@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class Index : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                Session["LoginName"] = null;
+                Session["CompanyName"] = null;
+                Session["Area_Code"] = null;
+                Session["CompanyTypeName"] = null;
+                Session["CompanyTypeCode"] = null;
+                Session["SystemInfoID"] = null;
+                Session["UserID"] = null;
+                Session["LoginID"] = null;
+                Session["UserName"] = null;
+                Session["RoleID"] = null;
+                Session["CompanyID"] = null;
+                Session["CompanyName"] = null;
+                Session["PageCount"] = null;
+                Session["IsLeader"] = null;
+                Session["SuperAdmin"] = null;
+
+
+                string IsCompany = Common.DNTRequest.GetString("IsCompany");
+                if (IsCompany == "true" || IsCompany == "")
+                {
+                    Response.Redirect("UserLoginGather.aspx");
+                }
+                else
+                {
+                    Response.Redirect("UserLoginGather.aspx");
+                }
+            }
+        }
+    }
+}

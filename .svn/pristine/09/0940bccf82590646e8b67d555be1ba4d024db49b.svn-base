@@ -1,0 +1,206 @@
+﻿BODY {
+    FONT-SIZE: 12px;
+    MARGIN: 0px;
+    background-color: #e2f5ff;
+}
+
+.Acss {
+    color: green;
+}
+
+
+
+.DivHead {
+    HEIGHT: 25px;
+}
+
+    .DivHead DIV {
+        DISPLAY: inline;
+        FLOAT: left;
+        CURSOR: pointer;
+        max-width: 250px;
+        min-width: 50px;
+    }
+
+.Tab_td1 {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 4px;
+    BACKGROUND: url(../Main/tabLeft.gif) no-repeat left -42px;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    PADDING-TOP: 0px;
+}
+
+.Tab_td2 {
+    PADDING-RIGHT: 2px;
+    PADDING-LEFT: 2px;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12px;
+    BACKGROUND: url(../Main/tabMiddle.gif) repeat-x right -42px;
+    PADDING-BOTTOM: 2px;
+    COLOR: #666;
+    LINE-HEIGHT: 21px;
+    PADDING-TOP: 2px;
+    TEXT-ALIGN: left;
+}
+
+.Tab_td3 {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 1px;
+    BACKGROUND: url(../Main/tabRight.gif) no-repeat left -42px;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    WIDTH: 17px;
+    PADDING-TOP: 0px;
+}
+
+.Tab_close {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 1px;
+    BACKGROUND: url(../Main/tabClose.gif) no-repeat left -42px;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    WIDTH: 17px;
+    PADDING-TOP: 0px;
+}
+
+.td2_Tab_td1 {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 4px;
+    BACKGROUND: url(../Main/tabLeft.gif) no-repeat left top;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    PADDING-TOP: 0px;
+}
+
+.td2_Tab_td2 {
+    PADDING-RIGHT: 2px;
+    PADDING-LEFT: 2px;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12px;
+    BACKGROUND: url(../Main/tabMiddle.gif) repeat-x right top;
+    PADDING-BOTTOM: 2px;
+    COLOR: #666;
+    LINE-HEIGHT: 21px;
+    PADDING-TOP: 2px;
+    TEXT-ALIGN: left;
+}
+
+.td2_Tab_td3 {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 1px;
+    BACKGROUND: url(../Main/tabRight.gif) no-repeat left top;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    WIDTH: 17px;
+    PADDING-TOP: 0px;
+}
+
+.td2_Tab_close {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 1px;
+    BACKGROUND: url(../Main/tabClose.gif) no-repeat left top;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    WIDTH: 17px;
+    PADDING-TOP: 0px;
+}
+
+.DivTable {
+    BACKGROUND: #fff;
+    OVERFLOW: hidden;
+    WIDTH: 100%;
+    HEIGHT: 100%;
+}
+
+    .DivTable DIV {
+        WIDTH: 100%;
+        POSITION: absolute;
+        HEIGHT: 100%;
+    }
+
+.TabShow {
+    PADDING-RIGHT: 15px;
+    DISPLAY: block;
+    PADDING-LEFT: 6px;
+    BACKGROUND: url(../Main/tabRight.gif) no-repeat right top;
+    FLOAT: left;
+    PADDING-BOTTOM: 4px;
+    PADDING-TOP: 5px;
+}
+
+    .TabShow Tab_td1 {
+        PADDING-RIGHT: 0px;
+        PADDING-LEFT: 4px;
+        BACKGROUND: url(../Main/tabLeft.gif) no-repeat left top;
+        PADDING-BOTTOM: 0px;
+        MARGIN: 0px;
+        PADDING-TOP: 0px;
+    }
+
+    .TabShow Tab_td2 {
+        FONT-WEIGHT: bold;
+        FONT-SIZE: 14px;
+        COLOR: #999;
+        LINE-HEIGHT: 20px;
+        TEXT-ALIGN: left;
+    }
+
+    .TabShow Tab_td3 {
+        PADDING-RIGHT: 0px;
+        PADDING-LEFT: 4px;
+        BACKGROUND: url(../Main/tabClose.gif) no-repeat left 7px;
+        PADDING-BOTTOM: 0px;
+        MARGIN: 0px;
+        WIDTH: 15px;
+        PADDING-TOP: 0px;
+    }
+
+#tabsF {
+    FONT-SIZE: 93%;
+    BACKGROUND: #efefef;
+    FLOAT: left;
+    WIDTH: 100%;
+    LINE-HEIGHT: normal;
+    BORDER-BOTTOM: #666 1px solid;
+}
+
+    #tabsF UL {
+        PADDING-RIGHT: 10px;
+        PADDING-LEFT: 50px;
+        PADDING-BOTTOM: 0px;
+        MARGIN: 0px;
+        PADDING-TOP: 10px;
+        LIST-STYLE-TYPE: none;
+    }
+
+    #tabsF LI {
+        PADDING-RIGHT: 0px;
+        DISPLAY: inline;
+        PADDING-LEFT: 0px;
+        PADDING-BOTTOM: 0px;
+        MARGIN: 0px;
+        PADDING-TOP: 0px;
+    }
+
+    #tabsF A {
+        PADDING-RIGHT: 0px;
+        PADDING-LEFT: 4px;
+        BACKGROUND: url(tableftF.gif) no-repeat left top;
+        FLOAT: left;
+        PADDING-BOTTOM: 0px;
+        MARGIN: 0px;
+        PADDING-TOP: 0px;
+        TEXT-DECORATION: none;
+    }
+
+        #tabsF A SPAN {
+            PADDING-RIGHT: 15px;
+            DISPLAY: block;
+            PADDING-LEFT: 6px;
+            BACKGROUND: url(tabrightF.gif) no-repeat right top;
+            FLOAT: left;
+            PADDING-BOTTOM: 4px;
+            COLOR: #666;
+            PADDING-TOP: 5px;
+        }

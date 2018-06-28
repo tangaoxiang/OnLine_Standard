@@ -1,0 +1,32 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="FindPassword.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.FindPassword" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>阜阳市"互联网+"建设工程文件跟踪管理服务系统- 找回密码</title>
+    <link href="CSS/OnLineGather/OnlineCollect.css" type="text/css" rel="Stylesheet" />
+    <script language="javascript" type="text/javascript" src="JS/jquery.js"></script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id="wrap">
+        <div id="login">
+            <h4>
+                用户名</h4>
+            <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
+            <%-- <input type="text" id="txtUserName" runat="server" />--%>
+            <h4>
+                邮箱</h4>
+            <asp:TextBox ID="txtEmail" runat="server"></asp:TextBox>
+            <%--    <input type="password" id="TxtEmail" runat="server"/>--%>
+            <div id="button">
+                <asp:Button ID="btnGetPasswrod" runat="server" Text="确定" 
+                    Style="cursor: pointer;" onclick="btnGetPasswrod_Click" 
+                     />
+            </div>
+            <%--<a href="UserLoginGather.aspx" >返回登录页</a>--%>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

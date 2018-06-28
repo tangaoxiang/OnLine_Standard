@@ -1,0 +1,164 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl {
+    public partial class ctrlCompanyRegBaseInfo3_2 : System.Web.UI.UserControl {
+        T_SingleProject_BLL singleProjectBLL = new T_SingleProject_BLL();
+        b_single_project_BLL bsingleProjectBLL = new b_single_project_BLL();
+
+        protected void Page_Load(object sender, EventArgs e) {
+
+        }
+
+        /// <summary>
+        /// 禁用页面所有的控件
+        /// </summary>
+        /// <param name="flag"></param>
+        public void DisabledControl() {
+            EnableControls(tablemain, false);
+        }
+
+        protected void EnableControls(Control c, bool bEnabled) {
+            if (c is WebControl)
+                ((WebControl)c).Enabled = bEnabled;
+
+            if (c is HtmlControl)
+                ((HtmlControl)c).Disabled = !bEnabled;
+
+            foreach (Control cc in c.Controls)
+                EnableControls(cc, bEnabled);
+        }
+        public void DataBindEx(int tSingleProjectID) {
+            gcqy.DataValueField = "systeminfoname";
+            gcqy.DataBindEx();//区域     
+
+            HSingleProjectID.Value = tSingleProjectID.ToString();
+            DataBindEx();
+        }
+
+        private void DataBindEx() {
+            T_SingleProject_MDL projectmdl = singleProjectBLL.GetModel(ConvertEx.ToInt(HSingleProjectID.Value));
+            b_single_project_MDL a_projectmdl = bsingleProjectBLL.GetModel(ConvertEx.ToInt(HSingleProjectID.Value));
+
+            if (projectmdl != null && a_projectmdl != null) {
+                projectmdl.fz = a_projectmdl.fz;
+
+                StringBuilder singlePoint = new StringBuilder();
+                StringBuilder ghxkz = new StringBuilder();
+                StringBuilder sgxkz = new StringBuilder();
+                StringBuilder other = new StringBuilder();
+                StringBuilder allStr = new StringBuilder();
+
+                #region 获取显示工程所有的坐标信息,按OrderIndex排序
+                List<T_SingleProject_Point_MDL> ltPoint = new T_SingleProject_Point_BLL().GetModelList("SingleProjectID=" + projectmdl.SingleProjectID);
+                if (ltPoint != null && ltPoint.Count > 0) {
+                    singlePoint.Append("<table class=\"zpxxxj\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"> ");
+                    singlePoint.Append("<tr>");
+                    singlePoint.Append("   <td colspan=\"4\" style=\"height: 10px\"><strong>工程坐标信息预览</strong></td>");
+                    singlePoint.Append("</tr>");
+                    int index = 0;
+                    foreach (T_SingleProject_Point_MDL pintMDL in ltPoint) {
+                        index++;
+                        singlePoint.Append(" <tr>");
+                        singlePoint.Append("     <td class=\"ww\">X" + index + "坐标：</td>");
+                        singlePoint.Append("     <td>");
+                        singlePoint.Append("         <input type=\"text\" readonly=\"readonly\" value=\"" + pintMDL.X + "\" title=\"" + pintMDL.X + "\" class=\"dd\"  />");
+                        singlePoint.Append("     </td>");
+                        singlePoint.Append("     <td class=\"ww\">Y" + index + "坐标：</td>");
+                        singlePoint.Append("     <td>");
+                        singlePoint.Append("         <input  type=\"text\" readonly=\"readonly\" value=\"" + pintMDL.Y + "\" title=\"" + pintMDL.Y + "\" class=\"dd\"  />");
+                        singlePoint.Append("     </td>");
+                        singlePoint.Append(" </tr> ");
+                    }
+                    singlePoint.Append("</table>");
+                    ltPointHtml.Text = singlePoint.ToString();
+                }
+                #endregion
+
+                #region 获取工程对应的所有上传证件的附件
+                List<T_FileAttach_MDL> lt_ftMdl = new T_FileAttach_BLL().GetModelList("PriKeyValue=" + projectmdl.SingleProjectID);
+                foreach (T_FileAttach_MDL ftMdl in lt_ftMdl) {
+                    if (ftMdl.AttachCode == "ghxkz") {
+                        ghxkz.Append("&nbsp;&nbsp;<a style=\"color:black;\" href=\"" + ftMdl.AttachPath + "\" title='点击查看' target=\"_blank\">" + ftMdl.AttachName + "</a>&nbsp;");
+                    } else if (ftMdl.AttachCode == "sgxkz") {
+                        sgxkz.Append("&nbsp;&nbsp;<a style=\"color:black;\" href=\"" + ftMdl.AttachPath + "\" title='点击查看' target=\"_blank\">" + ftMdl.AttachName + "</a>&nbsp;");
+                    } else if (ftMdl.AttachCode == "other") {
+                        other.Append("&nbsp;&nbsp;<a style=\"color:black;\" href=\"" + ftMdl.AttachPath + "\" title='点击查看' target=\"_blank\">" + ftMdl.AttachName + "</a>&nbsp;");
+                    }
+                }
+                if (ghxkz.Length > 0 || sgxkz.Length > 0 || other.Length > 0) {
+                    allStr.Append("<table class=\"zpxxxj\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+                    allStr.Append("<tr>");
+                    allStr.Append("<td colspan=\"4\" style=\"height: 10px\">");
+                    allStr.Append("<strong>文号项扫描件预览</strong>");
+                    allStr.Append("</td>");
+                    allStr.Append("</tr>");
+                }
+                if (ghxkz.Length > 0 || sgxkz.Length > 0) {
+                    allStr.Append("<tr>");
+                    if (ghxkz.Length > 0) {
+                        allStr.Append("<td class=\"ww\">规划许可证号：</td>");
+                        allStr.Append("<td>");
+                        allStr.Append(ghxkz.ToString());
+                        allStr.Append("</td>");
+                    }
+                    if (sgxkz.Length > 0) {
+                        allStr.Append("<td class=\"ww\">施工许可证号：</td>");
+                        allStr.Append("<td>");
+                        allStr.Append(sgxkz.ToString());
+                        allStr.Append("</td>");
+                    }
+                    allStr.Append("</tr>");
+                }
+                if (other.Length > 0) {
+                    allStr.Append("<tr>");
+                    allStr.Append("  <td class=\"ww\">其它证件附件：");
+                    allStr.Append("</td>");
+                    allStr.Append(" <td colspan=\"3\" style=\"word-break: break-all;\">");
+                    allStr.Append(other.ToString());
+                    allStr.Append("  </td>");
+                    allStr.Append("</tr>");
+                }
+                allStr.Append("</table>");
+                ltImage.Text = allStr.ToString();
+                #endregion
+            }
+            Comm.SetValueToPage(projectmdl, tablemain);
+            if (jsdw.Text == "") {
+                jsdw.Text = Common.Session.GetSession("CompanyName");
+            }
+        }
+
+        public void SetDefaultValue(Model.T_Construction_Project_MDL pMDL) {
+            if (pMDL != null) {
+                Comm.SetValueToPage(pMDL, tablemain);
+                try {
+                    gcmc.Text = pMDL.xmmc;
+                    gcdd.Text = pMDL.xmdd;
+                } catch { }
+            }
+        }
+
+        public T_SingleProject_MDL GetModule(int SingleProjectID) {
+            T_SingleProject_MDL mdl = new T_SingleProject_MDL();
+            if (SingleProjectID > 0) {
+                mdl = singleProjectBLL.GetModel(SingleProjectID);
+            }
+            object obj = Comm.GetValueToObject(mdl, tablemain);
+            return (T_SingleProject_MDL)obj;
+        }
+    }
+}

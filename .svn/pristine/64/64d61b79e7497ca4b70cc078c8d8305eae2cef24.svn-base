@@ -1,0 +1,185 @@
+<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="FileListTmpList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.FileListTmpList" Title="归档目录模板管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlArchiveFormType.ascx" TagName="ctrlArchiveFormType"
+    TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownFileListTmp.ascx" TagName="ctrlDropDownFileListTmp"
+    TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc21" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function getNewUrl() {
+            var url = window.location.href;
+            if ($('#ctl00_Main_archive_form_no_ddlArchiveFormType').val() != "") {
+                url = Common.urlreplace(url, 'archive_form_no', $('#ctl00_Main_archive_form_no_ddlArchiveFormType').val());
+            }
+            if ($('#ctl00_Main_PID_ddlModule').val() != "") {
+                url = Common.urlreplace(url, 'PID', $('#ctl00_Main_PID_ddlModule').val());
+            }
+            if ($('#ctl00_Main_txtTitle_TextBox1').val() != "") {
+                url = Common.urlreplace(url, 'Title', escape($('#ctl00_Main_txtTitle_TextBox1').val()));
+            }
+            if ($('#CurrentPageIndex').text() != "") {
+                url = Common.urlreplace(url, 'PageIndex', $('#CurrentPageIndex').text());
+            }
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+        //新增
+        function btnAdd() {
+            var selKey = Common.getRadioKeyToArray();
+            var url = 'FileListTmpAdd.aspx?action=' + PageState.Add + '&id=0&rn=' + Math.random();
+            if (selKey.length > 0)
+                url = 'FileListTmpAdd.aspx?action=' + PageState.Add + '&id=' + selKey[0] + '&rn=' + Math.random();
+
+            layer.open({
+                type: 2,
+                title: '流程编辑页面-新增',
+                maxmin: true,
+                resize: false,
+                shadeClose: false, //点击遮罩关闭层
+                area: ['700px', '580px'],
+                content: url,
+                end: function () {
+                    if ($("#hidOpenFlag").val() == "1") {
+                        layer.alert('流程新增成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                }
+            });
+        }
+        //编辑
+        function btnEdit() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                layer.open({
+                    type: 2,
+                    title: '流程编辑页面-修改',
+                    maxmin: false,
+                    resize: false,
+                    shadeClose: false, //点击遮罩关闭层
+                    area: ['700px', '580px'],
+                    content: 'FileListTmpAdd.aspx?action=' + PageState.Edit + '&id=' + keyList[0] + '&rn=' + Math.random(),
+                    end: function () {
+                        if ($("#hidOpenFlag").val() == "1") {
+                            layer.alert('流程修改成功!', { btnAlign: 'c' }, function (index) {
+                                window.location.href = getNewUrl();
+                                layer.close(index);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        //删除
+        function btnDel() {
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定要删除选中归档目录?<br/>注意:目录下有子目录则不能删除!', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    if (FileListTmpList.DeleteFileListTmp(keyList[0]).value) {
+                        layer.alert('归档目录删除成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                });
+            }
+        }
+
+    </script>
+    <style type="text/css">
+        select {
+            height: 21px;
+            width: 175px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">文件类别：</td>
+                    <td class="c2">
+                        <uc1:ctrlArchiveFormType ID="archive_form_no" runat="server" AutoPostBack="true" />
+                    </td>
+                    <td class="condition">上级分类：</td>
+                    <td class="c2">
+                        <uc3:ctrlDropDownFileListTmp ID="PID" runat="server" AutoPostBack="false" />
+                    </td>
+                    <td class="condition">文件题名：</td>
+                    <td class="c2">
+                        <uc21:ctrlTextBoxEx ID="txtTitle" runat="server" MaxLength="20" />
+                    </td>
+                    <td class="ss">
+                        <asp:Button ID="btnSearch" runat="server" Text=" 查询 " OnClick="btnSearch_Click" />
+                        <input type="reset" value="重 置" />
+                    </td>
+                </tr>
+            </table>
+            <div class="ss"></div>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl">
+                        <a id="MrcBtnAdd" href="#" title="添加" onclick="btnAdd()">
+                            添加 </a>
+                        <a id="MrcBtnEdit" href="#" title="修改" onclick="btnEdit()">
+                         修改 </a>
+                        <a id="MrcBtnDel" href="#" title="删除" onclick="btnDel()">
+                            删除 </a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="30px"></th>
+                                <th width="120px">文件类别</th>
+                                <th width="90px">编号</th>
+                                <th>文件题名</th>
+                                <th width="90px">是否归档</th>
+                                <th width="90px">是否目录级</th>
+                                <th width="90px">归档单位</th>
+                                <th width="90px">文件来源</th>
+                                <th width="90px">排序位置</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td>
+                                            <input type="radio" name="radio" value='<%# Eval("RECID")%>' />
+                                        </td>
+                                        <td><%#Eval("Archive_FormName")%></td>
+                                        <td><%#Eval("BH")%></td>
+                                        <td><%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetTitleForBH(Eval("BH").ToString(),
+                                            Eval("TITLE").ToString())%></td>
+                                        <td><%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(
+                                    DigiPower.Onlinecol.Standard.Common.ConvertEx.ToBool(Eval("MustSubmitFlag")),true)%></td>
+                                        <td><%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(
+                                    DigiPower.Onlinecol.Standard.Common.ConvertEx.ToBool(Eval("IsFolder")),true)%></td>
+                                        <td><%#Eval("DefaultCompanyTypeName")%></td>
+                                        <td><%#Eval("FileFromName")%></td>
+                                        <td><%#Eval("OrderIndex")%></td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

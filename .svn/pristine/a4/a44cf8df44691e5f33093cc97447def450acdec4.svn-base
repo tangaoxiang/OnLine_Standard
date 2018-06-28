@@ -1,0 +1,155 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="SystemList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.SystemList" Title="字典维护" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function getNewUrl() {
+            var url = window.location.href;
+            if ($('#ctl00_Main_drpType').val() != "") {
+                url = Common.urlreplace(url, 'drpType', $('#ctl00_Main_drpType').val());
+            }
+            if ($('#CurrentPageIndex').text() != "") {
+                url = Common.urlreplace(url, 'PageIndex', $('#CurrentPageIndex').text());
+            }
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+        //新增
+        function btnAdd() {
+            var selKey = Common.getChkMoreKeyListToArray(0);
+            var url = 'SystemAdd.aspx?action=' + PageState.Add + '&id=0&rn=' + Math.random();
+            if (selKey.length > 0)
+                url = 'SystemAdd.aspx?action=' + PageState.Add + '&id=' + selKey[0] + '&rn=' + Math.random();
+
+            layer.open({
+                type: 2,
+                title: '数据字典编辑页面-新增',
+                maxmin: false,
+                resize: false,
+                shadeClose: false, //点击遮罩关闭层
+                area: ['700px', '520px'],
+                content: url,
+                end: function () {
+                    if ($("#hidOpenFlag").val() == "1") {
+                        layer.alert('数据新增成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                }
+            });
+        }
+        //编辑
+        function btnEdit() {
+            if (Common.isCheckBoxOneChecked()) {
+                var keyList = Common.getChkOneKeyToArray();
+                layer.open({
+                    type: 2,
+                    title: '数据字典编辑页面-修改',
+                    maxmin: false,
+                    resize: false,
+                    shadeClose: false, //点击遮罩关闭层
+                    area: ['700px', '520px'],
+                    content: 'SystemAdd.aspx?action=' + PageState.Edit + '&id=' + keyList[0] + '&rn=' + Math.random(),
+                    end: function () {
+                        if ($("#hidOpenFlag").val() == "1") {
+                            layer.alert('数据修改成功!', { btnAlign: 'c' }, function (index) {
+                                window.location.href = getNewUrl();
+                                layer.close(index);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        //删除
+        function btnDel() {
+            if (Common.isCheckBoxMoreChecked()) {
+                layer.confirm('确定要删除选中行数据?', function () {
+                    var keyList = Common.getChkMoreKeyListToString(0);
+                    SystemList.DeleteSystemInfoe(keyList).value
+                    layer.alert('数据删除成功!', { btnAlign: 'c' }, function (index) {
+                        window.location.href = getNewUrl();
+                        layer.close(index);
+                    });
+                });
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">类型：</td>
+                    <td class="c2">
+                        <asp:DropDownList ID="drpType" runat="server" Height="21px"
+                            AutoPostBack="True" OnSelectedIndexChanged="drpType_SelectedIndexChanged">
+                        </asp:DropDownList>
+                    </td>
+                    <td class="condition"></td>
+                    <td class="c2"></td>
+                    <td class="condition"></td>
+                    <td class="c2"></td>
+                    <td class="ss"></td>
+                </tr>
+            </table>
+            <div class="ss"></div>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl">
+                        <a id="MrcBtnAdd" href="#" title="添加" onclick="btnAdd()">
+                            添加 </a>
+                        <a id="MrcBtnEdit" href="#" title="修改" onclick="btnEdit()">
+                         修改 </a>
+                        <a id="MrcBtnDel" href="#" title="删除" onclick="btnDel()">
+                            删除 </a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="40px" style="cursor: pointer;" onclick="Common.selCheckBoxAll(this)" selall="0">全选</th>
+                                <th>类型名称</th>
+                                <th width="200px">类型</th>
+                                <th width="200px">单位类别</th>
+                                <th width="150px">值</th>
+                                <th width="150px">二级类别</th>
+                                <th width="150px">排序编号</th>
+                                <th width="60px">Key</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td width="50">
+                                            <input type="checkbox" name="checkOne"
+                                                value='<%# Eval("SystemInfoID")%>,<%# Eval("CurrentType")%>' /></td>
+                                        <td><%#Eval("CurrentTypeCNName")%></td>
+                                        <td><%#Eval("CurrentType")%></td>
+                                        <td><%#Eval("SystemInfoName")%></td>
+                                        <td><%#Eval("SystemInfoCode")%></td>
+                                        <td><%#Eval("SubType")%></td>
+                                        <td><%#Eval("OrderIndex")%></td>
+                                        <td><%#Eval("SystemInfoID")%></td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

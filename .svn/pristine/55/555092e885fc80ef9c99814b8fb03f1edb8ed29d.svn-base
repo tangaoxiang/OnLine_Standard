@@ -1,0 +1,276 @@
+﻿//------------------------------------------------------------------------------
+// <自动生成>
+//     此代码由工具生成。
+//
+//     对此文件的更改可能会导致不正确的行为，并且如果
+//     重新生成代码，这些更改将会丢失。 
+// </自动生成>
+//------------------------------------------------------------------------------
+
+namespace DigiPower.Onlinecol.Standard.Web.File {
+    
+    
+    public partial class ImageFileInfoList {
+        
+        /// <summary>
+        /// tbl 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable tbl;
+        
+        /// <summary>
+        /// title 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx title;
+        
+        /// <summary>
+        /// psdd 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx psdd;
+        
+        /// <summary>
+        /// psz 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx psz;
+        
+        /// <summary>
+        /// pssj 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx pssj;
+        
+        /// <summary>
+        /// sb 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList sb;
+        
+        /// <summary>
+        /// fbl 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx fbl;
+        
+        /// <summary>
+        /// xjpp 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx xjpp;
+        
+        /// <summary>
+        /// xjxh 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx xjxh;
+        
+        /// <summary>
+        /// XAXIS_RESOLUTION 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx XAXIS_RESOLUTION;
+        
+        /// <summary>
+        /// YAXIS_RESOLUTION 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx YAXIS_RESOLUTION;
+        
+        /// <summary>
+        /// IMAGE_WIDTH 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx IMAGE_WIDTH;
+        
+        /// <summary>
+        /// IMAGE_HEIGHT 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx IMAGE_HEIGHT;
+        
+        /// <summary>
+        /// DATA_FICAL_LENGTH 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx DATA_FICAL_LENGTH;
+        
+        /// <summary>
+        /// DATA_APERTURE 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx DATA_APERTURE;
+        
+        /// <summary>
+        /// DATA_APERTURE_XS 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx DATA_APERTURE_XS;
+        
+        /// <summary>
+        /// FLASH 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx FLASH;
+        
+        /// <summary>
+        /// WHITE_BALANCE 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx WHITE_BALANCE;
+        
+        /// <summary>
+        /// ISO_SPEED_RATINGS 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx ISO_SPEED_RATINGS;
+        
+        /// <summary>
+        /// EXPOSURE_PROGRAM 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx EXPOSURE_PROGRAM;
+        
+        /// <summary>
+        /// EXPOSURE_MODE 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx EXPOSURE_MODE;
+        
+        /// <summary>
+        /// DATA_EXPOSURE_TIME 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx DATA_EXPOSURE_TIME;
+        
+        /// <summary>
+        /// QUALITY 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx QUALITY;
+        
+        /// <summary>
+        /// CONTRAST 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx CONTRAST;
+        
+        /// <summary>
+        /// SATURATION 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx SATURATION;
+        
+        /// <summary>
+        /// bz 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlTextBoxEx bz;
+        
+        /// <summary>
+        /// table1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable table1;
+        
+        /// <summary>
+        /// Button1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
+        
+        /// <summary>
+        /// Button2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button2;
+    }
+}

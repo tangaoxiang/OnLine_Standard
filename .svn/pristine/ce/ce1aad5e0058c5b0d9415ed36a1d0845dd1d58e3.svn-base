@@ -1,0 +1,331 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class SelectFileListTpl : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ctrlGridEx1.MyGridView_DataRowBound += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlGridEx.GridView_DataRowBound(ctrlGridEx1_MyGridView_DataRowBound);
+            if (!IsPostBack)
+            {
+                BLL.T_FileListTmp_BLL fileListTmp = new DigiPower.Onlinecol.Standard.BLL.T_FileListTmp_BLL();
+                Model.T_FileListTmp_MDL mdl = new DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL();
+                mdl.recid = 0;
+                mdl.title = "全部";
+
+                // List<Model.T_FileListTmp_MDL> list = fileListTmp.GetModelList("PID=0");
+                //jdk 9.29
+                string strWhere = string.Empty;
+                strWhere = "PID=0 and archive_form_no in(select ProjectType from T_SingleProject where SingleProjectID=" + DNTRequest.GetQueryString("SingleProjectID") + ")";
+                List<Model.T_FileListTmp_MDL> list = fileListTmp.GetModelList(strWhere);
+
+                list.Insert(0, mdl);
+                DropDownList1.DataValueField = "recid";
+                DropDownList1.DataTextField = "title";
+                DropDownList1.DataSource = list;
+                DropDownList1.DataBind();
+            }
+            BindGridView();
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            BLL.T_FileListTmp_BLL bll1 = new DigiPower.Onlinecol.Standard.BLL.T_FileListTmp_BLL();
+            List<string> SelectList = ctrlGridEx1.GetSelects();
+            //string SelectIDList = "";
+
+            BLL.T_FileList_BLL fileListBLL = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+
+            foreach (string ID in SelectList)
+            {
+                Model.T_FileListTmp_MDL mdl = bll1.GetModel(ConvertEx.ToInt(ID));
+                if (DNTRequest.GetQueryString("SuppleMent") == "SuppleMent")
+                {//由补卷管理 过来   此新增是由档案馆来做的,所以 都是需要提交归档的.
+                    mdl.MustSubmitFlag = true;
+                    fileListBLL.Add(DNTRequest.GetQueryString("SingleProjectID"), mdl, true);
+                }
+                else
+                {
+                    fileListBLL.Add(DNTRequest.GetQueryString("SingleProjectID"), mdl);
+                }
+            }
+            //Session["SelectIDList"] = SelectIDList;
+            if (DNTRequest.GetQueryString("SuppleMent") == "SuppleMent")
+            {//由补卷管理 过来 
+                MessageBox.ShowAndCloseWin(this.Page, "新增成功!");
+            }
+            else
+            {
+                Response.Write("<script>window.opener.location.reload();window.close();</script>");
+            }
+        }
+
+        public string ExcelHeader()
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("<?xml version=\"1.0\"?>\n");
+            sb.Append("<?mso-application progid=\"Excel.Sheet\"?>\n");
+            sb.Append("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" ");
+            sb.Append("xmlns:o=\"urn:schemas-microsoft-com:office:office\" ");
+            sb.Append("xmlns:x=\"urn:schemas-microsoft-com:office:excel\" ");
+            sb.Append("xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" ");
+            sb.Append("xmlns:html=\"http://www.w3.org/TR/REC-html40\">\n");
+            sb.Append("<DocumentProperties xmlns=\"urn:schemas-microsoft-com:office:office\">");
+            sb.Append("</DocumentProperties>");
+            sb.Append("<ExcelWorkbook xmlns=\"urn:schemas-microsoft-com:office:excel\">\n");
+            sb.Append("<ProtectStructure>False</ProtectStructure>\n");
+            sb.Append("<ProtectWindows>False</ProtectWindows>\n");
+            sb.Append("</ExcelWorkbook>\n");
+            return sb.ToString();
+        }
+
+        public void exportToExcel(DataSet source, string fileName)
+        {
+            int position = 0;
+            System.IO.StreamWriter excelDoc;
+            excelDoc = new System.IO.StreamWriter(fileName);
+            string startExcelXML = ExcelHeader();
+            startExcelXML += "<Styles>\r\n " +
+                "<Style ss:ID=\"Default\" ss:Name=\"Normal\">\r\n " +
+                "<Alignment ss:Vertical=\"Bottom\"/>\r\n <Borders/>" +
+                "\r\n <Font/>\r\n <Interior/>\r\n <NumberFormat/>" +
+                "\r\n <Protection/>\r\n </Style>\r\n " +
+                "<Style ss:ID=\"BoldColumn\">\r\n <Font " +
+                "x:Family=\"Swiss\" ss:Bold=\"1\"/>\r\n </Style>\r\n " +
+                "<Style ss:ID=\"StringLiteral\">\r\n <NumberFormat" +
+                " ss:Format=\"@\"/>\r\n </Style>\r\n <Style " +
+                "ss:ID=\"Decimal\">\r\n <NumberFormat " +
+                "ss:Format=\"0.0000\"/>\r\n </Style>\r\n " +
+                "<Style ss:ID=\"Integer\">\r\n <NumberFormat " +
+                "ss:Format=\"0\"/>\r\n </Style>\r\n <Style " +
+                "ss:ID=\"DateLiteral\">\r\n <NumberFormat " +
+                "ss:Format=\"mm/dd/yyyy;@\"/>\r\n </Style>\r\n " +
+                "</Styles>\r\n ";
+            const string endExcelXML = "</Workbook>";
+            int rowCount = 0;
+            int sheetCount = 1;
+
+            excelDoc.Write(startExcelXML);
+            excelDoc.Write("<Worksheet ss:Name=\"Sheet" + sheetCount + "\">");
+            excelDoc.Write("<Table>");
+            excelDoc.Write("<Row>");
+            for (int x = 0; x < source.Tables[0].Columns.Count; x++)
+            {
+                excelDoc.Write("<Cell ss:StyleID=\"BoldColumn\"><Data ss:Type=\"String\">");
+                excelDoc.Write(source.Tables[0].Columns[x].ColumnName);
+                excelDoc.Write("</Data></Cell>");
+            }
+            excelDoc.Write("</Row>");
+            foreach (DataRow x in source.Tables[0].Rows)
+            {
+                rowCount++;
+                //Excel 最多只能显示64000条数据，在同一个WorkSheet里 
+                if (rowCount == 64000)
+                {
+                    rowCount = 0;
+                    sheetCount++;
+                    excelDoc.Write("</Table>");
+                    excelDoc.Write(" </Worksheet>");
+                    excelDoc.Write("<Worksheet ss:Name=\"Sheet" + sheetCount + "\">");
+                    excelDoc.Write("<Table>");
+                }
+                excelDoc.Write("<Row>"); //ID=" + rowCount + " 
+                for (int y = 0; y < source.Tables[0].Columns.Count; y++)
+                {
+                    System.Type rowType;
+                    rowType = x[y].GetType();
+                    switch (rowType.ToString())
+                    {
+                        case "System.String":
+                            string XMLstring = x[y].ToString();
+                            XMLstring = XMLstring.Trim();
+                            XMLstring = XMLstring.Replace("&", "&");
+                            XMLstring = XMLstring.Replace(">", ">");
+                            XMLstring = XMLstring.Replace("<", "<");
+                            excelDoc.Write("<Cell ss:StyleID=\"StringLiteral\">" +
+                                           "<Data ss:Type=\"String\">");
+                            excelDoc.Write(XMLstring);
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        case "System.DateTime":
+                            DateTime XMLDate = (DateTime)x[y];
+                            string XMLDatetoString = ""; //Excel Converted Date 
+                            XMLDatetoString = XMLDate.Year.ToString() +
+                                 "-" +
+                                 (XMLDate.Month < 10 ? "0" +
+                                 XMLDate.Month.ToString() : XMLDate.Month.ToString()) +
+                                 "-" +
+                                 (XMLDate.Day < 10 ? "0" +
+                                 XMLDate.Day.ToString() : XMLDate.Day.ToString()) +
+                                 "T" +
+                                 (XMLDate.Hour < 10 ? "0" +
+                                 XMLDate.Hour.ToString() : XMLDate.Hour.ToString()) +
+                                 ":" +
+                                 (XMLDate.Minute < 10 ? "0" +
+                                 XMLDate.Minute.ToString() : XMLDate.Minute.ToString()) +
+                                 ":" +
+                                 (XMLDate.Second < 10 ? "0" +
+                                 XMLDate.Second.ToString() : XMLDate.Second.ToString()) +
+                                 ".000";
+                            excelDoc.Write("<Cell ss:StyleID=\"DateLiteral\">" +
+                                         "<Data ss:Type=\"DateTime\">");
+                            excelDoc.Write(XMLDatetoString);
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        case "System.Boolean":
+                            excelDoc.Write("<Cell ss:StyleID=\"StringLiteral\">" +
+                                        "<Data ss:Type=\"String\">");
+                            excelDoc.Write(x[y].ToString());
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        case "System.Int16":
+                        case "System.Int32":
+                        case "System.Int64":
+                        case "System.Byte":
+                            excelDoc.Write("<Cell ss:StyleID=\"Integer\">" +
+                                    "<Data ss:Type=\"Number\">");
+                            excelDoc.Write(x[y].ToString());
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        case "System.Decimal":
+                        case "System.Double":
+                            excelDoc.Write("<Cell ss:StyleID=\"Decimal\">" +
+                                  "<Data ss:Type=\"Number\">");
+                            excelDoc.Write(x[y].ToString());
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        case "System.DBNull":
+                            excelDoc.Write("<Cell ss:StyleID=\"StringLiteral\">" +
+                                  "<Data ss:Type=\"String\">");
+                            excelDoc.Write("");
+                            excelDoc.Write("</Data></Cell>");
+                            break;
+                        default:
+                            throw (new Exception(rowType.ToString() + " not handled."));
+                    }
+                    position = y;
+                    //ProgressEventArgs pe = new ProgressEventArgs(position); 
+                    //OnProgressChange(pe); 
+                }
+                excelDoc.Write("</Row>");
+            }
+            excelDoc.Write("</Table>");
+            excelDoc.Write(" </Worksheet>");
+            excelDoc.Write(endExcelXML);
+            excelDoc.Close();
+        }
+
+
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView()
+        {
+            BLL.T_FileListTmp_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileListTmp_BLL();
+            DataSet ds = new DataSet();
+
+            string strWhere = string.Empty;
+
+            //jdk 10.29
+            if (DNTRequest.GetQueryString("SingleProjectID").Length > 0)
+            {
+                strWhere = " archive_form_no in(select ProjectType from T_SingleProject where SingleProjectID=" + DNTRequest.GetQueryString("SingleProjectID") + ")";
+            }
+
+            ds = bll.GetList(strWhere);
+
+            strWhere = "DefaultCompanyType=" + Common.Session.GetSession("CompanyType");
+            if (Common.Session.GetSession("CompanyType") == "12")
+            {
+                strWhere = " 1=1 ";
+            }
+            if (title.Text.Trim().Length > 0)
+            {
+                strWhere += " AND title like '%" + title.Text.Trim() + "%' ";
+            }
+
+            if (ds.Tables.Count > 0)
+            {
+                DataTable outDT = ds.Tables[0].Copy();
+                outDT.Clear();
+                Recursion(ds.Tables[0], Common.ConvertEx.ToInt(DropDownList1.SelectedValue), 0, ref outDT);
+                ds.Tables.Clear();
+                ds.Tables.Add(outDT);
+                //exportToExcel(ds, "c:\\1.xls");
+                if (strWhere != " 1=1 ")
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        DataView dv = ds.Tables[0].Copy().DefaultView;
+
+                        dv.RowFilter = strWhere;
+                        if (dv.Count != ds.Tables[0].Rows.Count)
+                        {
+                            ds.Tables[0].Clear();
+                            ds.Tables.RemoveAt(0);
+                            ds.Tables.Add(dv.ToTable());
+                        }
+                    }
+                }
+
+                List<string> l1 = new List<string>();
+                l1.Add("bh");
+                l1.Add("title");
+                //l1.Add("MustSubmitFlag");
+                ctrlGridEx1.InitGrid("recid", l1, ds, "");
+            }
+        }
+
+        public void Recursion(DataTable dt, int PID, int LevelID, ref DataTable outDT)
+        {
+            DataRow[] dr = dt.Select("PID='" + PID + "'", "OrderIndex");
+            foreach (DataRow drr in dr)
+            {
+                drr["title"] = Comm.AddEmpty(drr["title"].ToString(), LevelID);
+                outDT.Rows.Add(drr.ItemArray);
+
+                int NewLevelID = LevelID + 1;
+                Recursion(dt, Int32.Parse(drr["recid"].ToString()), NewLevelID, ref outDT);
+            }
+        }
+
+        void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DataRowView view = e.Row.DataItem as DataRowView;
+
+                //10.22 jdk  用 AlonePack=1字段来表明 该归档目录是必须归档的.临时提醒下建设,监理,施工单位.
+                //最终的是否归档还是由在线预验收环节档案馆来勾选的.
+
+                if (ConvertEx.ToBool(view["AlonePack"]))
+                {
+                    e.Row.Style.Add("background-color", "yellowgreen");
+                }
+            }
+        }
+
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGridView();
+        }
+    }
+}

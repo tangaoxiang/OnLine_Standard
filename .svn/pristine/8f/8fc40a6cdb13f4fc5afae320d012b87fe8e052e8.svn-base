@@ -1,0 +1,238 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Filen.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.ArchiveManage.Filen" %>
+
+<%@ Register Src="../CommonCtrl/ctrlHead.ascx" TagName="ctrlHead" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%--<%@ Register src="../CommonCtrl/ctrlAuxidict.ascx" tagname="ctrlAuxidict" tagprefix="uc4" %>--%>
+<%@ Register src="../CommonCtrl/ctrlDropDownSystem.ascx" tagname="ctrlDropDownSystem" tagprefix="uc2" %>
+<%@ Register src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" tagname="ctrlDropDownSystemInfo" tagprefix="uc5" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>无标题页</title>
+    <link rel="stylesheet" type="text/css" href="../CSS/default.css" />
+    <link rel="stylesheet" type="text/css" href="../CSS/default2.css" />
+
+    <script type="text/javascript" src="../JS/Validate.js"></script>
+
+    <script type="text/javascript" src="../JS/WebCalendar.js"></script>
+
+    <style type="text/css">
+        .style2
+        {
+            height: 7px;
+        }
+        .style3
+        {
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="width: 100%; text-align: center;">
+        <div style="width: 900px">
+            <uc1:ctrlHead ID="ctrlHead1" runat="server" />
+        </div>
+        <table width="900px" border="0" align="center" cellpadding="0" cellspacing="0" style="vertical-align: top;
+            margin-top: 5px">
+            <tr>
+                <td height="154" valign="top" class="border_three" style="border-top: none; padding: 10px;
+                    background-color: #edf2f5;">
+                    <table width="878" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td height="105" valign="top" class="border_three">
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td height="5" background="../images/Regedit_line.gif">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="155" valign="top" style="padding: 5px;">
+                                            <table width="865" border="1" align="center" cellpadding="1" cellspacing="0" bordercolor="c1d4da"
+                                                style="border-collapse: collapse;">
+                                                <tr>
+                                                    <td align="center" colspan="2">
+                                                        <asp:Label ID="lbTitle" runat="server" Text="案卷级通用著录单" CssClass="cssTitle"></asp:Label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <table width="100%" border="1" align="center" cellpadding="1" cellspacing="0" bordercolor="c1d4da"
+                                                            style="border-collapse: collapse;" id="tablemain" runat="server">
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    档号：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="dh" Description="档号" canEmpty="false" MaxLength="20"
+                                                                        CssClass="regedit_input" runat="server" />
+                                                                </td>
+                                                                <td height="22" align="right" colspan="2">
+                                                                    总登记号：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="zdjh" canEmpty="true" Description="总登记号" MaxLength="20" CssClass="regedit_input"
+                                                                        runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    存放地址：
+                                                                </td>
+                                                                <td height="22" align="left" >
+                                                                    <uc3:ctrlTextBoxEx ID="cfdz" CssClass="regedit_input" canEmpty="false" Description="存放地址"
+                                                                         MaxLength="100" runat="server" />
+                                                                </td>
+                                                                <td height="22" align="right" colspan="2">
+                                                                    微缩号：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="swh" canEmpty="false" Description="微缩号" MaxLength="20" CssClass="regedit_input"
+                                                                        runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    案卷题名：
+                                                                </td>
+                                                                <td height="22" align="left" colspan="4">
+                                                                    <uc3:ctrlTextBoxEx ID="ajtm" CssClass="regedit_input" MaxLength="254" canEmpty="false" width="400px"
+                                                                        Description="案卷题名" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    编制单位：
+                                                                </td>
+                                                                <td height="22" align="left" >
+                                                                    <uc3:ctrlTextBoxEx ID="bzdw" CssClass="regedit_input" MaxLength="100" canEmpty="false"
+                                                                        Description="编制单位" runat="server" />
+                                                                </td>
+                                                                <td height="22" align="right" colspan="2">
+                                                                    进馆日期：
+                                                                </td>
+                                                                <td height="22" align="left" >
+                                                                    <uc3:ctrlTextBoxEx ID="jgrq" CssClass="regedit_input" Description="进馆日期" mode="Date" canEmpty="false"
+                                                                         runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    载体类型：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="ztlx" CssClass="regedit_input" Description="载体类型" canEmpty="false"
+                                                                        MaxLength="20" runat="server" />
+                                                                </td>
+                                                                <td height="22" align="right" colspan="2">
+                                                                    数量：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="sl" CssClass="regedit_input" Description="数量" canEmpty="false"
+                                                                        MaxLength="4" mode="Int" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" colspan="2">
+                                                                    计量单位：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="jldw" CssClass="regedit_input" Description="计量单位" canEmpty="false"
+                                                                        MaxLength="10" runat="server" />
+                                                                </td>
+                                                                <td height="22" align="right" colspan="2">
+                                                                    规格：
+                                                                </td>
+                                                                <td height="22" align="left">
+                                                                    <uc3:ctrlTextBoxEx ID="gg" CssClass="regedit_input" Description="规格" MaxLength="10"
+                                                                        canEmpty="false" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                    卷内文件起始时间：
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                    <uc3:ctrlTextBoxEx ID="jnwjqssj" CssClass="regedit_input" Description="卷内文件起始时间" canEmpty="false"
+                                                                        MaxLength="10" runat="server" />
+                                                                </td>
+                                                                <td align="right" class="style2" colspan="2">卷内文件终止时间：
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                <uc3:ctrlTextBoxEx ID="jnwjzzsj" CssClass="regedit_input" Description="卷内文件终止时间" canEmpty="false"
+                                                                        MaxLength="10" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                    保管期限：
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                    
+                                                                    <%--<uc4:ctrlauxidict ID="bgqx" runat="server" Serial_no="05" />--%>
+                                                                    <uc5:ctrlDropDownSystemInfo ID="bgqx" runat="server" CurrentType="05"/>
+                                                                </td>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                密级：
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                    <%--<uc4:ctrlAuxidict ID="mj" runat="server" serial_no="04" />--%>
+                                                                    
+                                                                    <uc5:ctrlDropDownSystemInfo ID="mj" runat="server" CurrentType="04"  />
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                    原档号：
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                    <uc3:ctrlTextBoxEx ID="ydh" CssClass="regedit_input" Description="原档号" 
+                                                                        MaxLength="20" runat="server" />
+                                                                </td>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                </td>
+                                                                <td align="left" class="style2">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" class="style3" colspan="2">
+                                                                    主题词：
+                                                                </td>
+                                                                <td align="left" class="style3" colspan="4">
+                                                                    <uc3:ctrlTextBoxEx ID="ztc" CssClass="regedit_input" Description="主题词" 
+                                                                        MaxLength="254" width="400px" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="right" class="style2" colspan="2">
+                                                                    附注：
+                                                                </td>
+                                                                <td align="left" class="style2" colspan="4">
+                                                                    <uc3:ctrlTextBoxEx ID="fz" CssClass="regedit_input" Description="附注" 
+                                                                        MaxLength="254" width="400px" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="35" align="center" valign="middle">
+                    <asp:Button ID="Button1" runat="server" Text=" 保存 " class="button_bg hand" OnClick="Button1_Click" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>

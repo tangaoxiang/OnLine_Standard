@@ -1,0 +1,70 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlDengJiBaseInfo.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDengJiBaseInfo" %>
+<%@ Register Src="ctrlArchiveFormType.ascx" TagName="ctrlArchiveFormType" TagPrefix="uc2" %>
+<%@ Register Src="ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<table id="tbl" width="100%" runat="server" border="1" align="center" cellpadding="1"
+    cellspacing="0" bordercolor="c1d4da" style="border-collapse: collapse;">
+    <tr>
+        <td align="right">
+            序号：
+        </td>
+        <td height="22" align="left">
+            <uc3:ctrlTextBoxEx ID="ORDER_INDEX" CssClass="regedit_input" MaxLength="10" canEmpty="false"
+                Description="自动生成" runat="server" mode="Int" />
+        </td>
+        <td height="22" align="right">
+            &nbsp;
+        </td>
+        <td height="22" align="left">
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td align="right" style="width: 10%">
+            工程号：
+        </td>
+        <td height="22" align="left" style="width: 40%">
+            <uc3:ctrlTextBoxEx ID="PROJ_NO" CssClass="regedit_input" MaxLength="100" canEmpty="false"
+                Description="工程号" runat="server" width="90%" />
+        </td>
+        <td height="22" align="right" style="width: 10%">
+            案卷号：
+        </td>
+        <td height="22" align="left" style="width: 40%">
+            <uc3:ctrlTextBoxEx ID="AJH" CssClass="regedit_input" canEmpty="false" Description="案卷号"
+                MaxLength="20" runat="server" width="90%" />
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            工程名称：
+        </td>
+        <td height="22" align="left">
+            <uc3:ctrlTextBoxEx ID="PROJ_NAME" CssClass="regedit_input" canEmpty="false" Description="工程名称"
+                MaxLength="20" runat="server" Rows="2" width="90%" />
+        </td>
+        <td height="22" align="right">
+            卷数：
+        </td>
+        <td height="22" align="left">
+            <uc3:ctrlTextBoxEx ID="JS" CssClass="regedit_input" canEmpty="false" Description="卷数"
+                MaxLength="20" runat="server" width="90%" />
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            建设单位：
+        </td>
+        <td height="22" align="left">
+            <uc3:ctrlTextBoxEx ID="JSDW" CssClass="regedit_input" canEmpty="false" Description="建设单位"
+                MaxLength="100" runat="server" Rows="2" width="90%" />
+        </td>
+        <td height="22" align="right">
+            面积(㎡)：
+        </td>
+        <td height="22" align="left">
+            <uc3:ctrlTextBoxEx ID="AREA" CssClass="regedit_input" canEmpty="false" Description="面积(㎡)"
+                MaxLength="20" runat="server" width="90%" />
+        </td>
+    </tr>
+</table>

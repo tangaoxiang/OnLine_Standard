@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DigiPower.Onlinecol.Standard.Log
+{
+    class ExceptionEx : Exception
+    {
+        protected void Exception()
+        {
+
+        }
+
+        public void AddException(Exception ex)
+        {
+            //Log.WriteLog(
+        }
+    }
+}

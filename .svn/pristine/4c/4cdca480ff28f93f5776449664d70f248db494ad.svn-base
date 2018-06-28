@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class CompanyList : PageBase
+    {
+        T_Company_BLL compBLL = new T_Company_BLL();
+        T_Company_MDL companymdl = new T_Company_MDL();
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        /// <summary>
+        /// 公司类型
+        /// </summary>
+        public string CompanyType = string.Empty;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            CompanyType = DNTRequest.GetQueryString("CompanyType");
+            Ajax.Utility.RegisterTypeForAjax(typeof(CompanyList));
+            MyAddInit();
+
+            if (!IsPostBack)
+            {
+                if (!string.IsNullOrWhiteSpace(DNTRequest.GetQueryString("txtCompanyName")))
+                    txtCompanyName.Text = Server.UrlDecode(DNTRequest.GetQueryString("txtCompanyName"));
+
+                BindGrid(AspNetPager.CurrentPageIndex);
+            }
+        }
+
+        protected void BindGrid(int pageIndex)
+        {  
+            if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0)
+            {
+                pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                ViewState["CurrentPageIndex"] = pageIndex;
+            }
+            else
+            {
+                pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+            }
+
+            DataTable dt = null;
+            if (PublicModel.isSuperAdmin())  //超级管理员
+            {
+                dt = compBLL.GetListPaging("", CompanyType, txtCompanyName.Text.Trim(), "", "",
+                    Common.Session.GetSession("AREA_CODE"), pageSize, pageIndex, out itemCount);
+            }
+            else if (PublicModel.isArchiveUser()) //档案馆用户看自己的
+            {
+                dt = compBLL.GetListPaging("", CompanyType, txtCompanyName.Text.Trim(), "", "",
+                    Common.Session.GetSession("OLD_AREA_CODE"), pageSize, pageIndex, out itemCount);
+            }
+            else if (PublicModel.isLeader()) //建设单位
+            {
+                dt = compBLL.GetListPaging("", CompanyType, txtCompanyName.Text.Trim(),
+                    Common.Session.GetSession("CompanyId"), "", "", pageSize, pageIndex, out itemCount);
+            }
+            else
+            {
+                dt = compBLL.GetListPaging("", CompanyType, txtCompanyName.Text.Trim(),
+                    Common.Session.GetSession("CompanyId"), Common.Session.GetSession("CompanyId"), "",
+                    pageSize, pageIndex, out itemCount);
+            }
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+            AspNetPager.CurrentPageIndex = pageIndex;
+
+            rpData.DataSource = dt;
+            rpData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 删除工程
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool DeleteCompany(string CompanyID)
+        {
+            bool flag = true;
+
+            if (new T_FileList_BLL().GetFileCountByCompanyID(CompanyID) < 1)//取处理过的文件总数，已有文件的公司，不可以删除
+            {
+                T_Company_MDL companyMDL = compBLL.GetModel(ConvertEx.ToInt(CompanyID));
+                if (companyMDL != null)
+                {
+                    T_SystemInfo_BLL systemInfoBLL = new T_SystemInfo_BLL();
+                    T_SystemInfo_MDL systemInfoMDL = systemInfoBLL.GetModel(companyMDL.CompanyType);
+                    if (companyMDL != null)
+                    {   //只删除监理和施工
+                        if (systemInfoMDL.SystemInfoCode != "JSCompanyInfo")
+                            compBLL.DeleteCompanyOther(CompanyID);
+                    }
+                }
+                flag = true;
+            }
+            else
+            {
+                flag = false;
+            }
+            return flag;
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }
+    }
+}

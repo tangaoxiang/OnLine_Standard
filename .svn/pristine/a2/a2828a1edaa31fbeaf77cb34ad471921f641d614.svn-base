@@ -1,0 +1,18 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="DefaultMyTaskList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.DefaultMyTaskList" Title="我的任务" %>
+
+<%@ Register Src="CommonCtrl/ctrlWorkFlowList_HTML.ascx" TagName="ctrlWorkFlowList_HTML" TagPrefix="uc2" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function Navgate(title, id, url) {
+            window.top.Content.CreateTitle(title, id, url);
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+    <div style="margin: 0px 2px 0px 0px; padding-left: 0px; border: solid 0px; padding-top: 4px;" align="center">
+        <uc2:ctrlWorkFlowList_HTML ID="ctrlWorkFlowList_HTML" runat="server" />
+    </div>
+</asp:Content>

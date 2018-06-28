@@ -1,0 +1,247 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using System.Data;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class MyTaskList : PageBase
+    {
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        /// <summary>
+        /// 流程编号
+        /// </summary>
+        public string workFlowCode = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        T_WorkFlowDefine_BLL flowDefineBLL = new T_WorkFlowDefine_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(MyTaskList));
+            workFlowID = Common.DNTRequest.GetString("workflowid");
+            if (!IsPostBack)
+            {
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("Main_gcmc")))
+                    gcmc.Text = Server.UrlDecode(DNTRequest.GetQueryString("Main_gcmc"));
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("Main_gcbm")))
+                    gcbm.Text = Server.UrlDecode(DNTRequest.GetQueryString("Main_gcbm"));
+
+                BindGrid(1);                 
+            }
+        }
+           
+        /// <summary>
+        /// 绑定数据
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        private void BindGrid(int pageIndex)
+        {
+            BLL.T_WorkFlow_BLL wfBLL = new T_WorkFlow_BLL();
+            Model.T_WorkFlow_MDL wfMDL = wfBLL.GetModel(ConvertEx.ToInt(workFlowID));
+            workFlowCode = wfMDL.WorkFlowCode;
+
+            string sqlWhere = string.Empty;
+
+            if (PublicModel.isSuperAdmin())       //管理员管理员获取所有工程
+                sqlWhere = " AND AREA_CODE LIKE '" + Common.Session.GetSession("AREA_CODE") + "%'";
+            else if (PublicModel.isArchiveUser()) //档案馆用户看自己的 
+                sqlWhere = " AND AREA_CODE LIKE '" + Common.Session.GetSession("OLD_AREA_CODE") + "%'";
+
+            if (!String.IsNullOrEmpty(gcmc.Text))
+                sqlWhere += " AND gcmc like '%" + gcmc.Text + "%'";
+            if (!String.IsNullOrEmpty(gcbm.Text))
+                sqlWhere += " AND gcbm like '%" + gcbm.Text + "%'";
+
+            //string zdwhere = "";//业务指导 在文件登记--窗口接收之间 只能看到自己的工程
+            //if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == false &&
+            //    Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            //{   //档案馆用户看自己的
+            //    if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.FILEREG ||
+            //       ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.ONLINE_CHECK ||
+            //        ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.ARCHIVEPACK ||
+            //        ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.WINRECV)
+            //    {
+            //        zdwhere = " AND ChargeUserID=" + Common.Session.GetSession("UserID");
+            //    }
+            //}
+
+            if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0)
+            {
+                pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                ViewState["CurrentPageIndex"] = pageIndex;
+            }
+            else
+            {
+                pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+            }
+
+            DataTable dt = null;
+            if (PublicModel.isSuperAdmin())
+                dt = flowDefineBLL.GetListPaging(workFlowID, false, "", "", sqlWhere, pageSize, pageIndex, out itemCount);
+            else
+                dt = flowDefineBLL.GetListPaging(workFlowID, Common.Session.GetSessionBool("IsCompany"),
+                    Common.Session.GetSession("RoleID"), Common.Session.GetSession("UserID"), sqlWhere, pageSize, pageIndex, out itemCount, "");
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+            AspNetPager.CurrentPageIndex = pageIndex;
+
+            rpData.DataSource = dt;
+            rpData.DataBind();
+        }
+                     
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }           
+
+        /// <summary>
+        /// 工程提交
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string SubMitProject(string singleProjectID, string workFlowID, string workFlowDefineID)
+        {
+            Model.T_SingleProject_MDL spMDL = (new BLL.T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(singleProjectID));
+            BLL.T_FileList_BLL flBLL = new T_FileList_BLL();
+            DataSet ds2 = flBLL.GetList("SingleProjectID=" + singleProjectID);
+            if (!String.IsNullOrEmpty(spMDL.gcbm) && ds2.Tables.Count > 0 && ds2.Tables[0].Rows.Count > 0)
+            {
+                BLL.T_WorkFlowDefine_BLL wkBLL = new T_WorkFlowDefine_BLL();
+                Model.T_WorkFlowDefine_MDL wkMDL = wkBLL.GetModel(ConvertEx.ToInt(workFlowDefineID));
+ 
+                if (String.IsNullOrEmpty(wkMDL.SubmitCellPath))
+                {//有些地方不需要填申请单的
+                    WorkFlowManage workflowmanage = new WorkFlowManage();
+                    if (workflowmanage.GoNextProjectWorkFlowSataus(ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(workFlowID)))
+                        return SystemSet._RETURN_SUCCESS_VALUE;
+                    else
+                        return SystemSet._RETURN_FAILURE_VALUE;
+                }
+                else
+                {  //填申请单的未做
+                    return SystemSet._RETURN_SUCCESS_VALUE;
+                }
+
+            }
+            else
+            {
+                return "请选分配任务!";
+            }
+        }
+
+        /// <summary>
+        /// 工程退回
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string ReturnProject(string singleProjectID)
+        {
+            //更新最后一次的工程，下次它排前面，方便操作些
+            T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMDL = spBLL.GetModel(ConvertEx.ToInt(singleProjectID));
+            spMDL.LastUserTime = DateTime.Now;   //提交或退回的时间 jdk 2015.03.14
+            spBLL.Update(spMDL);
+
+
+            WorkFlowManage workflowmanage = new WorkFlowManage();
+            if (workflowmanage.RollBackProjectWorkFlowStatus(ConvertEx.ToInt(singleProjectID)))
+                return SystemSet._RETURN_SUCCESS_VALUE;
+            else
+                return SystemSet._RETURN_FAILURE_VALUE;
+        }
+
+        /// <summary>
+        /// 受理
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <param name="workFlowDefineID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string AcceptProject(string singleProjectID, string workFlowDefineID)
+        {
+            BLL.T_WorkFlowDefine_BLL wkdBLL = new T_WorkFlowDefine_BLL();
+            Model.T_WorkFlowDefine_MDL wkdMDL = wkdBLL.GetModel(ConvertEx.ToInt(workFlowDefineID));
+
+            int strSubmitStatus = wkdMDL.SubmitStatus;
+            if (strSubmitStatus == 0 || strSubmitStatus == 1)
+            {//第一个流程strSubmitStatus=0;
+                wkdMDL.SubmitStatus = 2;//受理完成状态
+                wkdMDL.RecvUserID = ConvertEx.ToInt(Common.Session.GetSession("UserID"));
+                wkdMDL.RecvDateTime = DateTime.Now;
+                wkdBLL.Update(wkdMDL);
+
+                //=====受理时需要加入权限的。否则看不到的。
+                CBLL.SingleProjectUser projectRole = new DigiPower.Onlinecol.Standard.CBLL.SingleProjectUser();
+                projectRole.Update(Common.ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(Session["RoleID"].ToString()),
+                    ConvertEx.ToInt(Session["UserID"].ToString()));
+                //============================
+                return SystemSet._RETURN_SUCCESS_VALUE;
+            }
+            else
+            {
+                return SystemSet._RETURN_FAILURE_VALUE;
+            }
+        }
+
+        /// <summary>
+        /// 判断工程是否被受理
+        /// </summary>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool CheckRecvStatus(string singleProjectID, string workFlowID)
+        {
+            if (!Common.Session.GetSessionBool("IsCompany"))
+            {
+                T_WorkFlowDefine_BLL wfDefine = new T_WorkFlowDefine_BLL();
+                DataSet ds = wfDefine.GetList("SingleProjectID=" + singleProjectID + " AND WorkFlowID=" + workFlowID + " AND SubmitStatus<>2");
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0) //未受理
+                    return false;
+                else
+                    return true;
+            }
+            return true;
+        }
+    }
+}

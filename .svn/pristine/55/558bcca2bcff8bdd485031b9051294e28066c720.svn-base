@@ -1,0 +1,132 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlCompanyRegBaseInfo3_3Ext.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlCompanyRegBaseInfo3_3Ext" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<asp:HiddenField ID="HSingleProjectID" runat="server" />
+<style type="text/css">
+    .promiseLabelExt {
+    }
+
+    .promiseInputWidthExt {
+        width: 200px;
+    }
+
+    table {
+        background-color: #c9c7c0;
+        margin-top: 3px;
+    }
+
+    tr {
+        background-color: #fff;
+    }
+</style>
+
+<table id="tabledetail" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td class="left_title_1 promiseLabelExt">总长度：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="zcd" CssClass="regedit_input promiseInputWidthExt" Description="总长度" MaxLength="8"
+                mode="Float" runat="server" />
+            (m)
+        </td>
+        <td class="left_title_1 promiseLabelExt">设计压力：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="sjyl" CssClass="regedit_input promiseInputWidthExt" Description="设计压力" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">长度：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="cd" CssClass="regedit_input promiseInputWidthExt" Description="长度" MaxLength="8"
+                mode="Float" runat="server" />
+            (m)
+        </td>
+        <td class="left_title_1 promiseLabelExt">规格：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="gg" CssClass="regedit_input promiseInputWidthExt" Description="规格" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">材质：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="cz" CssClass="regedit_input promiseInputWidthExt" Description="材质" MaxLength="20"
+                runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">荷载：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="hz" CssClass="regedit_input promiseInputWidthExt" Description="荷载" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">起点：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="qd" CssClass="regedit_input promiseInputWidthExt" Description="起点" MaxLength="20"
+                runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">止点：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="zd" CssClass="regedit_input promiseInputWidthExt" Description="止点" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">工程质量：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc3:ctrlTextBoxEx ID="gczl" CssClass="regedit_input promiseInputWidthExt" Description="桥梁长度" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">工程预算：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="gcys" CssClass="regedit_input promiseInputWidthExt" Description="工程预算" MaxLength="8"
+                mode="Float" runat="server" />
+            (万元)
+        </td>
+        <td class="left_title_1 promiseLabelExt">工程决算：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="gcjs" CssClass="regedit_input promiseInputWidthExt" Description="工程决算" MaxLength="8"
+                mode="Float" runat="server" />
+            (万元)
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">起点坐标：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="qdzb" CssClass="regedit_input promiseInputWidthExt" mode="Float" Description="起点坐标" MaxLength="20"
+                runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">止点坐标：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="zdzb" CssClass="regedit_input promiseInputWidthExt" mode="Float"  Description="止点坐标" MaxLength="20"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">获奖情况：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="hjqk" CssClass="regedit_input promiseInputWidthExt" Description="获奖情况" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">其他：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="qt" CssClass="regedit_input promiseInputWidthExt" Description="其他" runat="server" />
+        </td>
+    </tr>
+</table>

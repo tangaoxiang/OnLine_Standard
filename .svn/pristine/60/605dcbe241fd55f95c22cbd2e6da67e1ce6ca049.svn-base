@@ -1,0 +1,73 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Main.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <%= Link%>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="layout-admin">
+            <header class="layout-header">
+                <div class="header-logo">
+                    <img src="Javascript/Layer/image/logo.png" />
+                </div>
+                <a class="header-menu-btn" href="javascript:;"><i class="icon-font">&#xe600;</i></a>
+                <ul class="header-bar">
+                    <li class="header-bar-role"><a href="javascript:;">欢迎您：超级管理员</a></li>
+                    <li class="Cancellation">
+                        <a href="#" title="个人中心">
+                            <img src="Javascript/Layer/image/grzx.png" /></a>
+                        <a href="#" title="切换账户">
+                            <img src="Javascript/Layer/image/qhzh.png" /></a>
+                        <a href="#" title="退出">
+                            <img src="Javascript/Layer/image/tcan.png" /></a>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+                <div class="sjj">
+                    <img src="Javascript/Layer/image/xnz.png" />
+                    <script language="JavaScript">
+                        var d, s = "";
+                        var x = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+                        d = new Date();
+                        s += d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日　";
+                        s += x[d.getDay()];
+                        document.writeln(s);
+                    </script>
+                    <span><a href="#">帮助？</a></span>
+                </div>
+            </header>
+            <aside class="layout-side">
+                <ul class="side-menu">
+                </ul>
+            </aside>
+
+            <div class="layout-side-arrow">
+                <div class="layout-side-arrow-icon"><i class="icon-font">&#xe60d;</i></div>
+            </div>
+
+            <section class="layout-main">
+                <div class="layout-main-tab" style="">
+                    <button class="tab-btn btn-left"><i class="icon-font">&#xe60e;</i></button>
+                    <nav class="tab-nav">
+                        <div class="tab-nav-content">
+                            <a href="javascript:;" class="content-tab active" data-id="home.html">首页</a>
+                        </div>
+                    </nav>
+                    <button class="tab-btn btn-right"><i class="icon-font">&#xe60f;</i></button>
+                </div>
+                <div class="layout-main-body">
+                    <iframe class="body-iframe" name="iframe0" width="100%" height="99%" src="home.html" frameborder="0" data-id="home.html" seamless></iframe>
+                </div>
+            </section>
+            <div class="layout-footer">深圳市世纪伟图科技开发有限公司 版权所有</div>
+        </div>
+    </form>
+    <script type="text/javascript" src="/Javascript/Layer/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="/Javascript/Layer/js/sccl.js"></script>
+    <script type="text/javascript" src="/Javascript/Layer/js/sccl-util.js"></script>
+</body>
+</html>

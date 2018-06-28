@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using System.Data;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class DefaultMyTaskList : PageBase
+    { 
+        protected void Page_Load(object sender, EventArgs e)
+        {
+          
+        }  
+    }
+}

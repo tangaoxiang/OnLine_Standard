@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections.Generic;
+
+//案卷跟踪
+
+namespace DigiPower.Onlinecol.Standard.Web.CompanyManage
+{
+    public partial class ArchiveListProView : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+                {                              
+                    ltHTML.Text = PartCountFileList(Common.DNTRequest.GetQueryString("SingleProjectID"));
+                }
+            }
+        }
+
+        public string PartCountFileList(string SingleProjectID)
+        {
+            try
+            {
+                string ReturnValue = "";
+
+                T_FileList_BLL Bll = new T_FileList_BLL();
+                DataSet DsSing = Bll.GetList(" SingleProjectID=" + SingleProjectID);                     //归档目录标题 PID=0        
+                DataTable Table = new DataTable();
+                Table.Columns.Add(new DataColumn("Title"));
+                Table.Columns.Add(new DataColumn("AllCount"));
+                Table.Columns.Add(new DataColumn("PartCount"));
+
+                if (DsSing.Tables.Count > 0)
+                {
+                    foreach (DataRow row in DsSing.Tables[0].Rows)
+                    {
+                        if (row["PID"].ToString() == "0")
+                        {
+                            DataRow newRow = Table.NewRow();
+                            newRow["Title"] = Common.ConvertEx.ToString(row["Title"]);
+                            int AllCount = GetAllCount(DsSing, row["recID"].ToString(), false);
+                            newRow["AllCount"] = AllCount;
+                            int FinishCount = GetAllCount(DsSing, row["recID"].ToString(), true);
+                            newRow["PartCount"] = FinishCount;
+                            //if (DsAll.Tables.Count > 0)
+                            //{
+                            //    DataRow[] dtRow = DsAll.Tables[0].Select("PID=" + Common.ConvertEx.ToString(row["recID"]));
+                            //    if (dtRow != null && dtRow.Length > 0)
+                            //        newRow["AllCount"] = Common.ConvertEx.ToString(dtRow[0]["AllCount"]);
+                            //    else
+                            //        newRow["AllCount"] = "0";
+                            //}
+                            //else
+                            //    newRow["AllCount"] = "0";
+
+                            //if (DsPartAll.Tables.Count > 0)
+                            //{
+                            //    DataRow[] dtRow = DsPartAll.Tables[0].Select("PID=" + Common.ConvertEx.ToString(row["recID"]));
+                            //    if (dtRow != null && dtRow.Length > 0)
+                            //        newRow["PartCount"] = Common.ConvertEx.ToString(dtRow[0]["AllCount"]);
+                            //    else
+                            //        newRow["PartCount"] = "0";
+                            //}
+                            //else
+                            //    newRow["PartCount"] = "0";
+
+                            Table.Rows.Add(newRow);
+                        }
+                    }
+                }
+
+                if (Table.Rows.Count > 0)
+                {
+                    string gcmc = new T_SingleProject_BLL().GetModel(Common.ConvertEx.ToInt(SingleProjectID)).gcmc;
+                    StringBuilder strBuilder = new StringBuilder();
+                    strBuilder.Append("<table width=\"99%\" border=\"0\" align=\"center\" cellpadding=\"3\" cellspacing=\"1\">");
+                    //strBuilder.Append("  <tr>");
+                    //strBuilder.Append("    <td  class=\"left_title_3 promise\" colspan=\"3\">工程名称:" + gcmc + "</td>");
+                    //strBuilder.Append("  </tr>");
+
+                    for (int i = 0; i < Table.Rows.Count; i++)
+                    {
+                        int PerCent = 0;
+                        int StrDsPartAll = Common.ConvertEx.ToInt(Table.Rows[i]["PartCount"]);
+                        int StrAllCount = Common.ConvertEx.ToInt(Table.Rows[i]["AllCount"]);
+                        string StyleImg = "display:none;";
+
+                        if (StrDsPartAll > 0 && StrAllCount > 0)
+                        {
+                            PerCent = Common.ConvertEx.ToInt(Common.ConvertEx.ToDouble(100 * StrDsPartAll / StrAllCount));
+                            StyleImg = "height:22px;width:" + PerCent.ToString() + "%;";
+                        }
+
+                        strBuilder.Append("  <tr>");
+                        strBuilder.Append("    <td class=\"left_title_1 promiseLabelExt\">" + Common.ConvertEx.ToString(Table.Rows[i]["Title"]) + "</td>");
+                        strBuilder.Append("    <td class=\"left_title_2\"><img src=\"../Images/3.png\" style=\"" + StyleImg + "\" border=\"0\">&nbsp;</td>");
+                        strBuilder.Append("    <td style=\"text-align:center;width:50px;background-color:#FFFFFF;\">" + PerCent.ToString() + "%</td>");
+                        strBuilder.Append("  </tr>");
+                    }
+                    strBuilder.Append("</table>");
+                    ReturnValue = strBuilder.ToString();
+                }
+
+                return ReturnValue;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private int GetAllCount(DataSet ds, string PID, bool isOK)
+        {
+            int iOut = 0;
+            DataRow[] dtRow = ds.Tables[0].Select("PID=" + PID);
+
+            foreach (DataRow dr in dtRow)
+            {
+                if (Common.ConvertEx.ToBool(dr["IsFolder"].ToString()))
+                {
+                    iOut += GetAllCount(ds, Common.ConvertEx.ToString(dr["recID"]), isOK);
+                }
+                else
+                {
+                    if (isOK == true && dr["Status"].ToString() != "0")
+                    {
+                        iOut++;
+                    }
+                    else if (isOK == false)
+                    {
+                        iOut++;
+                    }
+                }
+            }
+
+            return iOut;
+        }
+    }
+}

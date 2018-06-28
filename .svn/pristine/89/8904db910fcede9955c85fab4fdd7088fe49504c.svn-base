@@ -1,0 +1,155 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics;
+using System.Reflection;
+//using Microsoft.Office.Interop.Excel;
+//using Microsoft.Office.Core;
+
+namespace DigiPower.Onlinecol.Standard.Common
+{
+    public class ExcelOp
+    {
+        #region 导出datatable到excel文件（表格的中文标题要构造到datatable的第一行）
+        /// <summary>
+        /// 导出datatable到excel文件（表格的中文标题要构造到datatable的第一行）
+        /// </summary>
+        /// <param name="dt">要导出的datatable</param>
+        /// <param name="filePath">excel文件的物理路径</param>
+        /// <param name="title">excel表的标题</param>
+        /// /// <param name="ifNo">是否生成序号列</param>
+        /// <returns>返回导出结果，成功返回空字符串，否则返回失败原因。</returns>
+        public string exportToExcel(System.Data.DataTable dt, string filePath, string title,bool ifNo)
+        {
+            //检查进程中是否有excel
+            List<Process> excelProcesses = new List<Process>();
+            excelProcesses = GetExcelProcesses();
+            if (excelProcesses.Count > 0)
+                return "请将其他的Excel关闭再进行导出！";
+
+            Excel.Application myExcel = new Excel.Application();
+            Excel.Workbook workBook = myExcel.Workbooks.Add(Missing.Value);
+            Excel.Worksheet xlsSheet = (Excel.Worksheet)workBook.Worksheets[1];
+            xlsSheet.Name = title;
+            myExcel.Visible = false;
+            int iRows = dt.Rows.Count;
+            int iCols = dt.Columns.Count;
+            Excel.Range rangeTitle = null;
+            if(ifNo)
+                rangeTitle= xlsSheet.get_Range(xlsSheet.Cells[1,1],xlsSheet.Cells[1,iCols+1]);
+            else
+                rangeTitle = xlsSheet.get_Range(xlsSheet.Cells[1,1],xlsSheet.Cells[1,iCols]);
+            rangeTitle.MergeCells = true;
+            rangeTitle.Font.Size = 30;
+            rangeTitle.Font.Bold = true;
+            rangeTitle.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            rangeTitle.Value2 = title;
+            rangeTitle.Columns.AutoFit();
+
+            Excel.Range range = xlsSheet.get_Range(xlsSheet.Cells[2, 1], xlsSheet.Cells[iRows + 1, iCols + 1]);
+            object[,] data = new object[iRows, iCols];
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    if (ifNo)
+                    {
+                        if (j == 0)
+                            if (i == 0)
+                                data[i, j] = "序号";
+                            else
+                                data[i, j] = Convert.ToString(i);
+                        else
+                            data[i, j] = dt.Rows[i][j].ToString();
+                    }
+                    else
+                        data[i, j] = dt.Rows[i][j].ToString();
+                }
+            }
+            range.Value2 = data;
+            //设置单元格样式
+            range.Font.Bold = false;
+            range.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            range.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+            range.Columns.AutoFit();
+            //第一行加粗
+            xlsSheet.get_Range(xlsSheet.Cells[2, 1], xlsSheet.Cells[2, iCols + 1]).Font.Bold = true;
+            ////设置主标题单元格的样式
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).MergeCells = true;//合并单元格
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).HorizontalAlignment = XlHAlign.xlHAlignCenter;//水平对齐方式
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).VerticalAlignment = XlVAlign.xlVAlignBottom;//垂直对齐方式
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).Font.Bold = true;//字体加粗
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).Font.ColorIndex = 0;//字体颜色
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).Font.Italic = true;//是否斜体
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).Font.Size = 22;//字体大小
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).Borders.LineStyle = XlLineStyle.xlContinuous;//边框样式
+            //xlSheet.get_Range(xlSheet.Cells[1, 1], xlSheet.Cells[1, 10]).RowHeight = 33.75;//行高
+            ////设置主标题单元格的样式
+
+
+            try
+            {
+                //删除旧文件
+                if(System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                myExcel.ActiveWorkbook.SaveAs(filePath,Excel.XlFileFormat.xlExcel7, null, null, false, false, Excel.XlSaveAsAccessMode.xlNoChange, null, null, Missing.Value, Missing.Value, Missing.Value);
+                myExcel.Quit();
+                return "";
+            }
+            catch (Exception ee)
+            {
+                return ee.ToString();
+            }
+            finally
+            {
+                //释放资源
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(range);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlsSheet);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(workBook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(myExcel);
+                GC.Collect();
+                range = null;
+                xlsSheet = null;
+                workBook = null;
+                myExcel = null;
+                //关闭所有excel进程
+                //KillAllExcel();
+            }
+        }
+        #endregion
+
+        #region 获得所有的Excel进程
+        /// <summary>
+        /// 获得所有的Excel进程
+        /// </summary>
+        /// <returns>所有的Excel进程</returns>
+        private List<Process> GetExcelProcesses()
+        {
+            Process[] processes = Process.GetProcesses();
+            List<Process> excelProcesses = new List<Process>();
+            for (int i = 0; i < processes.Length; i++)
+            {
+                if (processes[i].ProcessName.ToUpper() == "EXCEL")
+                    excelProcesses.Add(processes[i]);
+            }
+            return excelProcesses;
+        }
+        #endregion
+
+        #region 关闭所有excel进程
+        /// <summary>
+        /// 关闭所有excel进程
+        /// </summary>
+        private void KillAllExcel()
+        {
+            List<Process> excelProcess = GetExcelProcesses();
+            for (int i = 0; i < excelProcess.Count; i++)
+            {
+                excelProcess[i].Kill();
+            }
+        }
+        #endregion
+    }
+}

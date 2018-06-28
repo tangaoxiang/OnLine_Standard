@@ -1,0 +1,159 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="SmArchiveList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SuppleMent.SmArchiveList" Title="问题列表" %>
+
+<%@ Register Src="~/CommonCtrl/ctrlJSCheckInfo.ascx" TagName="ctrlJSCheckInfo" TagPrefix="uc3" %>
+<%@ Register Src="~/CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%--<%@ Register Src="../CommonCtrl/ctrlSiteMap.ascx" TagName="ctrlSiteMap" TagPrefix="uc2" %>--%>
+<%@ Register Src="~/CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<%@ Register Src="~/CommonCtrl/ctrlDropDownSingleProject.ascx" TagName="ctrlDropDownSingleProject"
+    TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+
+    <script language="javascript" type="text/javascript">
+        //获取工程ID 
+        function GetSingleProjectID() {
+            return document.getElementById("HidProjectID").value;
+        }
+
+        //获取案卷ID 
+        function GetArchiveID() {
+            return document.getElementById("HidArchiveID").value;
+        }
+
+        //获取GridView对象
+        function GetGridviewTable() {
+            return document.getElementById('<%= ctrlGridEx1.ClientID%>_SmartGridView1')
+        }
+
+        //弹出窗体
+        function JonOpen(url, width, height) {
+            var top = (window.screen.height - height) / 2;
+            var left = (window.screen.width - width) / 2;
+            window.open(url, '', 'top=' + top + ',left=' + left + ' ,width=' + width + ',height=' + height + ',location=no,menubar=no,resizable=no,toolbar=no,titlebar=no,status=no,scrollbars=yes');
+        }
+
+        function WinOpenAll(types, width, height) {
+            if (ChCommBox_JS()) {
+                var strURL = "";
+                var ArchiveID = GetArchiveID();
+                var SingleProjectID = GetSingleProjectID();
+                if (types == 1) {//案卷信息修改
+                    strURL = "../WorkFlow/ArchiveAdd.aspx?Action=edit&sqlwhere=&PageIndex=0&ID=" + ArchiveID + "&SuppleMent=SuppleMent";
+                    JonOpen(strURL, width, height);
+                } else if (types == 2) {//工程信息修改
+                    var protype = SmArchiveList.getProjectType(SingleProjectID).value;
+                    if (protype != "") {
+                        //var url = "/companymanage/companyreg3_" + protype + "edit.aspx?action=edit&ID=" + SingleProjectID + "&SuppleMent=SuppleMent";
+                        var url = "/companymanage/companyreg3_" +
+                            getFileTypeForProjectType(protype) + "edit.aspx?action=edit&ID=" +
+                            SingleProjectID + "&ProjectType=" + protype + "&SuppleMent=SuppleMent";
+                        JonOpen(url, width, height);
+                    }
+                } else if (types == 3) {//补卷
+                    strURL = "SmZJList.aspx?SingleProjectID=" + SingleProjectID + "&SuppleMent=SuppleMent";
+                    JonOpen(strURL, width, height);
+                }
+                return false;
+            } else
+                return false;
+        }
+
+        //选择框
+        function ChCommBox_JS() {
+            var flag = false;
+            var ArchiveID = 0, SingleProjectID = 0;
+
+            var tb = GetGridviewTable();
+            if (tb == null) {
+                alert('没有任何数据可以操作！');
+                return false;
+            }
+            for (var i = 1; i < tb.rows.length; i++) {
+                var ren = tb.rows[i].cells[0].children;
+                if (ren[1].checked) {
+                    flag = true;
+                    ArchiveID = tb.rows[i].cells[6].children[0].value;
+                    SingleProjectID = tb.rows[i].cells[6].children[1].value;
+                    break;
+                }
+            }
+            document.getElementById('HidArchiveID').value = ArchiveID;
+            document.getElementById('HidProjectID').value = SingleProjectID;
+            if (!flag) {
+                alert('必须选择一项才可以操作！');
+                return flag;
+            } else {
+                return true;
+            }
+        }
+
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <input type="hidden" id="HidProjectID" />
+    <input type="hidden" id="HidArchiveID" />
+
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td>
+                            <div align="right">
+                                &nbsp;
+                                <asp:Button ID="btnUp" runat="server" CssClass="button" Text="上移" OnClick="btnUp_Click" Width="50px" />
+                                <asp:Button ID="btnDown" runat="server" CssClass="button" Text="下移" OnClick="btnDown_Click" Width="50px" />
+                                <asp:Button ID="btnSuppleMent" runat="server" CssClass="button" Text="补卷" OnClientClick="return WinOpenAll(3,1024,620)" Width="50px" />
+                                <asp:Button ID="btnEdit_Archive" runat="server" CssClass="button" Text="案卷信息修改" OnClientClick="return WinOpenAll(1,600,400)" Width="80px" />
+                                <asp:Button ID="btnEdit_SingleProject" runat="server" CssClass="button" Text="工程信息修改" OnClientClick="return WinOpenAll(2,1100,620)" Width="80px" />
+                            </div>
+                        </td>
+                        <td width="30" style="text-align: right;">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="99%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table style="text-align: left; width: 100%">
+                                    <tr>
+                                        <td>
+                                            <label runat="server" id="lblSingleProject">
+                                                &nbsp;工程名称：</label>
+                                            <%--<uc2:ctrlDropDownSingleProject ID="SingleProjectID" runat="server" />--%>
+                                            <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+                                            <label runat="server" id="Label1">
+                                                &nbsp;工程编号：</label>
+
+                                            <asp:TextBox ID="txtGCBH" runat="server"></asp:TextBox>
+                                            <label>
+                                                &nbsp;案卷题名：</label>
+                                            <asp:TextBox ID="txtTitle" runat="server" Width="105px"></asp:TextBox>
+                                            &nbsp;<asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text="查询" Width="50" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;">
+                    <uc1:ctrlGridEx ID="ctrlGridEx1" runat="server" SelCheckType="Radio" />
+                </div>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

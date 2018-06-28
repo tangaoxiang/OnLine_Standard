@@ -1,0 +1,156 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="SearchFieldOrParaAdd.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.SearchFieldOrParaAdd" Title="查询条件新增或修改" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            text-align: left;
+            height: 23px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif"
+                colspan="3">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; background-color: White;" colspan="3">
+                <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="0"
+                    cellspacing="1" style="margin-top: 4px; margin-bottom: 4px; background-color: #c1d4da;">
+                    <tr>
+                        <td width="130px" class="tdCSS">
+                            数据表：
+                        </td>
+                        <td width="35%" class="tdCSS">
+                            &nbsp;
+                            <asp:DropDownList ID="TableName" runat="server" Width="154px" AutoPostBack="True"
+                                OnSelectedIndexChanged="TableName_SelectedIndexChanged">
+                            </asp:DropDownList>
+                        </td>
+                        <td width="130px" class="tdCSS">
+                            数据字段：
+                        </td>
+                        <td width="35%" class="tdCSS">
+                            &nbsp;
+                            <asp:DropDownList ID="FieldName" runat="server" Width="154px">
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS">
+                            输入类型：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <asp:DropDownList ID="ParaType" runat="server" Width="154px">
+                                <asp:ListItem Value="TextBox">文本框</asp:ListItem>
+                                <asp:ListItem Value="DateTime">日期选择框</asp:ListItem>
+                                <asp:ListItem Value="ComboBox">下拉框</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td class="tdCSS">
+                            比较方式：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <asp:DropDownList ID="CompareType" runat="server" Width="154px">
+                                <asp:ListItem Value="=">等于</asp:ListItem>
+                                <asp:ListItem Value="LIKE">包含</asp:ListItem>
+                                <asp:ListItem Value='&gt;='>大于</asp:ListItem>
+                                <asp:ListItem Value='&lt;='>小于</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS">
+                            标签名称 ：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="LabelName" runat="server" CssClass="input" canEmpty="false"
+                                MaxLength="50" />
+                        </td>
+                        <td class="tdCSS">
+                            显示宽度：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="ControlWidth" runat="server" CssClass="input" mode="Int" Text="110" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS">
+                            顺序号：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="OrderId" runat="server" CssClass="input" mode="Int" canEmpty="false"
+                                Text="1" />
+                        </td>
+                        <td class="tdCSS">
+                            下拉数据源：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="SourceSql" runat="server" CssClass="input" width="230" MaxLength="200" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS">
+                            默认值：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="DefaultValue" runat="server" CssClass="input" MaxLength="50" />
+                        </td>
+                        <td class="tdCSS">
+                            是否换行：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <asp:CheckBox ID="chk_Line" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS">
+                            默认为字典：
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                            <asp:CheckBox ID="chk_IsDictionary" runat="server" />
+                        </td>
+                        <td class="tdCSS">
+                            
+                        </td>
+                        <td class="tdCSS">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; background-color: White;" colspan="3">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White; text-align: center;"
+                colspan="3">
+                <asp:Button runat="server" ID="btnBack" Text=" 返回 " Width="52px" class="SelectButton"
+                    OnClick="btnBack_Click" />
+                &nbsp;
+                <asp:Button ID="btnAdd0" runat="server" Text=" 保存 " CssClass="SelectButton" Width="62"
+                    OnClick="btnAdd_Click" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

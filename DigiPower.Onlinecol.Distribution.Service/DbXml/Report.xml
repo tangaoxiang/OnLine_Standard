@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <OperationSql>
+    <![CDATA[
+      SELECT ROW_NUMBER() OVER (ORDER BY LogID)as '序号',UserName as '操作人' ,CreateIP as'操作IP',CreateDate as '发生时间',
+      (CASE Description WHEN 'ErrorBug' THEN '系统BUG' WHEN 'LogIn' THEN '用户登录' WHEN 'LogOut' THEN '用户登录' END)as '操作类型',
+      ErrorMsg as '操作详情'		 
+      FROM  T_OperationLog  where {0} order by LogID asc 
+    ]]>
+  </OperationSql>
+</SqlList>

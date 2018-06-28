@@ -1,0 +1,331 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="MyTaskList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.MyTaskList" Title="我的任务" %>
+
+<%@ Register Assembly="AspNetPager" Namespace="Wuqi.Webdiyer" TagPrefix="webdiyer" %>
+<%@ Register Src="CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc3" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script type="text/javascript">
+        function ViewProject(types) {//查看工程信息
+            if (isCheck()) {
+                var keyList = getKeyList();
+                if (types == 1) {
+                  //  var strURL = "../companymanage/companyreg3_" + keyList[4] + "edit.aspx?action=view&SingleProjectID=" + keyList[0];
+                    var strURL = "../companymanage/companyreg3_" +
+                         getFileTypeForProjectType(keyList[4]) + "edit.aspx?action=view&ProjectType=" + keyList[4] + "&SingleProjectID=" + keyList[0];
+                    openCommonWindowScroll(strURL, 960, 710);
+                } else if (types == 2) {
+                    var strURL = "../WorkFlow/QuestionList.aspx?strWhere=SingleProjectID=" + keyList[0] + "";
+                    openCommonWindowScroll(strURL, 960, 580);
+                }
+            }
+        }
+        function SubMitProject() {//提交
+            if (isCheck()) {
+                if (confirm('确定提交吗？')) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        alert('请先受理！');
+                    } else {
+                        var len = MyTaskList.SubMitProject(keyList[0], keyList[1], keyList[3], "<%=workFlowCode%>").value;
+                        if (len == rtnObject.OK) {
+                            alert('已提交到下一流程!');
+                            window.location.href = 'MyTaskList.aspx?WorkFlowID=' + keyList[1];
+                        } else {
+                            alert(len);
+                        }
+                    }
+                }
+            }
+        }
+        function AcceptProject() {//受理
+            if (isCheck()) {
+                if (confirm('确定现在受理吗？')) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (recv) {
+                        alert('工程已被受理状态，不可以重复受理！');
+                    } else {
+                        var len = MyTaskList.AcceptProject(keyList[0], keyList[3]).value;
+                        if (len == rtnObject.OK) {
+                            window.location.href = 'MyTaskList.aspx?WorkFlowID=' + keyList[1];
+                        } else {
+                            alert('对不起，当前选项不可以受理。可能是已被受理过！');
+                        }
+                    }
+                };
+            }
+        }
+        function ReturnProject() {//退回
+            if (isCheck()) {
+                if (confirm('确定退回吗？')) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        alert('请先受理！');
+                    } else {
+                        var len = MyTaskList.ReturnProject(keyList[0],"<%=workFlowCode%>").value;
+                        if (len == rtnObject.OK) {
+                            window.location.href = 'MyTaskList.aspx?WorkFlowID=' + keyList[1];
+                        } else {
+                            alert('退回失败，请检查数据！');
+                        }
+                    }
+                }
+            }
+        }
+        function btnRwfp() {//报建确认
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var query = "gcmc=" + $("#ctl00_ContentPlaceHolder1_gcmc").val() + "&gcbm=" + $("#ctl00_ContentPlaceHolder1_gcbm").val();
+                    var strURL = "../WorkFlow/rwfp.aspx?" + query + "&SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1] + "";
+                    window.location.href = strURL;
+                }
+            }
+        }
+        function btnWJDJ() {//文件登记
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var strURL = "../WorkFlow/wjdj.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1] + "";
+                    window.location.href = strURL;
+                }
+            }
+        }
+
+        function btnSoundImage() {//声像管理
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var strUrl = '../WorkFlow/ImageWjdj.aspx?SingleProjectId=' + keyList[0] + "&WorkFlowID=" + keyList[1] + "";
+                    window.location.href = strUrl;
+                }
+            }
+        }
+
+        function btnZXYYS() {//在线预验收
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var strURL = "../WorkFlow/zxyys.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                    window.location.href = strURL;
+                }
+            }
+        }
+        function btnDHZJ() {//接收整理
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var strURL = "../WorkFlow/ZJList.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                    window.location.href = strURL;
+                }
+            }
+        }
+        function btnCKJS() {//窗口接收
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    alert('请先受理！');
+                } else {
+                    var strURL = "../WorkFlow/WFArchiveList.aspx?WorkFlowCode=<%= workFlowCode%>&SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                        window.location.href = strURL;
+                    }
+                }
+            }
+            function btnYwsh() {//业务审核
+                if (isCheck()) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        alert('请先受理！');
+                    } else {
+                        var strURL = "../WorkFlow/WFArchiveList.aspx?WorkFlowCode=<%= workFlowCode%>&SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                        window.location.href = strURL;
+                    }
+                }
+            }
+            //领导签字
+            function btnLDQZ() {
+                if (isCheck()) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        alert('请先受理！');
+                    } else {
+                        var strURL = "../WorkFlow/InsideRemove.aspx?WorkFlowCode=<%= workFlowCode%>&SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                        window.location.href = strURL;
+                    }
+                }
+            }
+            //发证入库
+            function btnFZRK() {
+                if (isCheck()) {
+                    var keyList = getKeyList();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        alert('请先受理！');
+                    } else {
+                        var strURL = "../WorkFlow/InsideRemove.aspx?WorkFlowCode=<%= workFlowCode%>&SingleProjectID=" + keyList[0] + "&WorkFlowID=" + keyList[1];
+                        window.location.href = strURL;
+                    }
+                }
+            }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <input type="hidden" id="HidSingleProjectID" name="HidSingleProjectID" />
+    <input type="hidden" id="HidProjectType" name="HidProjectType" />
+
+    <div style="margin: 0px 2px 0px 0px; padding-left: 0px; border: solid 0px; padding-top: 4px;" align="center">
+        <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+            <tr>
+                <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                        <tr>
+                            <td width="10px">&nbsp;&nbsp;&nbsp;
+                            </td>
+                            <td>
+                                <div align="left">
+
+                                    <asp:Button ID="btnSingleProjectInfo" runat="server" OnClientClick="ViewProject(1);return false;"
+                                        CssClass="button" Text="工程信息" />
+                                    <asp:Button ID="btnQuestion" runat="server" CssClass="button" OnClientClick="ViewProject(2);return false;" Text="在线提问" />
+                                </div>
+                            </td>
+                            <td>
+                                <table width="100%" border="0" cellpadding="0" cellspacing="0" id="btnList" runat="server">
+                                    <tr>
+                                        <td align="right" style="text-align: right">
+                                            <asp:Button ID="btnUpdate001" runat="server" CssClass="button"
+                                                OnClientClick="SubMitProject();return false;" Text=" 提交 " />
+                                            <asp:Button ID="btnUpdate002" runat="server" CssClass="button" Text=" 受理 "
+                                                OnClientClick="AcceptProject();return false;" />
+                                            <asp:Button ID="btnApprove001" runat="server" CssClass="button"
+                                                OnClientClick="ReturnProject();return false;" Text=" 退回 " />
+                                            <asp:Button ID="btn1" runat="server" OnClientClick="btnRwfp();return false;"
+                                                CssClass="button" Visible="false" Text="报建确认" />
+                                            <asp:Button ID="btn2" runat="server" CssClass="button" Visible="false"
+                                                OnClientClick="btnWJDJ();return false;" Text="文件登记" />
+                                            <asp:Button ID="btnSoundImage" runat="server" CssClass="button" Visible="false"
+                                                OnClientClick="btnSoundImage();return false;" Text="声像管理" />
+                                            <asp:Button ID="btn3" runat="server" CssClass="button" Visible="false"
+                                                Text="在线预验收" OnClientClick="btnZXYYS();return false;" />
+                                            <asp:Button ID="btnEntryCheck" runat="server" CssClass="button"
+                                                Visible="false" Text="业务审核" />
+                                            <asp:Button ID="btn4" runat="server" CssClass="button" Visible="false"
+                                                Text="接收整理" OnClientClick="btnDHZJ();return false;" />
+                                            <asp:Button ID="btn5" runat="server" CssClass="button" Visible="false"
+                                                Text="窗口接收" OnClientClick="btnCKJS();return false;" />
+                                            <asp:Button ID="btn6" runat="server" CssClass="button" Visible="false"
+                                                Text="业务审核" OnClientClick="btnYwsh();return false;" />
+                                            <asp:Button ID="btn7" runat="server" CssClass="button"
+                                                Visible="false" Text="审   批" OnClientClick="btnLDQZ();return false;" />
+                                            <asp:Button ID="btn8" runat="server" CssClass="button"
+                                                Visible="false" Text="入   库" OnClientClick="btnFZRK();return false;" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td width="30" align="right">
+                                <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#cbdcec">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="100%" class="STYLE1">
+                                <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                    cellpadding="0">
+                                    <table style="text-align: left; width: 100%">
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    工程名称：</label><asp:TextBox ID="gcmc" runat="server" CssClass="SelectText"></asp:TextBox>
+                                                <label>
+                                                    &nbsp;工程编号：</label><asp:TextBox ID="gcbm" runat="server" CssClass="SelectText"></asp:TextBox>
+                                                &nbsp;<asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                    Text=" 查询 " />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </asp:Panel>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                        <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False" OnRowDataBound="gvData_RowDataBound">
+                            <Columns>
+                                <asp:TemplateField HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1">
+                                    <ItemTemplate>
+                                        <input type="checkbox" name="checkOne" onclick="selectOne(this)" value='<%# Eval("SingleProjectID")%>,
+                                           <%= workFlowID.Trim()%> ,<%# Eval("SubmitStatus")%>,<%# Eval("WorkFlowDefineID")%>,<%# Eval("ProjectType")%>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField HeaderText="项目类型" DataField="ProjectTypeName"
+                                    ItemStyle-Width="90px" HeaderStyle-Width="90px" />
+                                <asp:BoundField HeaderText="工程名称" DataField="gcmc" />
+                                <asp:TemplateField HeaderText="工程编号" ItemStyle-Width="86px"
+                                    ItemStyle-HorizontalAlign="Justify" HeaderStyle-Width="86px">
+                                    <ItemTemplate>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField HeaderText="工程地址" DataField="gcdd" />
+                                <asp:BoundField HeaderText="规划许可证号" DataField="ghxkzh" />
+                                <asp:BoundField HeaderText="施工许可证号" DataField="sgxkzh" />
+                                <asp:TemplateField HeaderText="受理状态" HeaderStyle-Width="60px">
+                                    <ItemTemplate>
+                                        <%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(DigiPower.Onlinecol.Standard.Common.ConvertEx.ToBool(Eval("SubmitStatus")))%>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="最近受理时间" HeaderStyle-Width="80px">
+                                    <ItemTemplate>
+                                        <%# Eval("SubmitStatus").ToString()!="2"?"":DigiPower.Onlinecol.Standard.Common.ConvertEx.ToDate(Eval("RecvDateTime").ToString()).ToString("yyyy-MM-dd")%>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField HeaderText="状态" HeaderStyle-Width="40px" />
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                    <webdiyer:aspnetpager id="AspNetPager" runat="server" pagingbuttonspacing="8px"
+                        onpagechanged="AspNetPager_PageChanged" showcustominfosection="left" custominfostyle="text-align:left;"
+                        firstpagetext="首页" lastpagetext="尾页" nextpagetext="下一页" prevpagetext="上一页" pageindexboxstyle="text-align:right;"
+                      CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                        urlpaging="false" width="100%" layouttype="Table" shownavigationtooltip="True"
+                        showpageindex="False" horizontalalign="Right" pageindexboxtype="TextBox" showpageindexbox="Always" submitbuttontext="跳转" textafterpageindexbox="页" textbeforepageindexbox="转到">
+                    </webdiyer:aspnetpager>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <br />
+</asp:Content>

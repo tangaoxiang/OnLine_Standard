@@ -1,0 +1,425 @@
+﻿using System;
+using System.Collections;
+using System.Data;
+using System.Web;
+using System.Web.Services;
+using System.Web.Services.Protocols;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections.Generic;
+using System.Web.SessionState;
+using System.Reflection;
+using System.Text;
+
+using System.Configuration;
+using System.IO;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+
+    public class RequestHandler : IHttpHandler, IRequiresSessionState
+    {
+        public void ProcessRequest(HttpContext context)
+        {
+            string FileType = DNTRequest.GetQueryString("FileType");
+            string ReturnValue = "";
+            switch (FileType)
+            {
+                //case "login":   //登录
+                //    ReturnValue = GetUserInfo(DNTRequest.GetQueryString("UserName"), DNTRequest.GetQueryString("Pwd"), context);
+                //    break;
+                case "cellFile"://获取华表标注信息
+                    ReturnValue = GetFileValue(DNTRequest.GetQueryString("StrforMat"), DNTRequest.GetQueryString("keyValue"), context);
+                    break;
+                case "MergerPDF"://保存华表并合并PDF    
+                    int FileListID = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("FileListID"));
+                    int ArchiveListCellRptID = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("ArchiveListCellRptID"));
+                    //string OriPath = DNTRequest.GetQueryString("OriPath");
+                    //string OriFile = DNTRequest.GetQueryString("OriFile");
+                    string NewCellFilePath = DNTRequest.GetQueryString("NewCellFilePath");
+
+                    //string SinglePDFPath = DNTRequest.GetQueryString("SinglePDFPath");
+                    //string MergePDFPath = DNTRequest.GetQueryString("MergePDFPath");
+                    //string PDFT_Archiveame = DNTRequest.GetQueryString("PDFT_Archiveame");
+                    //string SingleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+
+                    BLL.T_FileList_BLL fileListBLL = new T_FileList_BLL();
+                    Model.T_FileList_MDL fileMDL = fileListBLL.GetModel(FileListID);
+
+                    string cellAbsPath = context.Server.MapPath(".");//当前绝对目录
+                    //不直接pdf了，留给批量去转
+                    ReturnValue = ToAndMergePDF(fileMDL.SingleProjectID.ToString(), FileListID,
+                        ArchiveListCellRptID, NewCellFilePath, cellAbsPath);
+                    break;
+                case "GetFileToArchive"://获取案卷下的所有文件
+                    ReturnValue = GetFileToArchive(DNTRequest.GetQueryString("ArchiveID"));
+                    break;
+                case "FileUpload":
+                    ReturnValue = UploadFile(DNTRequest.GetQueryString("fileName"), DNTRequest.GetQueryString("singleProjectID"));
+                    break;  
+
+                default:
+                    break;
+            }
+            context.Response.Write(ReturnValue);
+        }
+
+        public string UploadFile(string filename, string singleProjectID)
+        {
+            string msg = string.Empty;
+            try
+            {
+                using (FileStream inputStram = System.IO.File.Create(Common.Common.EFileStartPath + "\\" + singleProjectID + "\\MPDF\\" + filename))
+                {
+                    SaveFile(HttpContext.Current.Request.InputStream, inputStram);
+                }
+                msg = "success";
+            }
+            catch (Exception ex)
+            {
+                msg = "Error:" + ex.Message;
+            }
+            return msg;
+        }
+
+        private void SaveFile(Stream stream, FileStream inputStream)
+        {
+            int bufSize = 1024;
+            int byteGet = 0;
+            byte[] buf = new byte[bufSize];
+            while ((byteGet = stream.Read(buf, 0, bufSize)) > 0)
+            {
+                inputStream.Write(buf, 0, byteGet);
+            }
+        }    
+
+        #region 加载华表时,获取其表格的标注对应的数据库内容
+        /// <summary>
+        /// 加载华表时，获取其表格的标注对应的数据库内容
+        /// </summary>
+        /// <param name="fileName">华表标注格式(1，ProjectName)</param>
+        /// <param name="keyValue">查询条件(gcbm='T100')</param>
+        /// <returns></returns>
+        public string GetFileValue(string forMat, string keyValue, HttpContext context)
+        {
+            string[] strTemp = forMat.Split(new Char[] { ',' }, StringSplitOptions.None);
+            string fileName = Common.ConvertEx.ToString(strTemp[1]);
+            int flagIndex = Common.ConvertEx.ToInt(strTemp[0]);
+
+
+            fileName = GetFileName(fileName);
+
+            //keyValue=SingleProjectID=31|CompanyID=274|ConstructionProjectID=28
+            string[] strKeyValueTemp = keyValue.Split(new Char[] { '|' }, StringSplitOptions.None);
+
+            string ReturnValue = "";
+            if (flagIndex == 1)      //工程信息
+            {
+                List<T_SingleProject_MDL> spMdl = null;
+                if (context.Session["TempSingleProject"] == null)
+                {
+                    spMdl = new T_SingleProject_BLL().GetModelList(strKeyValueTemp[0]);
+                    context.Session["TempSingleProject"] = spMdl;
+                }
+                else
+                {
+                    spMdl = context.Session["TempSingleProject"] as List<T_SingleProject_MDL>;
+                }
+
+                if (spMdl != null && spMdl.Count > 0)
+                {
+                    PropertyInfo[] objPropertyInfo = spMdl[0].GetType().GetProperties(); //获取工程其所有属性集合
+                    foreach (PropertyInfo info in objPropertyInfo)                       //遍历工程对象的属性集合
+                    {
+                        if (fileName.Length > 0 && String.Compare(info.Name, fileName) == 0)//通过传入fileName与属性集合比较
+                        {
+                            ReturnValue = Common.ConvertEx.ToString(info.GetValue(spMdl[0], null));//得出其属性所对应的值
+                            break;
+                        }
+                    }
+
+                    if (ReturnValue.Trim().Length == 0)
+                    {
+                        List<T_SystemInfo_MDL> ltInfo = new T_SystemInfo_BLL().GetModelList("SystemInfoCode like '%" + forMat + "%'");
+                        if (ltInfo.Count > 0)
+                        {
+                            fileName = ltInfo[0].SubType;
+                            foreach (PropertyInfo info in objPropertyInfo)       //遍历对象的属性集合
+                            {
+                                if (fileName.Length > 0 && String.Compare(info.Name, fileName) == 0)//通过传入fileName与属性集合比较
+                                {
+                                    ReturnValue = Common.ConvertEx.ToString(info.GetValue(spMdl[0], null));//得出其属性所对应的值
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (flagIndex == 8) //文件附件(单位签章)
+            {
+                List<T_FileAttach_MDL> ftMdl = new T_FileAttach_BLL().GetModelList("Flag='SignetType' and " + strKeyValueTemp[1].Replace("CompanyID", "PriKeyValue") + " and AttachCode like '%" + forMat + "%'");
+                if (ftMdl.Count > 0)
+                {
+                    ReturnValue = HttpContext.Current.Server.MapPath(ftMdl[0].AttachPath);//获取签章路径
+                }
+            }
+
+            return ReturnValue;
+        }
+        #endregion
+
+        #region 保存华表并合并PDF
+        /// <summary>
+        /// 保存华表并合并PDF
+        /// </summary>
+        /// <param name="FileListID">归档目录ID</param>
+        /// <param name="ArchiveListCellRptID">电子文件ID</param>
+        /// <param name="OriFilePath">原始文件路径</param>
+        /// <param name="SinglePDFPath">单个PDF路径</param>
+        /// <param name="MergePDFPath">合并后的PDF路径</param>
+        /// <param name="PDFT_Archiveame">单体PDF的完整路径</param>
+        /// <returns></returns>
+        //public string MergePDF(string SingleProjectID, int FileListID, int ArchiveListCellRptID, string OriFilePath, string SinglePDFPath, string MergePDFPath, string PDFT_Archiveame)
+        public string ToAndMergePDF(string SingleProjectID, int FileListID, int ArchiveListCellRptID, string OriFile, string cellAbsPath)
+        {
+            //try
+            {
+                //string EFileStartPath = Common.Common.EFileStartPath;                
+                //string SinglePDFPath = SingleProjectID + "\\PDF\\" + Guid.NewGuid() + ".PDF";
+                T_EFile_BLL efBll = new T_EFile_BLL();
+                T_EFile_MDL efMdl = efBll.GetModel(ArchiveListCellRptID);
+                //if (!String.IsNullOrEmpty(efMdl.PDFFilePath))
+                //{
+                //    SinglePDFPath = efMdl.PDFFilePath;
+                //}
+                //Common.PrintToPDF printToPDFObj = new PrintToPDF(SingleProjectID);
+                //printToPDFObj.PrintPDF(OriFilePath, SinglePDFPath);
+
+                //OriFilePath = OriFilePath.Replace("../", "");
+                //SinglePDFPath = SinglePDFPath.Replace("../", "");
+                //MergePDFPath = MergePDFPath.Replace("../", "");
+                //PDFT_Archiveame = PDFT_Archiveame.Replace("../", "");
+
+                //SinglePDFPath = EFileStartPath + SingleProjectID + "\\PDF\\";// +Guid.NewGuid() + ".PDF";
+                //string MergePDFPath = EFileStartPath + SingleProjectID + "\\MPDF\\";// +Guid.NewGuid() + ".PDF";
+
+                //PDFT_Archiveame = SinglePDFPath + Guid.NewGuid() + ".PDF";
+
+                //string NewGUID = Guid.NewGuid().ToString();//获取一个新的GUID
+
+                #region 获取单体PDF的完整路径
+                //Common.PrintToPDF pdfTool = new PrintToPDF(SingleProjectID);
+                //pdfTool.PrintPDF(Common.Common.CellFilePath + OriFile, EFileStartPath + SinglePDFPath);
+
+                //int PDFcount = pdfTool.GetPDFCount(HttpContext.Current.Server.MapPath(PDFT_Archiveame));//返回PDF页数
+                //int PDFcount = pdfTool.GetPDFCount(EFileStartPath + SinglePDFPath);//返回PDF页数
+                int PDFcount = 0;
+                #endregion
+
+                #region 改变电子文件的属性(Status,FilePath,PDFFilePath,PageCounts)
+
+                efMdl.Status = 1;
+                efMdl.FilePath = OriFile;
+                efMdl.PageCounts = PDFcount;
+                //efMdl.PDFFilePath = SinglePDFPath;// PDFT_Archiveame;
+                // efMdl.RootPath = cellAbsPath + "\\";//存起来批量转换用
+
+
+                //jdk0926
+                if (efMdl.RootPath == null || efMdl.RootPath.Length < 1)
+                    efMdl.RootPath = Common.Common.EFileStartPath + "\\";//存起来批量转换用
+
+
+                efBll.Update(efMdl);
+
+                #endregion
+
+                #region 合并PDF
+
+                //ArrayList list = new ArrayList();
+
+                //先合华表，再合上传的文件
+                //BLL.T_EFile_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+                //DataSet ds = bll.GetList("FileListID = " + FileListID + " order by FileType Desc,OrderIndex");//and FileType = 1 
+
+                //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                //{
+                //    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                //    {
+                //        list.Add(ds.Tables[0].Rows[i]["PDFFilePath"].ToString());
+                //    }
+                //}
+
+                //string[] Paths = new string[list.Count];
+                //if (Paths != null && Paths.Length > 0)
+                //{
+                //    for (int i = 0; i < Paths.Length; i++)
+                //    {
+                //        Paths[i] = Common.Common.EFileStartPath + list[i].ToString();
+                //    }
+                //}
+
+                Model.T_FileList_MDL dmodel = new DigiPower.Onlinecol.Standard.Model.T_FileList_MDL();
+                BLL.T_FileList_BLL dbll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+                dmodel = dbll.GetModel(Common.ConvertEx.ToInt(FileListID));
+                //等计划转换它
+                dmodel.CONVERT_FLAG = false;
+                dmodel.RootPath = Common.Common.EFileStartPath;
+                dbll.Update(dmodel);
+
+                //合并新文件到合并临时目录
+
+                //string MergePDFPath = "";
+                //if (!String.IsNullOrEmpty(dmodel.PDFFilePath))
+                //{
+                //    MergePDFPath = dmodel.PDFFilePath;
+                //}
+                //else
+                //{
+                //    MergePDFPath = SingleProjectID + "\\MPDF\\" + Guid.NewGuid() + ".pdf";
+                //}
+                //pdfTool.MergerPDF(Paths, EFileStartPath + MergePDFPath);
+
+                //更新目录合并PDF信息
+                //dmodel.PDFFilePath = MergePDFPath;// NewGUID + ".pdf";
+                ////dmodel.PagesCount = pdfTool.GetPDFCount(System.Web.HttpContext.Current.Server.MapPath(MergePDFPath) + NewGUID + ".pdf");
+                //dmodel.PagesCount = pdfTool.GetPDFCount(EFileStartPath + dmodel.PDFFilePath);
+                //dbll.Update(dmodel);
+
+                BLL.T_Other_BLL otherBLL = new DigiPower.Onlinecol.Standard.BLL.T_Other_BLL();
+                otherBLL.UpdateArchiveStatus(dmodel.FileListID.ToString(), 10, "0");
+                #endregion
+                return "success";
+            }
+            //catch (Exception ex)
+            //{
+            //    return ex.Message;
+            //    // return "failure";
+            //}
+        }
+        #endregion
+
+        #region 获取案卷下的所有文件
+
+        public string GetFileToArchive(string ArchiveID)
+        {
+            try
+            {
+                StringBuilder sbStr = new StringBuilder();
+
+                string strWhere = "  ArchiveID=" + ArchiveID;
+                List<T_FileList_MDL> lt_FileList = new T_FileList_BLL().GetModelList(strWhere);
+
+                if (lt_FileList.Count > 0)
+                {
+                    sbStr.Append("<table id=\"tb_" + ArchiveID + "\" style=\"width:95%;border-collapse:collapse;\" border=\"1\">");
+
+                    int index = 0;
+                    foreach (T_FileList_MDL flMdl in lt_FileList)
+                    {
+                        string FileListID = flMdl.FileListID.ToString();
+
+                        if (index == 0)
+                        {
+                            sbStr.Append("  <tr style=\"background-color:White;height:25px;\" class=\"Table_Title_tr\">");
+                            sbStr.Append("      <th class=\"Table_Title_tr\" style=\"width:40px;\">");
+                            sbStr.Append("          <input id=\"chk_Head\" value=\"0\" ArchiveID=\"" + ArchiveID + "\" type=\"checkbox\" onclick=\"AllSelect(" + ArchiveID + ",'chk_Head',this)\"");
+                            sbStr.Append("      </th>");
+                            sbStr.Append("      <th>文件名称</th>");
+                            sbStr.Append("      <th>上传页数</th>");
+                            sbStr.Append("      <th>实体页数</th>");
+                            sbStr.Append("  </tr>");
+
+
+                            index = 1;
+                        }
+
+                        sbStr.Append("  <tr style=\"background-color:White;height:25px;\" class=\"gv_table_center\">");
+                        sbStr.Append("      <td class=\"Table_Title_tr\">");
+                        sbStr.Append("          <input type=\"checkbox\" onclick=\"AllSelect(" + ArchiveID + ",'',this)\" FileListID=\"" + FileListID + "\" ArchiveID=\"" + ArchiveID + "\" >");
+                        sbStr.Append("      </td>");
+                        sbStr.Append("      <td>" + flMdl.Title + "</td>");
+                        sbStr.Append("      <td>" + Common.ConvertEx.ToString(flMdl.PagesCount) + "</td>");
+                        sbStr.Append("      <td>" + Common.ConvertEx.ToString(flMdl.ManualCount) + "</td>");
+                        sbStr.Append("  </tr>");
+                    }
+                    sbStr.Append("</table>");
+                }
+                else
+                {
+                    sbStr.Append("<font style='font-size:12px;'>该案卷没有文件!</font>");
+                }
+                return sbStr.ToString();
+            }
+            catch
+            {
+                return "";
+            }
+        }
+        #endregion
+
+        public string GetFileName(string oldFileName)
+        {
+            string value = "";
+            if (oldFileName.Trim().Length > 0)
+            {
+                switch (oldFileName)
+                {
+                    case "ProjectName":
+                        value = "gcmc";
+                        break;
+                    case "area":
+                        value = "jzmj";
+                        break;
+                    case "address":
+                        value = "gcdd";
+                        break;
+                    case "begindate":
+                        value = "kgsj";
+                        break;
+                    case "EndDate":
+                        value = "jgsj";
+                        break;
+                    case "Ghcode":
+                        value = "GHXKZH";
+                        break;
+                    case "Sgcode":
+                        value = "SGXKZH";
+                        break;
+                    case "price":
+                        value = "GCZJ";
+                        break;
+                    case "jsdw_mc":
+                        value = "jsdw";
+                        break;
+                    case "kcdw_mc":
+                        value = "kcdw";
+                        break;
+                    case "sjdw_mc":
+                        value = "sjdw";
+                        break;
+                    case "sgdw_mc":
+                        value = "sgdw";
+                        break;
+                    case "jldw_mc":
+                        value = "jldw";
+                        break;
+                    default:
+                        value = oldFileName;
+                        break;
+                }
+            }
+            return value;
+        }
+
+        public bool IsReusable
+        {
+            get
+            {
+                return false;
+            }
+        }
+    }
+}

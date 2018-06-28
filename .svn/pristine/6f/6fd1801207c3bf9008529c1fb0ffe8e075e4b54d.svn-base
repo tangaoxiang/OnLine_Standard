@@ -1,0 +1,243 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.IO;
+using System.Drawing;
+using System.Web.UI.WebControls;
+using System.Configuration;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public static class SystemSet
+    {
+        /// <summary>
+        /// 档案馆字典ID
+        /// </summary>
+        public static readonly int _ARCHIVE = ConvertEx.ToInt(ConfigurationManager.AppSettings["ARCHIVE"]);
+
+        /// <summary>
+        /// 建设单位字典ID
+        /// </summary>
+        public static readonly int _JSCOMPANYINFO = ConvertEx.ToInt(ConfigurationManager.AppSettings["JSCompanyInfo"]);
+
+        /// <summary>
+        /// 监理单位字典ID
+        /// </summary>
+        public static readonly int _JLCOMPANYINFO = ConvertEx.ToInt(ConfigurationManager.AppSettings["JLCompanyInfo"]);
+
+        /// <summary>
+        /// 施工单位字典ID
+        /// </summary>
+        public static readonly int _SGCOMPANY = ConvertEx.ToInt(ConfigurationManager.AppSettings["SGCompany"]);
+
+        /// <summary>
+        /// 安监单位字典ID
+        /// </summary>
+        public static readonly int _AJCOMPANYINFO = ConvertEx.ToInt(ConfigurationManager.AppSettings["AJCompanyInfo"]);
+
+        /// <summary>
+        /// 质监单位字典ID
+        /// </summary>
+        public static readonly int _ZJCOMPANYINFO = ConvertEx.ToInt(ConfigurationManager.AppSettings["ZJCompanyInfo"]);
+
+        /// <summary>
+        /// 检测单位字典ID
+        /// </summary>
+        public static readonly int _JCCOMPANYINFO = ConvertEx.ToInt(ConfigurationManager.AppSettings["JCCompanyInfo"]);
+
+        /// <summary>
+        /// 工程受理,工作日超时期限
+        /// </summary>
+        public static readonly int _RECTIMEOUTDAYS = ConvertEx.ToInt(ConfigurationManager.AppSettings["RecTimeOutDays"]);
+
+        /// <summary>
+        /// 文件登记上传文件格式
+        /// </summary>
+        public static readonly string _FILELISTFILEEXT = ConfigurationManager.AppSettings["FileListFileExt"].Trim();
+
+        /// <summary>
+        /// 工程入库后能否查看PDF,默认可以
+        /// </summary>
+        public static readonly bool _RKLOOKPDFFLAG = ConvertEx.ToBool(ConfigurationManager.AppSettings["RKLookPDFFlag"]);
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        public static readonly int _PAGESIZE = ConvertEx.ToInt(ConfigurationManager.AppSettings["PageSize"]);
+
+        /// <summary>
+        /// 默认登录密码
+        /// </summary>
+        public static readonly string _DEFAULTPWD = ConfigurationManager.AppSettings["DefaultPwd"].Trim();
+
+        /// <summary>
+        /// 操作成功返回字符串 success
+        /// </summary>
+        public static readonly string _RETURN_SUCCESS_VALUE = "success";
+
+        /// <summary>
+        /// 操作失败返回字符串 failure
+        /// </summary>
+        public static readonly string _RETURN_FAILURE_VALUE = "failure";
+
+        /// <summary>
+        /// 工程登记注册,提示电话
+        /// </summary>
+        public static readonly string _QUICKREGTEL = ConfigurationManager.AppSettings["QuickRegTel"].Trim();
+
+        /// <summary>
+        /// 工程登记注册,提示电话
+        /// </summary>
+        public static readonly string _MENURIGHTCHAR = ConfigurationManager.AppSettings["MenuRightChar"].Trim();
+
+        /// <summary>
+        /// 工程登记注册,提示电话
+        /// </summary>
+        public static readonly string _WORKFLOWRIGHTCHAR = ConfigurationManager.AppSettings["WorkFlowRightChar"].Trim();
+
+        /// <summary>
+        /// 建设单位角色编号
+        /// </summary>
+        public static readonly string _ROLECODE_JSCOMPANY = ConfigurationManager.AppSettings["RoleCode_JSCompany"].Trim();
+
+        /// <summary>
+        /// 施工单位角色编号
+        /// </summary>
+        public static readonly string _ROLECODE_SGCOMPANY = ConfigurationManager.AppSettings["RoleCode_SGCompany"].Trim();
+
+        /// <summary>
+        ///监理单位角色编号
+        /// </summary>
+        public static readonly string _ROLECODE_JLCOMPANY = ConfigurationManager.AppSettings["RoleCode_JLCompany"].Trim();
+
+        /// <summary>
+        ///业务指导人员默认受理的流程节点ID 多个,隔开
+        /// </summary>
+        public static readonly string _DEFAULT_RECV_WORKFLOWID = ConfigurationManager.AppSettings["DefaultRecvWorkFlowID"].Trim();
+
+        /// <summary>
+        ///业务指导人员角色编号
+        /// </summary>
+        public static readonly string _ROLECODE_CHARGEUSER = ConfigurationManager.AppSettings["RoleCode_ChargeUser"].Trim();
+
+        /// <summary>
+        /// 系统名称
+        /// </summary>
+        public static readonly string _APPTITLE = ConfigurationManager.AppSettings["AppTitle"].Trim();
+
+        /// <summary>
+        /// 枚举工程流程编号
+        /// </summary>
+        public enum EumWorkFlowCode
+        {
+            /// <summary>
+            /// 报建确认
+            /// </summary>
+            SINGLEPROJECTRED,
+            /// <summary>
+            /// 文件登记
+            /// </summary>
+            FILEREG,
+            /// <summary>
+            /// 在线预验收
+            /// </summary>
+            ONLINE_CHECK,
+            /// <summary>
+            /// 接收整理
+            /// </summary>
+            ARCHIVEPACK,
+            /// <summary>
+            /// 窗口接收
+            /// </summary>
+            WINRECV,
+            /// <summary>
+            /// 业务审核
+            /// </summary>
+            SIGNER,
+            /// <summary>
+            /// 领导签字
+            /// </summary>
+            FG_SIGNER,
+            /// <summary>
+            /// 移交入库
+            /// </summary>
+            IMPORT_TO
+        }
+
+        /// <summary>
+        /// 枚举工程流程ID
+        /// </summary>
+        public enum WorkFlowStatus
+        {
+            /// <summary>
+            /// 报建确认
+            /// </summary>
+            SINGLEPROJECTRED = 1,
+            /// <summary>
+            /// 文件登记
+            /// </summary>
+            FILEREG = 4,
+            /// <summary>
+            /// 在线预验收
+            /// </summary>
+            ONLINE_CHECK = 28,
+            /// <summary>
+            /// 接收整理
+            /// </summary>
+            ARCHIVEPACK = 15,
+            /// <summary>
+            /// 窗口接收
+            /// </summary>
+            WINRECV = 17,
+            /// <summary>
+            /// 业务审核
+            /// </summary>
+            SIGNER = 23,
+            /// <summary>
+            /// 领导签字
+            /// </summary>
+            FG_SIGNER = 38,
+            /// <summary>
+            /// 移交入库
+            /// </summary>
+            IMPORT_TO = 24
+        }
+
+        /// <summary>
+        /// 用户类别
+        /// </summary>
+        public enum EumUserType
+        {
+            /// <summary>
+            /// 档案馆用户
+            /// </summary>
+            Archive,
+            /// <summary>
+            /// 非档案馆用户
+            /// </summary>
+            Company
+        }
+
+        /// <summary>
+        /// 工程上传附件证书类别(规划许可证号,施工许可证号,其它证号等)
+        /// </summary>
+        public enum EumProject_Credentials
+        {
+            /// <summary>
+            /// 规划许可证号
+            /// </summary>
+            ghxkz,
+            /// <summary>
+            /// 施工许可证号
+            /// </summary>
+            sgxkz,
+            /// <summary>
+            /// 其它证号等
+            /// </summary>
+            other
+        }
+    }
+}

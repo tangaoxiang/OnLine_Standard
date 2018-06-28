@@ -1,0 +1,25 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ViewReport.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.ViewReport" %>
+
+<%@ Register Assembly="Stimulsoft.Report.Web, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a"
+    Namespace="Stimulsoft.Report.Web" TagPrefix="cc2" %>
+<html>
+<head runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>报表预览</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <cc2:StiWebViewer GlobalizationFile="Report\\Localization\\zh-CHS.xml" ID="StiWebViewer1"
+            runat="server" RenderMode="AjaxWithCache" Height="1500px" Width="100%" ScrollBarsMode="True"
+            ShowExportToBmp="False" ShowExportToCsv="False" ShowExportToDbf="False" ShowExportToExcel2007="False"
+            ShowExportToGif="False" ShowExportToMetafile="False" ShowExportToMht="False"
+            ShowExportToOds="False" ShowExportToOdt="False" ShowExportToPcx="False" ShowExportToPdf="False"
+            ShowExportToPng="False" ShowExportToRtf="False" ShowExportToText="False" ShowExportToTiff="False"
+            ShowExportToXml="False" ShowExportToXps="False" PdfStandardFonts="True" PrintDestination="Pdf" ToolBarBackColor="White" ShowExportToExcel="False" ShowExportToExcelXml="False" ShowExportToHtml="False" ShowExportToJpeg="False" />
+    </form>
+    <script type="text/javascript">
+        window.moveTo(0, 0);
+        window.resizeTo(window.screen.width - 150, window.screen.height);
+    </script>
+</body>
+</html>

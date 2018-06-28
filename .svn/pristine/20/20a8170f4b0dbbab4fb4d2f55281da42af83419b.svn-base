@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class QuestionTypeList : PageBase
+    {
+        T_QuestionType_BLL questionBLL = new T_QuestionType_BLL();
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(QuestionTypeList));
+            if (!IsPostBack)
+            {
+                MyInit(this.tblSearch);
+                this.btnSearch_Click(null, null);
+                BindGrid(1);
+            }
+        }
+
+        protected void BindGrid(int pageIndex)
+        {
+            DataTable dt = new DataTable();
+            SqlWhere = " 1=1 ";
+            if (txtTitle.Text.Trim().Length > 0)
+            {
+                SqlWhere = " Title like '%" + txtTitle.Text.Trim() + "%'";
+            }   
+            dt = questionBLL.GetListPaging(SqlWhere, pageSize, pageIndex, out itemCount);
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 删除区域
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void DeleteQuestionType(string QuestionTypeID)
+        {
+            questionBLL.Delete(ConvertEx.ToInt(QuestionTypeID));
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            this.BindGrid(1);
+        }
+    }
+}

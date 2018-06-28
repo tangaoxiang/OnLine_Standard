@@ -1,0 +1,84 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SignatureReportPdf.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SignatureReportPdf" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>报表PDF</title>
+    <script type="text/javascript" src="JS/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="JS/signature.js"></script>
+    <script type="text/javascript">
+        var url = '<%=mServerUrl%>';
+        var id = '<%=singleProjectID%>';
+        var pdfFileName = '<%=pdfFileName%>';
+        var mHostName = '<%=mHostName%>';
+        var reportType = '<%=reportType%>';
+
+        var ImagAdd, ImageDel;
+
+        $(function () {
+            for (var i = 1; i < iWebPDF2015.CommandBars.Count; i++) {
+                //alert(iWebPDF2015.CommandBars.Item(i).Name + i);			
+
+                iWebPDF2015.CommandBars.Item(i).Visible = false;
+            }
+            iWebPDF2015.CommandBars.Item("DigitalSignature").Visible = true;
+            iWebPDF2015.Options.TabBarVisible = false;
+
+            WebOpen(id);
+        });
+
+        function down() {//下载
+            if (pdfFileName != "") {
+                window.parent.location.href = "../ReportPDFDown.aspx?pdfFileName=" + pdfFileName;
+            }
+        }
+    </script>
+</head>
+<body style="margin: 0px; padding: 0px;">
+    <form id="form1" runat="server">
+        <%-- <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 2px 2px; border: solid 1px #8db2e3; height: 25px;">
+            <tr>
+                <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                        <tr>
+                            <td width="10px">&nbsp;&nbsp;&nbsp;
+                            </td>
+                            <td style="color: red; font-weight: bold;">注意:签章完成后,必须点击保存,签章记录才会保存到PDF上,也会自动挂接到对应的归档目录下</td>
+                            <td>
+                                <div align="right">
+                                    <input type="button" onclick="save()" value=" 保存 " class="button" />
+                                    <input type="button" onclick="down()" value=" 下载 " class="button" />
+                                </div>
+                            </td>
+                            <td width="30" align="right">
+
+                                <img src="../Images/01.jpg" border="0" style="margin-right: 4px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>--%>
+    </form>
+    <object id="iWebPDF2015" style="width: 100%; margin: 0px; padding: 0px;"
+        classid="CLSID:7017318C-BC50-4DAF-9E4A-10AC8364C315"> 
+    </object>
+
+    <script language="javascript" type="text/javascript">
+        function setCss() {
+            var iWebPDF2015 = $("#iWebPDF2015");
+            var height = document.documentElement.clientHeight + "px";
+            iWebPDF2015.css("height", height);
+        }
+        window.onload = function () {
+            setCss();
+        }
+        window.onresize = function () {
+            setCss();
+        }
+    </script>
+</body>
+</html>

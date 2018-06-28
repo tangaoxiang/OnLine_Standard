@@ -1,0 +1,71 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections.Generic;
+
+//报表类型管理
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportTypeList : PageBase
+    {
+        #region 属性及构造方法
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                MyAddInit();
+                BindGridView();
+            }
+        }
+        #endregion
+
+        #region 方法
+        private void BindGridView()
+        {
+            DataSet ds = new T_Report_Type_BLL().GetAllList();
+            List<string> l1 = new List<string>();
+
+            l1.Add("ReportTypeName");
+            //l1.Add("PID");            
+            l1.Add("IsValid");
+
+            //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+            ctrlGridEx1.InitGrid("ReportTypeID", l1, ds, "~/Report/ReportTypeAdd.aspx?Action=Edit");
+
+        }
+        #endregion
+
+        #region 事件
+
+        //add
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReportTypeAdd.aspx?action=add");
+        }
+
+        //delete
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                foreach (string key in ltKey)
+                {
+                    new T_Report_Type_BLL().Delete(Common.ConvertEx.ToInt(key));
+                }
+                BindGridView();
+            }
+        }
+        #endregion
+    }
+}

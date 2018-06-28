@@ -1,0 +1,122 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="MainSqlAdd.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.MainSqlAdd" Title="数据集添加/修改" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            text-align: left;
+            height: 23px;
+        }
+    </style>
+
+    <script language="javascript" type="text/javascript">
+    function CheckSql(flag){
+        var tdMainSql=document.getElementById('ctl00_ContentPlaceHolder1_MainSql_TextBox1');
+        var tdOtherName=document.getElementById('ctl00_ContentPlaceHolder1_OtherName_TextBox1');
+        
+        var strSql=tdMainSql.value.toLowerCase().replace(";",""); 
+        var OtherName=tdOtherName.value.toLowerCase();
+        
+        if(OtherName==""){
+            alert('集合别名不能为空!');
+            tdOtherName.focus();
+            return false;
+        }
+        
+        if(strSql==""){
+            alert('SQL语句不能为空!');
+            tdMainSql.focus();
+            return false;
+        }
+        if(strSql.indexOf('delete') > -1 || strSql.indexOf('update') > -1 || strSql.indexOf('drop') > -1 || strSql.indexOf('alter') > -1 ){
+            alert('SQL语句中不能出现 delete|update|drop|alter 关键字!');
+            return false;
+        }
+        var len=MainSqlAdd.CheckSql(strSql).value;
+        if(!len){
+            alert('SQL语句语法有问题!');
+            return false;
+        }
+        
+        tdMainSql.value=strSql;
+        var ReportMainSqlID=document.getElementById('ctl00_ContentPlaceHolder1_HidReportMainSqlID').value;
+        var ReportID=document.getElementById('ctl00_ContentPlaceHolder1_ReportID').value;       
+
+        var len2=MainSqlAdd.CheckSqlExist(ReportMainSqlID,ReportID,strSql,OtherName).value;
+        if(len2==1){
+            alert('SQL语句不能重复添加!');
+            return false;
+        }  
+        if(len2==2){
+            alert('别名不能重复添加!');
+            return false;
+        }       
+        
+        return true;
+    }
+    
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif"
+                colspan="3">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; background-color: White;" colspan="3">
+                <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="0"
+                    cellspacing="1" style="margin-top: 4px; margin-bottom: 4px; background-color: #c1d4da;">
+                    <tr>
+                        <td style="width: 110px; background-color: White; text-align: left;">
+                            集合别名：
+                        </td>
+                        <td style="background-color: White;">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="OtherName" runat="server" CssClass="input" MaxLength="20" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 110px; background-color: White; text-align: left;">
+                            顺序号：
+                        </td>
+                        <td style="background-color: White;">
+                            &nbsp;
+                            <asp:TextBox ID="txt_OrderId" runat="server" CssClass="input" onblur="return CheckValid(this,'','Numeric');"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 110px; background-color: White; text-align: left;">
+                            查询语句：<asp:HiddenField runat="server" ID="ReportID" />
+                        </td>
+                        <td style="background-color: White; width: 80%;">
+                            &nbsp;
+                            <uc2:ctrlTextBoxEx ID="MainSql" runat="server" CssClass="input" MaxLength="500" Rows="7"
+                                TextMode="MultiLine" height="100" width="92%" />
+                            <br />
+                            <font style="font-size: 12px;"> &nbsp;例如:select * from T_UsersInfo Where 1=1 {T_UsersInfo};
+                                {T_UsersInfo}为查询参数,可以在下步中设置该查询参数的任何字段作为查询条件 </font>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White; text-align: center;"
+                colspan="3">
+                <asp:HiddenField ID="HidReportMainSqlID" runat="server" Value="0" />
+                <asp:Button runat="server" ID="btnBack" Text=" 返回 " Width="52px" class="SelectButton"
+                    OnClick="btnBack_Click" />
+                &nbsp;
+                <asp:Button ID="btnAdd0" runat="server" Text=" 保存 " CssClass="SelectButton" Width="62"
+                    OnClientClick="return CheckSql(false);" OnClick="btnAdd_Click" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

@@ -1,0 +1,184 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlDropDownFileList : System.Web.UI.UserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }
+
+        public bool AutoPostBack
+        {
+            set { DropDownList1.AutoPostBack = value; }
+        }
+
+        public string SelectValue
+        {
+            set { DropDownList1.SelectedIndex = DropDownList1.Items.IndexOf(DropDownList1.Items.FindByValue(value)); }
+            get { return DropDownList1.SelectedValue; }
+        }
+
+        public void Attributes(string Key, string Value)
+        {
+            DropDownList1.Attributes.Add(Key, Value);
+        }
+
+        public int Width
+        {
+            set
+            {
+                DropDownList1.Width = value;
+            }
+        }
+        public bool bShowNO
+        {
+            set
+            {
+                Label1.Visible = false;
+            }
+        }
+
+        public void DataBindEx(int SingleProjectID)
+        {
+            DataBindEx(SingleProjectID, false);
+        }
+
+        public void DataBindEx(int SingleProjectID, bool IsFolder)
+        {
+            BLL.T_FileList_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+            DataSet ds = new DataSet();
+            string strWhere2 = "SingleProjectID=" + SingleProjectID;
+
+            if (IsFolder == true)
+            {
+                strWhere2 += " AND IsFolder='True'";
+            }
+            ds = bll.GetList(strWhere2);
+
+            if (ds.Tables.Count > 0)
+            {
+                DataTable outDT = ds.Tables[0].Copy();
+                outDT.Clear();
+                Recursion(ds.Tables[0], 0, 0, ref outDT);
+                ds.Tables.Clear();
+                ds.Tables.Add(outDT);
+
+                BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+                Model.T_SingleProject_MDL spMDL = spBLL.GetModel(SingleProjectID);
+                string strWhere = "1=1";
+                if (Common.Session.GetSession("SuperAdmin").ToLower() == "true")
+                {//Leo 超级管理员看全部                
+                }
+                else if (spMDL != null && spMDL.CompanyUserID == Common.ConvertEx.ToInt(Common.Session.GetSession("UserID")))
+                {//Leo 工程管理员也看全部
+                }
+                else
+                {
+                    strWhere += " and OperateUserID=" + Common.Session.GetSession("UserID");
+                }
+
+                if (strWhere != "1=1")
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        DataView dv = ds.Tables[0].Copy().DefaultView;
+                        dv.RowFilter = strWhere;
+                        if (dv.Count != ds.Tables[0].Rows.Count)
+                        {
+                            ds.Tables[0].Clear();
+                            ds.Tables.RemoveAt(0);
+                            ds.Tables.Add(dv.ToTable());
+                        }
+                    }
+                }
+            }
+
+            DropDownList1.DataTextField = "TitleNew";
+            DropDownList1.DataValueField = "FileListID";
+            DropDownList1.DataSource = ds;
+            DropDownList1.DataBind();
+            //DropDownList1.Items.Insert(0, new ListItem("无", "0"));
+        }
+
+        /// <summary>
+        /// 绑定工程下的归档目录
+        /// </summary>
+        /// <param name="SingleProjectID">工程ID</param>
+        /// <param name="PID">PID=0</param>
+        public void DataBindEx(int SingleProjectID, string PID)
+        {
+            BLL.T_FileList_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+            DataSet ds = new DataSet();
+            ds = bll.GetList("SingleProjectID=" + SingleProjectID + " AND PID=" + PID);
+
+            if (ds.Tables.Count > 0)
+            {
+                DropDownList1.DataTextField = "title";
+                DropDownList1.DataValueField = "recID";
+                DropDownList1.DataSource = ds;
+                DropDownList1.DataBind();
+            }
+
+            DropDownList1.Items.Insert(0, new ListItem("无", "0"));
+        }
+
+        /// <summary>
+        /// 绑定工程下的归档目录
+        /// </summary>
+        /// <param name="SingleProjectID">工程ID</param>
+        /// <param name="PID">PID=0</param>
+        /// <param name="DataValueField">绑定主键</param>
+        public void DataBindEx(int SingleProjectID, string PID, string DataValueField)
+        {
+            BLL.T_FileList_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+            DataSet ds = new DataSet();
+            ds = bll.GetList("SingleProjectID=" + SingleProjectID + " AND PID=" + PID);
+
+            if (ds.Tables.Count > 0)
+            {
+                DropDownList1.DataTextField = "title";
+                DropDownList1.DataValueField = DataValueField;
+                DropDownList1.DataSource = ds;
+                DropDownList1.DataBind();
+            }
+
+            DropDownList1.Items.Insert(0, new ListItem("无", "0"));
+        }
+
+        public void Recursion(DataTable dt, int PID, int LevelID, ref DataTable outDT)
+        {
+            DataRow[] dr = dt.Select("PID='" + PID + "'", "OrderIndex");
+            foreach (DataRow drr in dr)
+            {
+                drr["TitleNew"] = Comm.AddEmpty(drr["TitleNew"].ToString(), LevelID);
+                outDT.Rows.Add(drr.ItemArray);
+
+                int NewLevelID = LevelID + 1;
+                Recursion(dt, Int32.Parse(drr["recid"].ToString()), NewLevelID, ref outDT);
+            }
+        }
+
+        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BLL.T_FileList_BLL docBLL = new T_FileList_BLL();
+            Model.T_FileList_MDL docMDL = docBLL.GetModel(Common.ConvertEx.ToInt(DropDownList1.SelectedValue));
+            if (docMDL != null)
+            {
+                Label1.Text = docMDL.BH;
+            }
+        }
+    }
+}

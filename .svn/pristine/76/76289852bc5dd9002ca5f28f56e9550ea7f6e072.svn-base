@@ -1,0 +1,148 @@
+﻿/*内网二级页面标准 按钮*/
+body {
+    font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+}
+
+.btn {
+    display: inline-block;
+    background: none;
+    margin: 0;
+    padding: 3px 0;
+    border-width: 0;
+    overflow: visible;
+    font: 12px Arial,Sans-serif;
+    text-decoration: none;
+    color: #333;
+}
+
+* html button.btn {
+    padding-bottom: 1px;
+}
+
+html:not([lang*=""]) button.btn {
+    margin: 0 -3px;
+}
+
+.btn span {
+    background: #ddd url(../images/bg-button.gif) repeat-x 0 0;
+    margin: 0;
+    padding: 3px 0;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #aaa;
+}
+
+* html .btn span {
+    padding-top: 0;
+}
+
+    .btn span span {
+        position: relative;
+        padding: 2px 1em 2px 1em;
+        border-width: 0;
+        border-top: 1px solid #bbb;
+        border-bottom: 1px solid #aaa;
+    }
+
+.btn2 {
+    background-position: 0 0;
+    display: inline-block;
+    background: none;
+    margin: 0;
+    padding: 3px 0;
+    border-width: 0;
+    overflow: visible;
+    font: 12px Arial,Sans-serif;
+    color: #333;
+    background: #ddd url(../images/bg-button.gif) repeat-x 0 0;
+    margin: 0;
+    padding: 3px 0;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #aaa;
+    padding-top: 0;
+    position: relative;
+    padding: 1px 2px 0px 2px;
+    border-width: 1px;
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #aaa;
+    border-color: #bbb;
+    text-decoration: none;
+}
+
+.childMenu2 {
+    background-position: 20px;
+    padding: 3px 3px 3px 10px;
+    font: 12px Arial,Sans-serif;
+    color: #333333;
+    text-decoration: none;
+}
+
+.noLinkLine {
+    text-decoration: none;
+    color: #333333;
+}
+
+button.pill-l span {
+    border-right-width: 0;
+}
+
+    button.pill-l span span {
+        border-right: 1px solid #bbb;
+    }
+
+button.pill-c span {
+    border-right-style: none;
+    border-left-color: #fff;
+}
+
+    button.pill-c span span {
+        border-right: 1px solid #bbb;
+    }
+
+button.pill-r span {
+    border-left-color: #fff;
+}
+
+border-color:#9cf !important; color:#000;
+}
+
+.btn:active span {
+    background-position: 0 -400px;
+    outline: none;
+}
+
+.btn:focus, .btn:active {
+    outline: none;
+}
+
+/* use if one button should be the 'primary' button */
+.primary {
+    font-weight: bold;
+    color: #000;
+    top: 0px;
+    left: -1px;
+}
+
+.button_area {
+    padding: 2px 0 5px 0;
+    background: #eeedea url(../images/button_area_back.gif) repeat-x;
+    width: 100%;
+    border: 0px solid #c9c7c0;
+    border-bottom: 1px solid #9a9994;
+    float: left;
+}
+
+    .button_area p {
+        margin: 0 0 0 5px;
+        background: url(../images/button_area_icon.png) no-repeat 99.3% center;
+    }
+
+
+.more_button {
+    float: right;
+    margin-top: -20px;
+    margin-right: 10px;
+}
+
+select {
+    height: 25px;
+}

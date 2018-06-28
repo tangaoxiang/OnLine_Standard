@@ -1,0 +1,171 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ConstructionList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.ConstructionList" Title="项目管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script language="javascript" type="text/javascript">
+        //全选
+        var selFlag = true;
+        function selectALL() {
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr('disabled') != 'disabled') {
+                    $(this).attr('checked', selFlag);
+                }
+            });
+            selFlag = !selFlag;
+        }
+        //新增
+        function btnAdd() {
+            var strURL = 'CompanyReg2Edit.aspx?action=add';
+            window.location.href = strURL;
+        }
+        //编辑
+        function btnEdit(ConstructionProjectID) {
+            var strURL = 'CompanyReg2Edit.aspx?action=edit&ID=' + ConstructionProjectID;
+            window.location.href = strURL;
+        }
+        //删除
+        function delFile() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                if (confirm('确定要删除选中项目?')) {
+                    $("input[type='checkbox']:checked").each(function () {
+                        if (ConstructionList.DeleteConstruction($(this).val()).value) {
+                            alert('删除成功!');
+                            window.location.href = window.location.href;
+                        } else {
+                            alert('工删除失败,本项目下有活动工程！');
+                        }
+                    });
+                }
+            } else if (checkedLen == 0) {
+                alert('请先选择一个项目！');
+            }
+            else {
+                alert('每次只能选中一行来操作!');
+            }
+        }
+        //查看工程
+        function lookSingle() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var strURL = "../CompanyManage/SingleProjectList.aspx?ConstructionID=" + $(this).val();
+                    window.top.Content.CreateTitle('工程管理', 178, strURL);
+                });
+            } else if (checkedLen == 0) {
+                alert('请先选择一个项目！');
+            }
+            else {
+                alert('每次只能选中一行来操作!');
+            }
+        }
+        //新增工程    
+        function addSingle() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var strURL = '../CompanyManage/CompanyReg3_1Edit.aspx?action=add&ConstructionID=' + $(this).val();
+                    window.location.href = strURL;
+                });
+            } else if (checkedLen == 0) {
+                alert('请先选择一个项目！');
+            }
+            else {
+                alert('每次只能选中一行来操作!');
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td width="10px">&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td></td>
+                        <td>
+                            <div align="right">
+                                &nbsp;
+                                <asp:Button ID="btnAdd" runat="server" OnClientClick="btnAdd();return false;" CssClass="button" Text="新增项目" />
+                                <asp:Button ID="btnDelete" runat="server" OnClientClick="delFile();return false;" CssClass="button" Text=" 删除 " />
+                                <asp:Button ID="btnAdd3" runat="server" CssClass="button" Text="查看工程" OnClientClick="lookSingle();return false;" />
+                                <asp:Button ID="btnAdd2" runat="server" CssClass="button" Text="新增工程" OnClientClick="addSingle();return false;" />
+                            </div>
+                        </td>
+                        <td width="30" align="right">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="100">&nbsp; 项目名称：
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="xmmc" runat="server" CssClass="SelectText" Width="200px"></asp:TextBox>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text=" 查询 " />
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;' onclick='selectALL()'>全选</a>"
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px" ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox"
+                                        name="checkOne" value='<%# Eval("ConstructionProjectID")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="项目编号" DataField="XMH" ItemStyle-Width="130px" HeaderStyle-Width="130px" />
+                            <asp:BoundField HeaderText="项目名称" DataField="XMMC" />
+                            <asp:BoundField HeaderText="建设单位" DataField="JSDW" ItemStyle-Width="350px" HeaderStyle-Width="350px" />
+                            <asp:BoundField HeaderText="立项批准文号" DataField="lxpzwh" ItemStyle-Width="130px" HeaderStyle-Width="130px" />
+                            <asp:TemplateField HeaderText="操作" HeaderStyle-Width="30px" ItemStyle-Width="30px">
+                                <ItemTemplate>
+                                    <a style="cursor: pointer;" onclick="btnEdit(<%# Eval("ConstructionProjectID")%>)">编辑</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                    OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                    FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                    CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+</asp:Content>

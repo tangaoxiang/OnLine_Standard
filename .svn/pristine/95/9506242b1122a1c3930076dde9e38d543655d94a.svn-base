@@ -1,0 +1,217 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+using DigiPower.Onlinecol.Standard.CBLL;
+//案卷管理
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class WFArchiveList : PageBase
+    {
+        T_Archive_BLL trBll = new T_Archive_BLL();
+
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        /// <summary>
+        /// 流程编号
+        /// </summary>
+        public string workFlowCode = string.Empty;
+        /// <summary>
+        /// 是否禁用审核意见
+        /// </summary>
+        public bool IsFlag = true;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(WFArchiveList));
+            workFlowCode = DNTRequest.GetQueryString("WorkFlowCode").ToUpper();
+            workFlowID = DNTRequest.GetQueryString("WorkFlowID");
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            MyAddInit();
+
+            if (workFlowCode.ToUpper() == SystemSet.EumWorkFlowCode.WINRECV.ToString())
+            {
+                IsFlag = false;
+                btnApprove100.Visible = true;
+                gvData.Columns[8].Visible = false;
+            }
+            if (workFlowCode.ToUpper() == SystemSet.EumWorkFlowCode.SIGNER.ToString())
+            {
+                btnRKZ.Visible = true;
+            }
+            if (!IsPostBack)
+            {
+                ctrlJSCheckInfo1.SetVisible = true;
+                ctrlJSCheckInfo1.DataBindEx(singleProjectID, workFlowCode);
+
+                BindGrid(1);
+                //if (workFlowCode.ToUpper() == SystemSet.EumWorkFlowCode.SIGNER.ToString() ||
+                //    workFlowCode.ToUpper() == SystemSet.EumWorkFlowCode.WINRECV.ToString())
+            }
+        }
+
+        #region 方法
+
+        public void BindGrid(int pageIndex)
+        {
+            string strWhere = string.Empty;
+
+            if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == true)
+            {//管理员管理员获取所有工程
+                strWhere += " AND D.AREA_CODE LIKE '" + Session["AREA_CODE"].ToString() + "%'";
+                if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+                {
+                    strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+                }
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == false && Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//档案馆用户看自己的
+                strWhere += " AND D.AREA_CODE LIKE '" + Session["OLD_AREA_CODE"].ToString() + "%'";
+                if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+                {
+                    strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+                }
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("IsCompany")) && Common.ConvertEx.ToBool(Common.Session.GetSession("IsLeader")))
+            {//建设单位只看到自己
+                strWhere += " AND A.SingleProjectID in (select SingleProjectID from T_SingleProject  A,(select distinct ConstructionProjectID from T_Construction_Project ";
+                strWhere += " where CompanyID=" + Common.Session.GetSession("CompanyID") + ") B where A.ConstructionProjectID=B.ConstructionProjectID)";
+            }
+            if (txtShortDH.Text != "")
+            {
+                strWhere += " AND ShortDH LIKE '%" + txtShortDH.Text + "%'";
+            }
+            if (txtTitle.Text.Trim().Length > 0)    //案卷题名
+            {
+                strWhere += " AND A.ajtm like '%" + txtTitle.Text.Trim() + "%' ";
+            }
+
+            DataTable dt = trBll.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+        #endregion
+        public string SetTextDisabled(object IsFlag)
+        {
+            if (ConvertEx.ToBool(IsFlag))
+                return " disabled='disabled' style='border:solid 0px;' ";
+            else
+                return "";
+        }
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                System.Drawing.Color col = System.Drawing.Color.Red;
+                DataRowView view = e.Row.DataItem as DataRowView;
+                if (Convert.ToInt32(((HiddenField)e.Row.FindControl("hidfilestatus")).Value) < 0)
+                    {
+                        e.Row.BackColor = col;
+                    }
+            }
+        }
+        /// <summary>
+        /// 更新文件预验收备注及需要归档的条目
+        /// </summary>
+        /// <param name="fileListID"></param>
+        /// <param name="remark"></param>
+        /// <param name="mustSubmitFlag"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateFile(string ArchiveID, string remark,string note="")
+        {
+            T_Archive_MDL ArchMDL = trBll.GetModel(ConvertEx.ToInt(ArchiveID));
+            if (ArchMDL != null)
+            {
+                ArchMDL.dhNew = remark;
+                ArchMDL.note = note;
+                trBll.Update(ArchMDL);
+            }
+        }
+        /// <summary>
+        /// 更新馆长审核意见
+        /// </summary>
+        /// <param name="fileListID"></param>
+        /// <param name="remark"></param>
+        /// <param name="mustSubmitFlag"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateArchiveNote(string ArchiveID, string qpnote = "")
+        {
+            T_ReadyCheckBook_BLL rbb = new T_ReadyCheckBook_BLL();
+            List<T_ReadyCheckBook_MDL> ArchMDLList = rbb.GetModelList(" (CodeType='qianpi' or CodeType='ywsh') and SingleProjectID=" + ArchiveID.ToString());
+
+            T_ReadyCheckBook_MDL ml = new T_ReadyCheckBook_MDL();
+            if (ArchMDLList.Count > 0)
+            {
+                ml = ArchMDLList[0];
+            }
+
+            ml.SingleProjectID = ConvertEx.ToInt(ArchiveID);
+            ml.CodeType = "ywsh";
+            ml.OTHER_MATERIAL = qpnote;
+
+            if (ArchMDLList.Count > 0)
+                rbb.Update(ml);
+            else
+                rbb.Add(ml);
+        }
+    }
+}

@@ -1,0 +1,108 @@
+﻿using DigiPower.Onlinecol.Standard.Common;
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+
+namespace DigiPower.Onlinecol.Standard.Web.iwebpdf
+{
+    public partial class DocumentEdit : PageBase
+    {
+        public string mSubject;
+        public string mStatus;
+        public string mAuthor;
+        public string mFileName;
+        public string mFileDate;
+        public string mHTMLPath;
+
+        public string mDisabled;
+
+        //public string mHttpUrl;
+        public string mScriptName;
+        public string mServerName;
+        public string mServerUrl;
+
+        public string mRecordID;
+        public string mTemplate;
+        public string mFileType;
+        public string mEditType;
+        public string mUserName;
+
+        public string mEFilePath;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            MyAddInit();
+
+            mHTMLPath = "";
+            mDisabled = "";
+            //自动获取OfficeServer和OCX文件完整URL路径
+            mScriptName = "DocumentEdit.aspx";
+            mServerName = "PDFServer.aspx";
+
+            //mHttpUrl = mHttpUrl.Substring(0, mHttpUrl.Length - mScriptName.Length);
+            //mServerUrl = mHttpUrl + mServerName;                           //取得OfficeServer文件的完整UR
+            if (Request.QueryString["selectvalue"] != null && Request.QueryString["selectvalue"].ToString() != null && Request.QueryString["selectvalue"].ToString() != "")
+            {
+                Session["selectvalue"] = Request.QueryString["selectvalue"].ToString();
+            }
+            if (!String.IsNullOrEmpty(ID))
+            {
+                if (Common.DNTRequest.GetQueryString("fileType") == "PDF")
+                {//查看单个PDF
+                    DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL Ebll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+                    DigiPower.Onlinecol.Standard.Model.T_EFile_MDL Emodel = Ebll.GetModel(Common.ConvertEx.ToInt(ID));
+
+                    if (Emodel != null)
+                    {
+                        DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+                        DigiPower.Onlinecol.Standard.Model.T_FileList_MDL model = bll.GetModel(Common.ConvertEx.ToInt(Emodel.FileListID));
+
+                        if (model != null)
+                        {
+                            string LastPath = model.RootPath.Substring(0, model.RootPath.Length - 1);
+                            int iPos1 = LastPath.LastIndexOf('\\');
+                            LastPath = LastPath.Substring(iPos1 + 1);
+                            string mHttpUrl = "http://" + Request.ServerVariables["HTTP_HOST"] + "/" + LastPath;
+                            mEFilePath = mHttpUrl + "/" + model.SingleProjectID + "/PDF/" + Emodel.PDFFilePath;
+
+                            if (Convert.ToString(Emodel.PDFFilePath).Trim().Length == 0)
+                                MessageBox.ShowAndCloseWin(this, "没有文件,无法查看！");
+                        }
+                    }
+                }
+                else
+                {//查看文件所有的PDF
+                    DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+                    DigiPower.Onlinecol.Standard.Model.T_FileList_MDL model = bll.GetModel(Common.ConvertEx.ToInt(ID));
+
+                    if (model != null)
+                    {
+                        if (model.RootPath.Length > 0)
+                        {
+                            string LastPath = model.RootPath.Substring(0, model.RootPath.Length - 1);
+                            int iPos1 = LastPath.LastIndexOf('\\');
+                            LastPath = LastPath.Substring(iPos1 + 1);
+                            string mHttpUrl = "http://" + Request.ServerVariables["HTTP_HOST"] + "/" + LastPath;
+                            mEFilePath = mHttpUrl + "/" + model.SingleProjectID + "/MPDF/" + model.PDFFilePath;
+                        }
+                        else
+                        {
+                            MessageBox.ShowAndCloseWin(this, "没有文件,无法查看！");
+                        }                    
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.ShowAndCloseWin(this, "没有文件,无法查看！");
+            }
+        }
+    }
+}

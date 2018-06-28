@@ -1,0 +1,18 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReportDesign.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Report.ReportDesign" %>
+
+<%@ Register Assembly="Stimulsoft.Report.WebDesign, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a"
+    Namespace="Stimulsoft.Report.Web" TagPrefix="cc1" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>报表设计</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <cc1:StiWebDesigner ID="StiWebDesigner1" runat="server" Localization="Localization/zh-CHS.xml"
+            OnSaveReport="StiWebDesigner1_SaveReport" />
+    </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,267 @@
+using System;
+using System.Data;
+using System.Collections.Generic;
+using LTP.Common;
+using DigiPower.Onlinecol.Standard.Model;
+namespace DigiPower.Onlinecol.Standard.BLL
+{
+    /// <summary>
+    /// 业务逻辑类T_UsersInfo_BLL 的摘要说明。
+    /// </summary>
+    public class T_UsersInfo_BLL
+    {
+        private readonly DigiPower.Onlinecol.Standard.DAL.T_UsersInfo_DAL dal = new DigiPower.Onlinecol.Standard.DAL.T_UsersInfo_DAL();
+        public T_UsersInfo_BLL()
+        { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return dal.GetMaxId();
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int UserID)
+        {
+            return dal.Exists(UserID);
+        }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model)
+        {
+            return dal.Add(model);
+        }
+
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model)
+        {
+            dal.Update(model);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int UserID)
+        {
+
+            dal.Delete(UserID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL GetModel(int UserID)
+        {
+
+            return dal.GetModel(UserID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体，从缓存中。
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL GetModelByCache(int UserID)
+        {
+
+            string CacheKey = "T_UsersInfo_MDLModel-" + UserID;
+            object objModel = LTP.Common.DataCache.GetCache(CacheKey);
+            if (objModel == null)
+            {
+                try
+                {
+                    objModel = dal.GetModel(UserID);
+                    if (objModel != null)
+                    {
+                        int ModelCache = LTP.Common.ConfigHelper.GetConfigInt("ModelCache");
+                        LTP.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+                    }
+                }
+                catch { }
+            }
+            return (DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL)objModel;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetListByCompany(string strWhere)
+        {
+            return dal.GetListByCompany(strWhere);
+        }
+
+        public DataSet GetListByProj(string strWhere)
+        {
+            return dal.GetListByProj(strWhere);
+        }
+
+        public DataTable GetListPaging(string strWhere, int PageSize, int curPage, out int recCoun)
+        {
+            return dal.GetListByProj(strWhere, PageSize, curPage, "UserID", "UserID desc", out recCoun).Tables[0];
+        }
+
+        public DataTable UserGetListByProj(string strWhere, int PageSize, int curPage, out int recCoun)
+        {
+            return dal.UserGetListByProj(strWhere, PageSize, curPage, "UserID", "UserID desc", out recCoun).Tables[0];
+        }
+
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            return dal.GetList(Top, strWhere, filedOrder);
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL> GetModelList(string strWhere)
+        {
+            DataSet ds = dal.GetListByCompany(strWhere);
+            return DataTableToList(ds.Tables[0]);    
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL> DataTableToList(DataTable dt)
+        {
+            List<DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL> modelList = new List<DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL>();
+            int rowsCount = dt.Rows.Count;
+            if (rowsCount > 0)
+            {
+                DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model;
+                for (int n = 0; n < rowsCount; n++)
+                {
+                    model = new DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL();
+                    if (dt.Rows[n]["UserID"].ToString() != "")
+                    {
+                        model.UserID = int.Parse(dt.Rows[n]["UserID"].ToString());
+                    }
+                    if (dt.Rows[n]["CompanyID"].ToString() != "")
+                    {
+                        model.CompanyID = int.Parse(dt.Rows[n]["CompanyID"].ToString());
+                    }
+                    if (dt.Rows[n]["RoleID"].ToString() != "")
+                    {
+                        model.RoleID = int.Parse(dt.Rows[n]["RoleID"].ToString());
+                    }
+                    model.UserName = dt.Rows[n]["UserName"].ToString();
+                    model.CardID = dt.Rows[n]["CardID"].ToString();
+                    model.LoginName = dt.Rows[n]["LoginName"].ToString();
+                    model.Passwd = dt.Rows[n]["Passwd"].ToString();
+                    model.Sex = dt.Rows[n]["Sex"].ToString();
+                    model.Mobile = dt.Rows[n]["Mobile"].ToString();
+                    model.Tel = dt.Rows[n]["Tel"].ToString();
+                    model.Fax = dt.Rows[n]["Fax"].ToString();
+                    model.EMail = dt.Rows[n]["EMail"].ToString();
+                    model.QQ = dt.Rows[n]["QQ"].ToString();
+                    model.MSN = dt.Rows[n]["MSN"].ToString();
+                    if (dt.Rows[n]["Createdate"].ToString() != "")
+                    {
+                        model.Createdate = DateTime.Parse(dt.Rows[n]["Createdate"].ToString());
+                    }
+                    model.Createdby = dt.Rows[n]["Createdby"].ToString();
+                    if (dt.Rows[n]["IsValid"].ToString() != "")
+                    {
+                        if ((dt.Rows[n]["IsValid"].ToString() == "1") || (dt.Rows[n]["IsValid"].ToString().ToLower() == "true"))
+                        {
+                            model.IsValid = true;
+                        }
+                        else
+                        {
+                            model.IsValid = false;
+                        }
+                    }
+                    model.UserType = dt.Rows[n]["UserType"].ToString();
+                    if (dt.Rows[n]["IsLeader"].ToString() != "")
+                    {
+                        if ((dt.Rows[n]["IsLeader"].ToString() == "1") || (dt.Rows[n]["IsLeader"].ToString().ToLower() == "true"))
+                        {
+                            model.IsLeader = true;
+                        }
+                        else
+                        {
+                            model.IsLeader = false;
+                        }
+                    }
+                    if (dt.Rows[n]["IsSuperAdmin"].ToString() != "")
+                    {
+                        if ((dt.Rows[n]["IsSuperAdmin"].ToString() == "1") || (dt.Rows[n]["IsSuperAdmin"].ToString().ToLower() == "true"))
+                        {
+                            model.IsSuperAdmin = true;
+                        }
+                        else
+                        {
+                            model.IsSuperAdmin = false;
+                        }
+                    }
+                    if (dt.Rows[n]["LastLoginTime"].ToString() != "")
+                    {
+                        model.LastLoginTime = DateTime.Parse(dt.Rows[n]["LastLoginTime"].ToString());
+                    }
+                    model.LastLoginIP = dt.Rows[n]["LastLoginIP"].ToString();
+                    if (dt.Rows[n]["TrainCount"].ToString() != "")
+                    {
+                        model.TrainCount = int.Parse(dt.Rows[n]["TrainCount"].ToString());
+                    }
+                    model.RegDate = dt.Rows[n]["RegDate"].ToString();
+                    modelList.Add(model);
+                }
+            }
+            return modelList;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList()
+        {
+            return GetListByCompany("");
+        }
+
+        #endregion  成员方法
+
+        public bool Exists(string sqlWhere)
+        {
+            return dal.Exists(sqlWhere);
+        }
+
+
+        /// <summary>
+        /// 根据公司获取用户相关信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="curPage"></param>
+        /// <param name="recCoun"></param>
+        /// <returns></returns>
+        public DataTable GetListByCompany(string strWhere, int PageSize, int curPage, out int recCoun)
+        {
+            return dal.GetListByCompany(strWhere, PageSize, curPage, "UserID", "UserID desc", out  recCoun);
+        }
+
+
+        /// <summary>
+        /// 获取业务用户相关信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="curPage"></param>
+        /// <param name="recCoun"></param>
+        /// <returns></returns>
+        public DataTable GetCompanyUserList(string strWhere, int PageSize, int curPage, out int recCoun)
+        {
+            return dal.GetCompanyUserList(strWhere, PageSize, curPage, "UserID", "UserID desc", out  recCoun);
+        }
+    }
+}
+

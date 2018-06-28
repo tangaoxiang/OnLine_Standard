@@ -1,0 +1,469 @@
+using System;
+using System.Data;
+using System.Text;
+using System.Data.SqlClient;
+using DigiPower.Onlinecol.Standard.DbUtility;//请先添加引用
+namespace DigiPower.Onlinecol.Standard.DAL {
+    /// <summary>
+    /// 数据访问类T_UsersInfo_DAL。
+    /// </summary>
+    public class T_UsersInfo_DAL {
+        public T_UsersInfo_DAL() { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId() {
+            return DbHelperSQL.GetMaxID("UserID", "T_UsersInfo");
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int UserID) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from T_UsersInfo");
+            strSql.Append(" where UserID=@UserID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@UserID", SqlDbType.Int,8)};
+            parameters[0].Value = UserID;
+
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into T_UsersInfo(");
+            strSql.Append("CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,Mobile,Tel,Fax,EMail,QQ,MSN,Createdate,Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,Position,OwnerFileTmp)");
+            strSql.Append(" values (");
+            strSql.Append("@CompanyID,@RoleID,@UserName,@CardID,@LoginName,@Passwd,@Sex,@Mobile,@Tel,@Fax,@EMail,@QQ,@MSN,@Createdate,@Createdby,@IsValid,@UserType,@IsLeader,@IsSuperAdmin,@LastLoginTime,@LastLoginIP,@TrainCount,@RegDate,@Position,@OwnerFileTmp)");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+					new SqlParameter("@CompanyID", SqlDbType.Int,8),
+					new SqlParameter("@RoleID", SqlDbType.Int,8),
+					new SqlParameter("@UserName", SqlDbType.NVarChar,50),
+					new SqlParameter("@CardID", SqlDbType.NVarChar,20),
+					new SqlParameter("@LoginName", SqlDbType.NVarChar,20),
+					new SqlParameter("@Passwd", SqlDbType.NVarChar,200),
+					new SqlParameter("@Sex", SqlDbType.NVarChar,2),
+					new SqlParameter("@Mobile", SqlDbType.NVarChar,20),
+					new SqlParameter("@Tel", SqlDbType.NVarChar,20),
+					new SqlParameter("@Fax", SqlDbType.NVarChar,20),
+					new SqlParameter("@EMail", SqlDbType.NVarChar,50),
+					new SqlParameter("@QQ", SqlDbType.NVarChar,20),
+					new SqlParameter("@MSN", SqlDbType.NVarChar,50),
+					new SqlParameter("@Createdate", SqlDbType.DateTime),
+					new SqlParameter("@Createdby", SqlDbType.VarChar,50),
+					new SqlParameter("@IsValid", SqlDbType.Bit,1),
+					new SqlParameter("@UserType", SqlDbType.NVarChar,20),
+					new SqlParameter("@IsLeader", SqlDbType.Bit,1),
+					new SqlParameter("@IsSuperAdmin", SqlDbType.Bit,1),
+					new SqlParameter("@LastLoginTime", SqlDbType.DateTime),
+					new SqlParameter("@LastLoginIP", SqlDbType.NVarChar,20),
+					new SqlParameter("@TrainCount", SqlDbType.Int,8),
+					new SqlParameter("@RegDate", SqlDbType.NVarChar,20),
+                    new SqlParameter("@Position", SqlDbType.NVarChar,50),
+                    new SqlParameter("@OwnerFileTmp", SqlDbType.NVarChar,200)};
+
+            parameters[0].Value = model.CompanyID;
+            parameters[1].Value = model.RoleID;
+            parameters[2].Value = model.UserName;
+            parameters[3].Value = model.CardID;
+            parameters[4].Value = model.LoginName;
+            parameters[5].Value = model.Passwd;
+            parameters[6].Value = model.Sex;
+            parameters[7].Value = model.Mobile;
+            parameters[8].Value = model.Tel;
+            parameters[9].Value = model.Fax;
+            parameters[10].Value = model.EMail;
+            parameters[11].Value = model.QQ;
+            parameters[12].Value = model.MSN;
+            parameters[13].Value = model.Createdate;
+            parameters[14].Value = model.Createdby;
+            parameters[15].Value = model.IsValid;
+            parameters[16].Value = model.UserType;
+            parameters[17].Value = model.IsLeader;
+            parameters[18].Value = model.IsSuperAdmin;
+            parameters[19].Value = model.LastLoginTime;
+            parameters[20].Value = model.LastLoginIP;
+            parameters[21].Value = model.TrainCount;
+            parameters[22].Value = model.RegDate;
+            parameters[23].Value = model.Position;
+            parameters[24].Value = model.OwnerFileTmp;
+
+
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
+            if (obj == null) {
+                return 1;
+            } else {
+                return Convert.ToInt32(obj);
+            }
+        }
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update T_UsersInfo set ");
+            strSql.Append("CompanyID=@CompanyID,");
+            strSql.Append("RoleID=@RoleID,");
+            strSql.Append("UserName=@UserName,");
+            strSql.Append("CardID=@CardID,");
+            strSql.Append("LoginName=@LoginName,");
+            strSql.Append("Passwd=@Passwd,");
+            strSql.Append("Sex=@Sex,");
+            strSql.Append("Mobile=@Mobile,");
+            strSql.Append("Tel=@Tel,");
+            strSql.Append("Fax=@Fax,");
+            strSql.Append("EMail=@EMail,");
+            strSql.Append("QQ=@QQ,");
+            strSql.Append("MSN=@MSN,");
+            strSql.Append("Createdate=@Createdate,");
+            strSql.Append("Createdby=@Createdby,");
+            strSql.Append("IsValid=@IsValid,");
+            strSql.Append("UserType=@UserType,");
+            strSql.Append("IsLeader=@IsLeader,");
+            strSql.Append("IsSuperAdmin=@IsSuperAdmin,");
+            strSql.Append("LastLoginTime=@LastLoginTime,");
+            strSql.Append("LastLoginIP=@LastLoginIP,");
+            strSql.Append("TrainCount=@TrainCount,");
+            strSql.Append("RegDate=@RegDate,");
+            strSql.Append("Position=@Position,");
+            strSql.Append("OwnerFileTmp=@OwnerFileTmp");
+
+            strSql.Append(" where UserID=@UserID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@UserID", SqlDbType.Int,8),
+					new SqlParameter("@CompanyID", SqlDbType.Int,8),
+					new SqlParameter("@RoleID", SqlDbType.Int,8),
+					new SqlParameter("@UserName", SqlDbType.NVarChar,50),
+					new SqlParameter("@CardID", SqlDbType.NVarChar,20),
+					new SqlParameter("@LoginName", SqlDbType.NVarChar,20),
+					new SqlParameter("@Passwd", SqlDbType.NVarChar,200),
+					new SqlParameter("@Sex", SqlDbType.NVarChar,2),
+					new SqlParameter("@Mobile", SqlDbType.NVarChar,20),
+					new SqlParameter("@Tel", SqlDbType.NVarChar,20),
+					new SqlParameter("@Fax", SqlDbType.NVarChar,20),
+					new SqlParameter("@EMail", SqlDbType.NVarChar,50),
+					new SqlParameter("@QQ", SqlDbType.NVarChar,20),
+					new SqlParameter("@MSN", SqlDbType.NVarChar,50),
+					new SqlParameter("@Createdate", SqlDbType.DateTime),
+					new SqlParameter("@Createdby", SqlDbType.VarChar,50),
+					new SqlParameter("@IsValid", SqlDbType.Bit,1),
+					new SqlParameter("@UserType", SqlDbType.NVarChar,20),
+					new SqlParameter("@IsLeader", SqlDbType.Bit,1),
+					new SqlParameter("@IsSuperAdmin", SqlDbType.Bit,1),
+					new SqlParameter("@LastLoginTime", SqlDbType.DateTime),
+					new SqlParameter("@LastLoginIP", SqlDbType.NVarChar,20),
+					new SqlParameter("@TrainCount", SqlDbType.Int,8),
+					new SqlParameter("@RegDate", SqlDbType.NVarChar,20),
+                    new SqlParameter("@Position", SqlDbType.NVarChar,50),
+                    new SqlParameter("@OwnerFileTmp", SqlDbType.NVarChar,200)};
+
+            parameters[0].Value = model.UserID;
+            parameters[1].Value = model.CompanyID;
+            parameters[2].Value = model.RoleID;
+            parameters[3].Value = model.UserName;
+            parameters[4].Value = model.CardID;
+            parameters[5].Value = model.LoginName;
+            parameters[6].Value = model.Passwd;
+            parameters[7].Value = model.Sex;
+            parameters[8].Value = model.Mobile;
+            parameters[9].Value = model.Tel;
+            parameters[10].Value = model.Fax;
+            parameters[11].Value = model.EMail;
+            parameters[12].Value = model.QQ;
+            parameters[13].Value = model.MSN;
+            parameters[14].Value = model.Createdate;
+            parameters[15].Value = model.Createdby;
+            parameters[16].Value = model.IsValid;
+            parameters[17].Value = model.UserType;
+            parameters[18].Value = model.IsLeader;
+            parameters[19].Value = model.IsSuperAdmin;
+            parameters[20].Value = model.LastLoginTime;
+            parameters[21].Value = model.LastLoginIP;
+            parameters[22].Value = model.TrainCount;
+            parameters[23].Value = model.RegDate;
+            parameters[24].Value = model.Position;
+            parameters[25].Value = model.OwnerFileTmp;
+
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int UserID) {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from T_UsersInfo ");
+            strSql.Append(" where UserID=@UserID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@UserID", SqlDbType.Int,8)};
+            parameters[0].Value = UserID;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL GetModel(int UserID) {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 UserID,CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,Mobile,Tel,Fax,EMail,QQ,MSN,");
+            strSql.Append("Createdate,Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,");
+            strSql.Append("Position,OwnerFileTmp from T_UsersInfo ");
+
+            strSql.Append(" where UserID=@UserID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@UserID", SqlDbType.Int,8)};
+            parameters[0].Value = UserID;
+
+            DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL model = new DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL();
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0) {
+                if (ds.Tables[0].Rows[0]["UserID"].ToString() != "") {
+                    model.UserID = int.Parse(ds.Tables[0].Rows[0]["UserID"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["CompanyID"].ToString() != "") {
+                    model.CompanyID = int.Parse(ds.Tables[0].Rows[0]["CompanyID"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["RoleID"].ToString() != "") {
+                    model.RoleID = int.Parse(ds.Tables[0].Rows[0]["RoleID"].ToString());
+                }
+                model.UserName = ds.Tables[0].Rows[0]["UserName"].ToString();
+                model.CardID = ds.Tables[0].Rows[0]["CardID"].ToString();
+                model.LoginName = ds.Tables[0].Rows[0]["LoginName"].ToString();
+                model.Passwd = ds.Tables[0].Rows[0]["Passwd"].ToString();
+                model.Sex = ds.Tables[0].Rows[0]["Sex"].ToString();
+                model.Mobile = ds.Tables[0].Rows[0]["Mobile"].ToString();
+                model.Tel = ds.Tables[0].Rows[0]["Tel"].ToString();
+                model.Fax = ds.Tables[0].Rows[0]["Fax"].ToString();
+                model.EMail = ds.Tables[0].Rows[0]["EMail"].ToString();
+                model.QQ = ds.Tables[0].Rows[0]["QQ"].ToString();
+                model.MSN = ds.Tables[0].Rows[0]["MSN"].ToString();
+                if (ds.Tables[0].Rows[0]["Createdate"].ToString() != "") {
+                    model.Createdate = DateTime.Parse(ds.Tables[0].Rows[0]["Createdate"].ToString());
+                }
+                model.Createdby = ds.Tables[0].Rows[0]["Createdby"].ToString();
+                if (ds.Tables[0].Rows[0]["IsValid"].ToString() != "") {
+                    if ((ds.Tables[0].Rows[0]["IsValid"].ToString() == "1") || (ds.Tables[0].Rows[0]["IsValid"].ToString().ToLower() == "true")) {
+                        model.IsValid = true;
+                    } else {
+                        model.IsValid = false;
+                    }
+                }
+                model.UserType = ds.Tables[0].Rows[0]["UserType"].ToString();
+                if (ds.Tables[0].Rows[0]["IsLeader"].ToString() != "") {
+                    if ((ds.Tables[0].Rows[0]["IsLeader"].ToString() == "1") || (ds.Tables[0].Rows[0]["IsLeader"].ToString().ToLower() == "true")) {
+                        model.IsLeader = true;
+                    } else {
+                        model.IsLeader = false;
+                    }
+                }
+                if (ds.Tables[0].Rows[0]["IsSuperAdmin"].ToString() != "") {
+                    if ((ds.Tables[0].Rows[0]["IsSuperAdmin"].ToString() == "1") || (ds.Tables[0].Rows[0]["IsSuperAdmin"].ToString().ToLower() == "true")) {
+                        model.IsSuperAdmin = true;
+                    } else {
+                        model.IsSuperAdmin = false;
+                    }
+                }
+                if (ds.Tables[0].Rows[0]["LastLoginTime"].ToString() != "") {
+                    model.LastLoginTime = DateTime.Parse(ds.Tables[0].Rows[0]["LastLoginTime"].ToString());
+                }
+                model.LastLoginIP = ds.Tables[0].Rows[0]["LastLoginIP"].ToString();
+                if (ds.Tables[0].Rows[0]["TrainCount"].ToString() != "") {
+                    model.TrainCount = int.Parse(ds.Tables[0].Rows[0]["TrainCount"].ToString());
+                }
+                model.RegDate = ds.Tables[0].Rows[0]["RegDate"].ToString();
+                model.Position = ds.Tables[0].Rows[0]["Position"].ToString();
+                model.OwnerFileTmp = ds.Tables[0].Rows[0]["OwnerFileTmp"].ToString();
+                  
+                return model;
+            } else {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetListByCompany(string strWhere) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select UserID,a.CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,a.EMail,QQ,MSN,a.Createdate,b.Email,");
+            strSql.Append("Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName,Position,OwnerFileTmp ");
+            strSql.Append("FROM T_UsersInfo a,T_Company b WHERE a.CompanyID=b.CompanyID ");
+            if (strWhere.Trim() != "") {
+                strWhere = strWhere.Replace("CompanyID", "a.CompanyID");
+                strSql.Append(" AND " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 根据公司获取用户相关信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="curPage"></param>
+        /// <param name="PRIMARYKey"></param>
+        /// <param name="OrderByName"></param>
+        /// <param name="recCoun"></param>
+        /// <returns></returns>
+        public DataTable GetListByCompany(string strWhere, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select UserID,a.CompanyID,a.RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,");
+            strSql.Append("a.Fax,a.EMail,QQ,MSN,a.Createdate,Createdby,IsValid,UserType,IsLeader,a.OwnerFileTmp,");
+            strSql.Append("IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName,Position,c.RoleName,");
+            strSql.Append("(SELECT f0.SystemInfoName from T_SystemInfo f0 where f0.CurrentType='CompanyType' AND f0.SystemInfoID=b.CompanyType)as CompanyTypeName ");
+            strSql.Append("FROM T_UsersInfo a,T_Company b,T_Role c WHERE a.CompanyID=b.CompanyID and a.RoleID=c.RoleID ");
+
+            if (strWhere.Trim() != "") {
+                strSql.Append(" AND " + strWhere);
+            }
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun).Tables[0];
+        }
+
+        /// <summary>
+        /// 根据公司获取用户相关信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="PageSize"></param>
+        /// <param name="curPage"></param>
+        /// <param name="PRIMARYKey"></param>
+        /// <param name="OrderByName"></param>
+        /// <param name="recCoun"></param>
+        /// <returns></returns>
+        public DataTable GetCompanyUserList(string strWhere, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select distinct UserID,a.CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,");
+            strSql.Append("a.Fax,a.EMail,QQ,MSN,a.Createdate,Createdby,IsValid,UserType,IsLeader,a.OwnerFileTmp,");
+            strSql.Append("IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName,Position,CompanyCode,");
+            strSql.Append("(SELECT f0.SystemInfoName from T_SystemInfo f0 where f0.CurrentType='CompanyType' AND f0.SystemInfoID=b.CompanyType)as CompanyTypeName ");
+            strSql.Append("FROM T_UsersInfo a,T_Company b,T_SingleProjectCompany c,T_SingleProject d  WHERE a.CompanyID=b.CompanyID ");
+            strSql.Append("AND b.CompanyID=c.CompanyID AND c.SingleProjectID=d.SingleProjectID ");
+
+            if (strWhere.Trim() != "") {
+                strSql.Append(" AND " + strWhere);
+            }
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun).Tables[0];
+        }
+
+        public DataSet GetListByProj(string strWhere) {
+            StringBuilder strSql = new StringBuilder();        
+
+            strSql.Append("select top 100 c.gcmc,c.gcbm,UserID,a.CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,");
+            strSql.Append("a.EMail,QQ,MSN,a.Createdate,Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,");
+            strSql.Append("RegDate,CompanyName,a.OwnerFileTmp from T_Company b,T_UsersInfo a left join T_SingleProject c ");
+            strSql.Append("on a.userid=c.companyuserid where  a.CompanyID=b.CompanyID ");
+
+            if (strWhere.Trim() != "") {
+                strWhere = strWhere.Replace("CompanyID", "a.CompanyID");
+                strSql.Append(" AND " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        public DataSet GetListByProj(string strWhere, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun) {
+            StringBuilder strSql = new StringBuilder();
+            //strSql.Append("select top 100 c.gcmc,c.gcbm,UserID,a.CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,a.EMail,QQ,MSN,a.Createdate,Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName from T_UsersInfo a,T_Company b,T_SingleProject c where a.userid=c.companyuserid and a.CompanyID=b.CompanyID");
+
+            strSql.Append("select c.gcmc,c.gcbm,UserID,a.CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,a.EMail,QQ, ");
+            strSql.Append("MSN,a.Createdate,Createdby,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,,a.OwnerFileTmp,");
+            strSql.Append("CompanyName from T_Company b,T_UsersInfo a left join T_SingleProject c on a.userid=c.companyuserid where  a.CompanyID=b.CompanyID ");
+            if (strWhere.Trim() != "") {
+                strWhere = strWhere.Replace("CompanyID", "a.CompanyID");
+                strSql.Append(" AND " + strWhere);
+            }
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun);
+        }
+
+        public DataSet UserGetListByProj(string strWhere, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun) {
+            StringBuilder strSql = new StringBuilder();
+
+            strSql.Append("SELECT v1.*,");
+            strSql.Append("(SELECT f0.SystemInfoName from T_SystemInfo f0 where f0.CurrentType='CompanyType' AND f0.SystemInfoID=v1.CompanyType)as CompanyTypeName ");
+            strSql.Append("from (");
+
+            strSql.Append("select a.UserID,a.CompanyID,a.RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,a.EMail,");
+            strSql.Append("QQ,MSN,IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName,b.CompanyType ");
+            strSql.Append("from T_UsersInfo a ");
+            strSql.Append("inner join T_Company b on a.CompanyID=b.CompanyID ");
+            strSql.Append("left join T_SingleProjectCompany d on d.CompanyID = a.CompanyID ");
+            strSql.Append("left join T_SingleProject c on d.SingleProjectID = c.SingleProjectID ");
+            strSql.Append("left join T_SingleProjectUser f on f.UserID=a.UserID and f.SingleProjectID=c.SingleProjectID where 1=1 ");
+            if (strWhere.Trim() != "") {
+                strWhere = strWhere.Replace("CompanyID", "a.CompanyID");
+                strSql.Append(" AND " + strWhere);
+            }
+            strSql.Append(" group by a.UserID,a.CompanyID,a.RoleID,UserName,CardID,LoginName,Passwd,Sex,a.Mobile,a.Tel,a.Fax,a.EMail,QQ,MSN, ");
+            strSql.Append("IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,CompanyName,b.CompanyType) v1 ");
+
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun);
+        }
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ");
+            if (Top > 0) {
+                strSql.Append(" top " + Top.ToString());
+            }
+            strSql.Append(" UserID,CompanyID,RoleID,UserName,CardID,LoginName,Passwd,Sex,Mobile,Tel,Fax,EMail,QQ,MSN,Createdate,Createdby,");
+            strSql.Append("IsValid,UserType,IsLeader,IsSuperAdmin,LastLoginTime,LastLoginIP,TrainCount,RegDate,OwnerFileTmp ");
+            strSql.Append("FROM T_UsersInfo ");
+            if (strWhere.Trim() != "") {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" order by " + filedOrder);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /*
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        {
+            SqlParameter[] parameters = {
+                    new SqlParameter("@tblName", SqlDbType.VarChar, 255),
+                    new SqlParameter("@fldName", SqlDbType.VarChar, 255),
+                    new SqlParameter("@PageSize", SqlDbType.Int),
+                    new SqlParameter("@PageIndex", SqlDbType.Int),
+                    new SqlParameter("@IsReCount", SqlDbType.Bit),
+                    new SqlParameter("@OrderType", SqlDbType.Bit),
+                    new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
+                    };
+            parameters[0].Value = "T_UsersInfo";
+            parameters[1].Value = "ID";
+            parameters[2].Value = PageSize;
+            parameters[3].Value = PageIndex;
+            parameters[4].Value = 0;
+            parameters[5].Value = 0;
+            parameters[6].Value = strWhere;	
+            return DbHelperSQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
+        }*/
+
+        #endregion  成员方法
+
+        public bool Exists(string sqlWhere) {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from T_UsersInfo");
+            strSql.Append(" where " + sqlWhere);
+
+            return DbHelperSQL.Exists(strSql.ToString());
+        }
+
+
+    }
+}
+

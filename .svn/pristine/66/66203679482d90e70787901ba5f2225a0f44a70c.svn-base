@@ -1,0 +1,128 @@
+﻿
+.select-box {
+    width: 100px;
+    height: 23px;
+    background: #fff;
+    border: 1px solid #D5D5D5;
+}
+
+.select-wrap {
+    border: 0;
+    position: relative;
+    height: 18px;
+    overflow: hidden;
+}
+
+.countrySelcet {
+    border: 1px solid #D5D5D5;
+    padding: 4px 3px;
+    font-size: 12px;
+    height: 34px;
+    width: 100px;
+    margin: -1px;
+}
+
+
+
+
+html body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+}
+
+select {
+    height: 25px;
+}
+
+/*table {
+    background-color: #c9c7c0;
+    margin-top: 3px;
+}
+
+tr {
+    background-color: #fff;
+}*/
+
+.left_title_1 {
+    background-color: #F3F8F7;
+    color: #555574;
+    font-weight: bold;
+    line-height: 25px;
+    text-align: right;
+    font-size: 13px;
+    width: 120px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.left_title_2 {
+    background-color: #fff;
+    color: #73938E;
+    font-weight: bold;
+    line-height: 25px;
+    text-align: left;
+    font-size: 12px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.left_title_3 {
+    color: #73938E;
+    font-weight: bold;
+    line-height: 25px;
+    text-align: left;
+    font-size: 13px !important;
+    /*background: url('../Images/indicator-bg.gif') repeat-x scroll left top #FFF;*/
+}
+
+.regedit_input {
+    border-radius: 4px;
+    padding: 3px !important;
+    font-size: 13px !important;
+    background: url('../Images/bg-form-field.gif') repeat-x scroll left top #FFF;
+    border: 1px solid #D5D5D5 !important;
+    color: #333 !important;
+    height: 17px;
+}
+
+select {
+    font-family: Trebuchet MS;
+}
+
+.left_title_4 {
+    background: #eeedea url(../images/blue_back.gif) repeat-x;
+    border: 1px solid #99BBE8;
+    border-top: 0px;
+    height: 28px;
+    text-align: center;
+}
+
+.promise {
+    background-color: #D9E7F8;
+    color: #2E82D5;
+}
+
+.promiseHeight {
+    height: 13px;
+}
+
+.btn2 {
+    display: inline-block;
+    margin: 0;
+    padding: 3px 0;
+    border-width: 0;
+    overflow: visible;
+    font: 12px Arial,Sans-serif;
+    text-decoration: none;
+    color: #333;
+    border: solid 1px #c9c7c0;
+    width: 52px;
+    background: #ddd url(../images/bg-button.gif) repeat-x 0 0;
+}
+
+.trFile {
+    font-family: Trebuchet MS;
+    line-height: 20px;
+    border: 1px solid #D5D5D5 !important;
+    color: #333 !important;
+    background: url('../Images/bg-form-field.gif') repeat-x scroll left top #FFF;
+}

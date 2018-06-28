@@ -1,0 +1,40 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Content.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main.Content" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="x-ua-compatible" content="ie=7" />
+    <title></title>
+    <script type="text/javascript" src="../JSNew/20140618/jquery-1.6.2.min.js"></script>
+
+    <script language="javascript" type="text/javascript" src="link_frame.js"></script>
+    <script language="javascript" type="text/javascript" src="JS/DD_belatedPNG_0.0.8a.js"></script>
+    <link rel="stylesheet" type="text/css" href="link_frame.css" />
+    <style type="text/css">
+        <!--
+        body {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            overflow: hidden;
+            background-color: #DFE8F6;
+        }
+        -->
+    </style>
+</head>
+<body bgcolor="#DFE8F6">
+    <form id="form1" runat="server">
+        <div class="main" style="width: 100%;">
+            <div class="DivHead" id="DivHead" style="width: 100%; margin-left: 6px;">
+            </div>
+            <div class="DivTable" id="DivTable" style="width: 100%;">
+
+                <div style="font-size: 12px; position: absolute; width: 100%;">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

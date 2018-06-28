@@ -1,0 +1,156 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+//数据集新增/修改
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class MainSqlAdd : PageBase
+    {
+        #region 属性及构造函数
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(MainSqlAdd));
+            if (!this.IsPostBack)
+            {
+                MyAddInit();
+                ReportID.Value = Common.DNTRequest.GetQueryString("id");
+
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    if (Action.ToLower().Equals("add"))
+                    {
+                        ViewState["PageState"] = CommonEnum.PageState.ADD;
+                    }
+                    else if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["PageState"] = CommonEnum.PageState.EDIT;
+                        BindDataEx();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 方法
+        protected void BindDataEx()
+        {
+            if (!String.IsNullOrEmpty(Common.DNTRequest.GetQueryString("ReportMainSqlID")))
+            {
+                HidReportMainSqlID.Value = Common.DNTRequest.GetQueryString("ReportMainSqlID");
+                T_Report_MainSql_MDL mdl = new T_Report_MainSql_BLL().GetModel(Common.ConvertEx.ToInt(Common.DNTRequest.GetQueryString("ReportMainSqlID")));
+
+                if (mdl != null)
+                {
+                    ViewState["model"] = mdl;
+                    Comm.SetValueToPage(mdl, tbl);
+                    txt_OrderId.Text = Common.ConvertEx.ToString(mdl.OrderId);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 检测SQL语句是否合法
+        /// </summary>
+        /// <param name="strSql"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool CheckSql(string strSql)
+        {
+            try
+            {
+                if (strSql.IndexOf("{") > -1 && strSql.IndexOf("}") > -1)
+                {
+                    string RepSql = strSql.Substring(strSql.IndexOf("{"), strSql.LastIndexOf("}") - strSql.IndexOf("{") + 1);
+                    strSql = strSql.Replace(RepSql, "");
+                }
+
+                return new T_Other_BLL().CheckDefindSql(strSql);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 判断同一个报表下是否有重复的SQL及其对应的别名
+        /// </summary>
+        /// <param name="ReportMainSqlID"></param>
+        /// <param name="ReportID"></param>
+        /// <param name="strSql"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public int CheckSqlExist(string ReportMainSqlID, string ReportID, string strSql, string OtherName)
+        {
+            try
+            {
+                string strWhere = "ReportMainSqlID !=" + ReportMainSqlID + " and ReportID=" + ReportID + " and MainSql='" + strSql.Trim() + "'";
+                List<T_Report_MainSql_MDL> ltSql = new T_Report_MainSql_BLL().GetModelList(strWhere);
+
+                strWhere = "ReportMainSqlID !=" + ReportMainSqlID + " and ReportID=" + ReportID + " and OtherName='" + OtherName.Trim() + "'";
+                List<T_Report_MainSql_MDL> ltOther = new T_Report_MainSql_BLL().GetModelList(strWhere);
+
+                if (ltSql.Count > 0) return 1;
+                else if (ltOther.Count > 0) return 2;
+                else return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        #endregion
+
+        #region 事件
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            T_Report_MainSql_MDL mdl = new T_Report_MainSql_MDL();
+
+            if (ViewState["model"] != null)
+                mdl = ViewState["model"] as T_Report_MainSql_MDL;
+
+            mdl.OrderId = Common.ConvertEx.ToInt(txt_OrderId.Text);
+            mdl.IsValid = true;
+
+            object obj = Comm.GetValueToObject(mdl, tbl);
+            if (mdl != null)
+            {
+                T_Report_MainSql_MDL new_mdl = obj as T_Report_MainSql_MDL;
+
+                switch ((CommonEnum.PageState)ViewState["PageState"])
+                {
+                    case CommonEnum.PageState.ADD:
+                        new T_Report_MainSql_BLL().Add(new_mdl);
+                        break;
+
+                    case CommonEnum.PageState.EDIT:
+                        new T_Report_MainSql_BLL().Update(new_mdl);
+                        break;
+                }
+                Response.Redirect("ReportStep2.aspx?id=" + Common.DNTRequest.GetQueryString("id") + "");
+            }
+        }
+        #endregion
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReportStep2.aspx?id=" + Common.DNTRequest.GetQueryString("id") + "");
+        }
+    }
+}

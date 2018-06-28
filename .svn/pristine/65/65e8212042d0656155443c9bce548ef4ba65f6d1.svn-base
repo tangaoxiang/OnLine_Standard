@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+
+//报表设计 -step3
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportStep3 : System.Web.UI.Page
+    {
+        #region 属性及构造函数
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            iframe.Attributes.Add("src", "ReportDesign.aspx?id=" + Common.DNTRequest.GetQueryString("id") + "");
+        }
+        #endregion
+
+        #region 事件
+        //back
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReportStep2.aspx?action=" + Common.DNTRequest.GetQueryString("action") + "&id=" + Common.DNTRequest.GetQueryString("id") + "");
+        }
+
+        //step4
+        protected void btnNextStep_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReportStep4.aspx?action=" + Common.DNTRequest.GetQueryString("action") + "&id=" + Common.DNTRequest.GetQueryString("id") + "");
+        }
+
+        #endregion
+
+    }
+}

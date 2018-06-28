@@ -1,0 +1,82 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlJSCheckInfo.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlJSCheckInfo" %>
+<div style="padding: 0px" runat="server" id="divCheck" visible="false">
+    <table width="99%" border="1" align="center" cellpadding="1" cellspacing="0" bordercolor="c1d4da"
+        style="border-collapse: collapse;" id="table1" runat="server">
+        <tr>
+            <td width="14%" style="height: 22px;">
+                <div align="left">
+                    送审时间
+                </div>
+            </td>
+            <td width="15%">
+                <asp:Label ID="SubmitDateTime_dash" Text='' runat="server"></asp:Label>
+            </td>
+            <td width="15%">
+                <div align="left">
+                    送审人
+                </div>
+            </td>
+            <td colspan="7">
+                <asp:Label ID="SubmitUser_dash" Text='' runat="server"></asp:Label>
+            </td>
+        </tr>
+        <tr style="height: 22px;">
+            <td>
+                <div align="left">
+                    接收日期
+                </div>
+            </td>
+            <td>
+                <asp:Label ID="RecvDateTime_dash" Text='' runat="server"></asp:Label>
+            </td>
+            <td>
+                <div align="left">
+                    接收人
+                </div>
+            </td>
+            <td colspan="7">
+                <asp:Label ID="RecvUser_dash" Text='' runat="server"></asp:Label>
+            </td>
+        </tr>
+        <tr style="height: 22px;">
+            <td width="8%">
+                <div align="left">
+                    案卷总数
+                </div>
+            </td>
+            <td width="8%">
+                <asp:Label ID="ArchiveCount" Text='' runat="server"></asp:Label>
+            </td>
+            <td  width="8%">
+                <div align="left">
+                    文字卷数
+                </div>
+            </td>
+            <td  width="8%">
+                <asp:Label ID="wz" Text='' runat="server"></asp:Label>
+            </td>
+            <td  width="8%">
+                 <div align="left">
+                    图纸卷数 </div>
+            </td>
+            <td width="8%">
+                <asp:Label ID="tzz" Text='' runat="server"></asp:Label>
+            </td>
+            <td width="8%">
+                 <div align="left">
+                    照片卷数</div>
+            </td>
+            <td width="8%">
+                <asp:Label ID="zp" Text='0' runat="server" ></asp:Label>
+            </td>
+             <td width="8%">
+                <div align="left">
+                    混合卷数</div>   
+            </td>
+            <td width="8%">
+                 <asp:Label ID="hh" Text='0' runat="server" ></asp:Label>
+            </td>
+        </tr>
+    </table>
+</div>

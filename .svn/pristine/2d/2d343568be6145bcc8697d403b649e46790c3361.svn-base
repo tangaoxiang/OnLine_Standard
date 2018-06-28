@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class BatChUpload : System.Web.UI.Page
+    {
+        public string pid = string.Empty;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            pid = DNTRequest.GetQueryString("FileListID");                                                                 
+        }
+    }
+}

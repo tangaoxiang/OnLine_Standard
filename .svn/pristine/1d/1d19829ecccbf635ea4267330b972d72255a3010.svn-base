@@ -1,0 +1,173 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="RoleList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.RoleList" Title="角色管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownCompanyInfo.ascx" TagName="ctrlDropDownCompanyInfo"
+    TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo"
+    TagPrefix="uc3" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function getNewUrl() {
+            var url = window.location.href;
+            if ($('#ctl00_Main_ddlCompany_ddlArea').val() != "") {
+                url = Common.urlreplace(url, 'ddlCompany', $('#ctl00_Main_ddlCompany_ddlArea').val());
+            }
+            if ($('#ctl00_Main_txtRoleName_TextBox1').val() != "") {
+                url = Common.urlreplace(url, 'txtRoleName', escape($('#ctl00_Main_txtRoleName_TextBox1').val()));
+            }
+            if ($('#CurrentPageIndex').text() != "") {
+                url = Common.urlreplace(url, 'PageIndex', $('#CurrentPageIndex').text());
+            }
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+        //新增
+        function btnAdd() {
+            var selKey = Common.getRadioKeyToArray();
+            var url = 'RoleAdd.aspx?action=' + PageState.Add + '&id=0&rn=' + Math.random();
+            if (selKey.length > 0)
+                url = 'RoleAdd.aspx?action=' + PageState.Add + '&id=' + selKey[0] + '&rn=' + Math.random();
+
+            layer.open({
+                type: 2,
+                title: '角色编辑页面-新增',
+                maxmin: true,
+                resize: false,
+                shadeClose: false, //点击遮罩关闭层
+                area: ['500px', '400px'],
+                content: url,
+                end: function () {
+                    if ($("#hidOpenFlag").val() == "1") {
+                        layer.alert('角色新增成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                }
+            });
+        }
+        //编辑
+        function btnEdit() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                layer.open({
+                    type: 2,
+                    title: '角色编辑页面-修改',
+                    maxmin: false,
+                    resize: false,
+                    shadeClose: false, //点击遮罩关闭层
+                    area: ['500px', '400px'],
+                    content: 'RoleAdd.aspx?action=' + PageState.Edit + '&id=' + keyList[0] + '&rn=' + Math.random(),
+                    end: function () {
+                        if ($("#hidOpenFlag").val() == "1") {
+                            layer.alert('角色修改成功!', { btnAlign: 'c' }, function (index) {
+                                window.location.href = getNewUrl();
+                                layer.close(index);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        //删除
+        function btnDel() {
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定要删除选中角色?<br/>注意:如果有用户属于该角色,则不能删除!', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    if (RoleList.DeleteRole(keyList[0]).value) {
+                        layer.alert('角色删除成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    } else {
+                        Common.fnLayerAlert("删除失败,原因:有用户属于该角色.");
+                    }
+                });
+            }
+        }
+
+    </script>
+    <style type="text/css">
+        select {
+            height: 21px;
+            width: 175px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">单位名称：</td>
+                    <td class="c2">
+                        <uc2:ctrlDropDownCompanyInfo ID="ddlCompany" runat="server" />
+                    </td>
+                    <td class="condition">角色名称：</td>
+                    <td class="c2">
+                        <uc1:ctrlTextBoxEx runat="server" ID="txtRoleName" MaxLength="20" />
+                    </td>
+                    <td class="ss">
+                        <asp:Button ID="btnSearch" runat="server" Text=" 查询 " OnClick="btnSearch_Click" />
+                        <input type="reset" value="重 置" />
+                    </td>
+                </tr>
+            </table>
+            <div class="ss"></div>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl">
+                        <a id="MrcBtnAdd" href="#" title="添加" onclick="btnAdd()">
+                            添加 </a>
+                        <a id="MrcBtnEdit" href="#" title="修改" onclick="btnEdit()">
+                         修改 </a>
+                        <a id="MrcBtnDel" href="#" title="删除" onclick="btnDel()">
+                            删除 </a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="30px"></th>
+                                <th width="150px">区域名称</th>
+                                <th width="140px">单位类别</th>
+                                <th>单位名称</th>
+                                <th width="180px">角色名称</th>
+                                <th width="180px">角色代码</th>
+                                <th>描述</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td>
+                                            <input type="radio" name="radio" value='<%# Eval("RoleID")%>' />
+                                        </td>
+                                        <td><%#Eval("area_name")%></td>
+                                        <td><%#Eval("SystemInfoName")%></td>
+                                        <td><%#Eval("CompanyName")%></td>
+                                        <td><%#Eval("RoleName")%></td>
+                                        <td><%#Eval("RoleCode")%></td>
+                                        <td><%#Eval("Description")%></td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

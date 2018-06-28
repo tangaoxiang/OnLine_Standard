@@ -1,0 +1,133 @@
+﻿ 
+using DigiPower.Onlinecol.Standard.Model;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class SignatureReportPdf : PageBase
+    {
+        public string mScriptName;
+        public string mServerName;
+        public string mHttpUrl;
+        public string mServerUrl;
+        public string mHostName;
+
+        public string singleProjectID = string.Empty;         //工程ID
+        public string pdfFileName = string.Empty;             //报表PDF文件路径
+        public string reportType = string.Empty;              //报表类型  
+
+        BLL.T_FileList_BLL fileBLL = new BLL.T_FileList_BLL();
+        Model.T_FileList_MDL fileMDL = new Model.T_FileList_MDL();
+
+        BLL.T_EFile_BLL eFileBLL = new BLL.T_EFile_BLL();
+        Model.T_EFile_MDL eFileMDL = new Model.T_EFile_MDL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(SignatureReportPdf));
+
+            MyAddInit();
+            singleProjectID = Common.DNTRequest.GetQueryString("SingleProjectID");
+            pdfFileName = Common.DNTRequest.GetQueryString("pdfFileName");
+            reportType = Common.DNTRequest.GetQueryString("ReportType");
+
+            mHostName = "http://" + Request.Url.Authority;
+            mServerUrl = mHostName + "//ReportPDFServer.aspx?SingleProjectID=" +
+                singleProjectID + "&rn=" + DateTime.Now.ToString("MMddhhmmssf") + "&pdfFileName=" + pdfFileName;
+        }
+
+        /*
+        /// <summary>
+        ///  将PDF挂到对应归档目录下
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        /// <param name="TempPdfFileName">签章完成的临时目录下的PDF</param>
+        /// <param name="FileListTmpRecIDS">需要挂接的归档目录ID</param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void MoveFileToFileTmp(string SingleProjectID, string TempPdfFileName, string FileListTmpRecIDS)
+        {
+            try
+            {
+                IList<T_FileList_MDL> fileListMDL = fileBLL.GetZrsMoveFileRecID(SingleProjectID, FileListTmpRecIDS);
+                if (fileListMDL.Count > 0)
+                {
+                    if (!Directory.Exists(string.Concat(Common.Common.EFileStartPath, SingleProjectID, "\\MPDF\\")))
+                    {
+                        Directory.CreateDirectory(string.Concat(Common.Common.EFileStartPath, SingleProjectID, "\\MPDF\\"));
+                    }
+
+                    foreach (T_FileList_MDL mdl in fileListMDL)
+                    {
+                        string pdfNewFileName = Guid.NewGuid().ToString() + ".PDF";
+                        string pdfOldFileName = mdl.PDFFilePath;
+                        if (System.IO.File.Exists(Server.MapPath("../Upload/TempReport/" + TempPdfFileName)))
+                        {
+                            System.IO.File.Copy(Server.MapPath("../Upload/TempReport/" + TempPdfFileName),
+                                string.Concat(Common.Common.EFileStartPath, SingleProjectID, "\\MPDF\\" + pdfNewFileName), true);
+
+                            T_FileList_MDL tfMdl = fileBLL.GetModel(mdl.FileListID);
+                            if (tfMdl != null)
+                            {
+                                tfMdl.CONVERT_DT = DateTime.Now.ToString("yyyy-MM-dd");
+                                tfMdl.CONVERT_FLAG = true;
+                                tfMdl.RootPath = Common.Common.EFileStartPath;
+                                tfMdl.PDFFilePath = pdfNewFileName;
+                                tfMdl.PagesCount = 2;
+                                fileBLL.Update(tfMdl);
+                            }
+
+                            BLL.T_Other_BLL otherBLL = new DigiPower.Onlinecol.Standard.BLL.T_Other_BLL();
+                            otherBLL.UpdateArchiveStatus(mdl.FileListID.ToString(), 10, "0");
+
+                            if (System.IO.File.Exists(string.Concat(Common.Common.EFileStartPath, SingleProjectID, "\\MPDF\\" + pdfOldFileName)))
+                            {
+                                System.IO.File.Delete(string.Concat(Common.Common.EFileStartPath, SingleProjectID, "\\MPDF\\" + pdfOldFileName));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 责任书签章日志
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string SignatureFinish(string SingleProjectID, string OperationType)
+        {
+            string msg = string.Empty;
+            try
+            {
+                DigiPower.Onlinecol.Standard.BLL.T_FileList_SignatureLog_BLL logBLL = new BLL.T_FileList_SignatureLog_BLL();
+                DigiPower.Onlinecol.Standard.Model.T_FileList_SignatureLog_MDL logMDL = new Model.T_FileList_SignatureLog_MDL();
+                logMDL.SignatureFinish_DT = DateTime.Now;
+                logMDL.SignatureFinishFlag = "1";
+                logMDL.FileListTmpID = 0;
+                logMDL.SingleProjectID = Common.ConvertEx.ToInt(SingleProjectID);
+                logMDL.Signature_UserID = Common.Session.GetSessionInt("UserID");
+                logMDL.Signature_UserRoleCode = Common.Session.GetSession("RoleCode");
+                logMDL.OperationType = OperationType;
+
+                logBLL.Add(logMDL);
+                msg = SystemSet._RETURN_SUCCESS_VALUE;
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+            return msg;
+        }    */
+    }
+}

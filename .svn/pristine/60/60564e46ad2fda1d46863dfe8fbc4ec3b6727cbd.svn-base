@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.ArchiveManage
+{
+    public partial class SingleProjectUserList : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                this.btnDelete.Attributes.Add("onclick", "javascript:return confirm('你确认要删除吗?')");
+            }
+            BindGrid();
+        }
+
+        void BindGrid()
+        {
+            BLL.T_SingleProjectUser_BLL BLL = new T_SingleProjectUser_BLL();
+            DataSet ds = BLL.GetListByRoleID(Common.Session.GetSession("RoleID"));
+
+            List<string> collist = new List<string>();
+            //collist.Add("gcbm");
+            collist.Add("gcmc");
+            collist.Add("CompanyName");
+            collist.Add("username");
+            collist.Add("Mobile");
+            collist.Add("QQ");
+            collist.Add("Tel");
+            //collist.Add("Fax");
+            //collist.Add("EMail");
+
+            //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+            ctrlGridEx1.InitGrid("SingleProjectUserID", collist, ds, "SingleProjectUserAdd.aspx?action=edit");
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("SingleProjectUserAdd.aspx?action=add");
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<string> sellist = ctrlGridEx1.GetSelects();
+
+            if (sellist.Count > 0)
+            {
+                for (int i = 0; i < sellist.Count; i++)
+                {
+                    string KeyID = sellist[i];
+                    (new T_SingleProjectUser_BLL()).Delete(int.Parse(KeyID));
+                }
+                BindGrid();
+            }
+        }
+    }
+}

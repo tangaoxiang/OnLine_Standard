@@ -1,0 +1,178 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+using System.Collections.Generic;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class InsideRemove : PageBase
+    {
+        T_Archive_BLL trBll = new T_Archive_BLL();
+
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        /// <summary>
+        /// 流程编号
+        /// </summary>
+        public string workFlowCode = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 15;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(InsideRemove));
+            workFlowCode = DNTRequest.GetQueryString("WorkFlowCode").ToUpper();
+            workFlowID = DNTRequest.GetQueryString("WorkFlowID");
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+
+            if (workFlowCode.ToUpper() == SystemSet.EumWorkFlowCode.IMPORT_TO.ToString())
+            {
+                btnFugle.Text = "档案入库";
+                //btnPrintCertificate.Visible = true;
+                //btnRKZ.Visible = true;
+
+                //btnPrintApplication.Visible = true;
+                btnApprove100.Visible = false;
+                gvData.Columns[4].Visible = false;
+            }
+            if (!IsPostBack)
+            {
+                ctrlProjectBaseInfo1.DataBindEx(singleProjectID);
+
+                //接收审核信息
+                ctrlJSCheckInfo1.SetVisible = true;
+                ctrlJSCheckInfo1.DataBindEx(singleProjectID, workFlowCode);
+
+                BindArchiveList(1);
+            }
+        }
+
+        //绑定归档目录
+        private void BindArchiveList(int pageIndex)
+        {
+            string strWhere = " AND A.SingleProjectID=" + singleProjectID;
+            DataTable dt = trBll.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 取归档目录归档情况
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        /// <returns>需要归档目录数|已归档目录数|需要归档页数|已归档页数</returns>
+        string GetArchivelist(int SingleProjectID)
+        {
+            DataSet ds = (new UserOperate()).GetArchiveCount(SingleProjectID);
+
+            if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                return ds.Tables[0].Rows[0]["countlist"].ToString() + "|" + ds.Tables[0].Rows[0]["winrecvlist"].ToString() + "|" + ds.Tables[0].Rows[0]["pagescount"].ToString() + "|" + ds.Tables[0].Rows[0]["winrecvpagescount"].ToString();
+            }
+            else
+                return "";
+        }
+
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindArchiveList(AspNetPager.CurrentPageIndex);
+        }
+        
+        /// <summary>
+        /// 工程入库
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public void SingleProjectRK(string singleProjectID)
+        {
+            T_SingleProject_BLL spBll = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMdl = spBll.GetModel(ConvertEx.ToInt(singleProjectID));
+            if (spMdl != null)
+            {
+                spMdl.Status = 3721;
+                spBll.Update(spMdl);
+            }
+        }
+
+        /// <summary>
+        /// 领导签字=工程提交
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool SingleProjectSubmit(string singleProjectID, string workFlowID)
+        {
+            WorkFlowManage workflowmanage = new WorkFlowManage();
+            if (workflowmanage.GoNextProjectWorkFlowSataus(ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(workFlowID)))
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 更新馆长审核意见
+        /// </summary>
+        /// <param name="fileListID"></param>
+        /// <param name="remark"></param>
+        /// <param name="mustSubmitFlag"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateArchiveNote(string ArchiveID,string qpnote = "")
+        {
+            T_ReadyCheckBook_BLL rbb=new T_ReadyCheckBook_BLL();
+            List<T_ReadyCheckBook_MDL> ArchMDLList = rbb.GetModelList(" (CodeType='qianpi' or CodeType='ywsh') and SingleProjectID=" + ArchiveID.ToString());
+
+            T_ReadyCheckBook_MDL ml = new T_ReadyCheckBook_MDL();
+            if (ArchMDLList.Count > 0)
+            {
+                ml = ArchMDLList[0];
+            }
+
+            ml.SingleProjectID = ConvertEx.ToInt(ArchiveID);
+            ml.CodeType = "qianpi";
+            ml.OTHER_MATERIAL = qpnote;
+
+            if (ArchMDLList.Count > 0)
+                rbb.Update(ml);
+            else
+                rbb.Add(ml);
+        }
+    }
+}

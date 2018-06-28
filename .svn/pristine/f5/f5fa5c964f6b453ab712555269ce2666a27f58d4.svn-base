@@ -1,0 +1,368 @@
+using System;
+using System.Data;
+using System.Text;
+using System.Data.SqlClient;
+using DigiPower.Onlinecol.Standard.DbUtility;//请先添加引用
+namespace DigiPower.Onlinecol.Standard.DAL
+{
+    /// <summary>
+    /// 数据访问类T_FileListTmp_DAL。
+    /// </summary>
+    public class T_FileListTmp_DAL
+    {
+        public T_FileListTmp_DAL()
+        { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return DbHelperSQL.GetMaxID("recid", "T_FileListTmp");
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int recid)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from T_FileListTmp");
+            strSql.Append(" where recid=@recid ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@recid", SqlDbType.Int,8)};
+            parameters[0].Value = recid;
+
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into T_FileListTmp(");
+            strSql.Append("PID,archive_form_no,DefaultCompanyType,bh,title,OrderIndex,pym,MustSubmitFlag,IsVisible,AlonePack,IsFolder,");
+            strSql.Append("JS,SG,SJ,JL,FileType,ForeignNo,FileFrom) ");
+            strSql.Append(" values (");
+            strSql.Append("@PID,@archive_form_no,@DefaultCompanyType,@bh,@title,@OrderIndex,@pym,@MustSubmitFlag,@IsVisible,@AlonePack,@IsFolder,");
+            strSql.Append("@JS,@SG,@SJ,@JL,@FileType,@ForeignNo,@FileFrom)");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+					new SqlParameter("@PID", SqlDbType.Int,8),
+					new SqlParameter("@archive_form_no", SqlDbType.VarChar,20),
+					new SqlParameter("@DefaultCompanyType", SqlDbType.Int,8),
+					new SqlParameter("@bh", SqlDbType.VarChar,10),
+					new SqlParameter("@title", SqlDbType.VarChar,200),
+					new SqlParameter("@OrderIndex", SqlDbType.Int,8),
+					new SqlParameter("@pym", SqlDbType.VarChar,100),
+					new SqlParameter("@MustSubmitFlag", SqlDbType.Bit,1),
+					new SqlParameter("@IsVisible", SqlDbType.Bit,1),
+					new SqlParameter("@AlonePack", SqlDbType.Bit,1),
+					new SqlParameter("@IsFolder", SqlDbType.Bit,1),
+					new SqlParameter("@JS", SqlDbType.NVarChar,4),
+					new SqlParameter("@SG", SqlDbType.NVarChar,4),
+					new SqlParameter("@SJ", SqlDbType.NVarChar,4),
+					new SqlParameter("@JL", SqlDbType.NVarChar,4),
+					new SqlParameter("@FileType", SqlDbType.NVarChar,20),
+                    new SqlParameter("@ForeignNo", SqlDbType.NVarChar,100),
+                    new SqlParameter("@FileFrom", SqlDbType.NVarChar,100) };
+
+            parameters[0].Value = model.PID;
+            parameters[1].Value = model.archive_form_no;
+            parameters[2].Value = model.DefaultCompanyType;
+            parameters[3].Value = model.bh;
+            parameters[4].Value = model.title;
+            parameters[5].Value = model.OrderIndex;
+            parameters[6].Value = model.pym;
+            parameters[7].Value = model.MustSubmitFlag;
+            parameters[8].Value = model.IsVisible;
+            parameters[9].Value = model.AlonePack;
+            parameters[10].Value = model.IsFolder;
+            parameters[11].Value = model.JS;
+            parameters[12].Value = model.SG;
+            parameters[13].Value = model.SJ;
+            parameters[14].Value = model.JL;
+            parameters[15].Value = model.FileType;
+            parameters[16].Value = model.ForeignNo;
+            parameters[17].Value = model.FileFrom;
+
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+        }
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update T_FileListTmp set ");
+            strSql.Append("PID=@PID,");
+            strSql.Append("archive_form_no=@archive_form_no,");
+            strSql.Append("DefaultCompanyType=@DefaultCompanyType,");
+            strSql.Append("bh=@bh,");
+            strSql.Append("title=@title,");
+            strSql.Append("OrderIndex=@OrderIndex,");
+            strSql.Append("pym=@pym,");
+            strSql.Append("MustSubmitFlag=@MustSubmitFlag,");
+            strSql.Append("IsVisible=@IsVisible,");
+            strSql.Append("AlonePack=@AlonePack,");
+            strSql.Append("IsFolder=@IsFolder,");
+            strSql.Append("JS=@JS,");
+            strSql.Append("SG=@SG,");
+            strSql.Append("SJ=@SJ,");
+            strSql.Append("JL=@JL,");
+            strSql.Append("FileType=@FileType,");
+            strSql.Append("ForeignNo=@ForeignNo,");
+            strSql.Append("FileFrom=@FileFrom");
+
+
+            strSql.Append(" where recid=@recid ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@recid", SqlDbType.Int,8),
+					new SqlParameter("@PID", SqlDbType.Int,8),
+					new SqlParameter("@archive_form_no", SqlDbType.VarChar,20),
+					new SqlParameter("@DefaultCompanyType", SqlDbType.Int,8),
+					new SqlParameter("@bh", SqlDbType.VarChar,10),
+					new SqlParameter("@title", SqlDbType.VarChar,200),
+					new SqlParameter("@OrderIndex", SqlDbType.Int,8),
+					new SqlParameter("@pym", SqlDbType.VarChar,100),
+					new SqlParameter("@MustSubmitFlag", SqlDbType.Bit,1),
+					new SqlParameter("@IsVisible", SqlDbType.Bit,1),
+					new SqlParameter("@AlonePack", SqlDbType.Bit,1),
+					new SqlParameter("@IsFolder", SqlDbType.Bit,1),
+					new SqlParameter("@JS", SqlDbType.NVarChar,4),
+					new SqlParameter("@SG", SqlDbType.NVarChar,4),
+					new SqlParameter("@SJ", SqlDbType.NVarChar,4),
+					new SqlParameter("@JL", SqlDbType.NVarChar,4),
+					new SqlParameter("@FileType", SqlDbType.NVarChar,20) ,
+                    new SqlParameter("@ForeignNo", SqlDbType.NVarChar,100),
+                    new SqlParameter("@FileFrom", SqlDbType.NVarChar,100) };
+
+            parameters[0].Value = model.recid;
+            parameters[1].Value = model.PID;
+            parameters[2].Value = model.archive_form_no;
+            parameters[3].Value = model.DefaultCompanyType;
+            parameters[4].Value = model.bh;
+            parameters[5].Value = model.title;
+            parameters[6].Value = model.OrderIndex;
+            parameters[7].Value = model.pym;
+            parameters[8].Value = model.MustSubmitFlag;
+            parameters[9].Value = model.IsVisible;
+            parameters[10].Value = model.AlonePack;
+            parameters[11].Value = model.IsFolder;
+            parameters[12].Value = model.JS;
+            parameters[13].Value = model.SG;
+            parameters[14].Value = model.SJ;
+            parameters[15].Value = model.JL;
+            parameters[16].Value = model.FileType;
+            parameters[17].Value = model.ForeignNo;
+            parameters[18].Value = model.FileFrom;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int recid)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from T_FileListTmp ");
+            strSql.Append(" where recid=@recid ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@recid", SqlDbType.Int,8)};
+            parameters[0].Value = recid;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+                
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL GetModel(int recid)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 recid,PID,archive_form_no,DefaultCompanyType,bh,title,OrderIndex,pym,MustSubmitFlag,IsVisible,");
+            strSql.Append("AlonePack,IsFolder,JS,SG,SJ,JL,FileType,ForeignNo,FileFrom from T_FileListTmp ");
+            strSql.Append(" where recid=@recid ");      
+            SqlParameter[] parameters = {
+					new SqlParameter("@recid", SqlDbType.Int,8)};
+            parameters[0].Value = recid;
+
+            DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL model = new DigiPower.Onlinecol.Standard.Model.T_FileListTmp_MDL();
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                if (ds.Tables[0].Rows[0]["recid"].ToString() != "")
+                {
+                    model.recid = int.Parse(ds.Tables[0].Rows[0]["recid"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["PID"].ToString() != "")
+                {
+                    model.PID = int.Parse(ds.Tables[0].Rows[0]["PID"].ToString());
+                }
+                model.archive_form_no = ds.Tables[0].Rows[0]["archive_form_no"].ToString();
+                if (ds.Tables[0].Rows[0]["DefaultCompanyType"].ToString() != "")
+                {
+                    model.DefaultCompanyType = int.Parse(ds.Tables[0].Rows[0]["DefaultCompanyType"].ToString());
+                }
+                model.bh = ds.Tables[0].Rows[0]["bh"].ToString();
+                model.title = ds.Tables[0].Rows[0]["title"].ToString();
+                if (ds.Tables[0].Rows[0]["OrderIndex"].ToString() != "")
+                {
+                    model.OrderIndex = int.Parse(ds.Tables[0].Rows[0]["OrderIndex"].ToString());
+                }
+                model.pym = ds.Tables[0].Rows[0]["pym"].ToString();
+                if (ds.Tables[0].Rows[0]["MustSubmitFlag"].ToString() != "")
+                {
+                    if ((ds.Tables[0].Rows[0]["MustSubmitFlag"].ToString() == "1") || (ds.Tables[0].Rows[0]["MustSubmitFlag"].ToString().ToLower() == "true"))
+                    {
+                        model.MustSubmitFlag = true;
+                    }
+                    else
+                    {
+                        model.MustSubmitFlag = false;
+                    }
+                }
+                if (ds.Tables[0].Rows[0]["IsVisible"].ToString() != "")
+                {
+                    if ((ds.Tables[0].Rows[0]["IsVisible"].ToString() == "1") || (ds.Tables[0].Rows[0]["IsVisible"].ToString().ToLower() == "true"))
+                    {
+                        model.IsVisible = true;
+                    }
+                    else
+                    {
+                        model.IsVisible = false;
+                    }
+                }
+                if (ds.Tables[0].Rows[0]["AlonePack"].ToString() != "")
+                {
+                    if ((ds.Tables[0].Rows[0]["AlonePack"].ToString() == "1") || (ds.Tables[0].Rows[0]["AlonePack"].ToString().ToLower() == "true"))
+                    {
+                        model.AlonePack = true;
+                    }
+                    else
+                    {
+                        model.AlonePack = false;
+                    }
+                }
+                if (ds.Tables[0].Rows[0]["IsFolder"].ToString() != "")
+                {
+                    if ((ds.Tables[0].Rows[0]["IsFolder"].ToString() == "1") || (ds.Tables[0].Rows[0]["IsFolder"].ToString().ToLower() == "true"))
+                    {
+                        model.IsFolder = true;
+                    }
+                    else
+                    {
+                        model.IsFolder = false;
+                    }
+                }
+                model.JS = ds.Tables[0].Rows[0]["JS"].ToString();
+                model.SG = ds.Tables[0].Rows[0]["SG"].ToString();
+                model.SJ = ds.Tables[0].Rows[0]["SJ"].ToString();
+                model.JL = ds.Tables[0].Rows[0]["JL"].ToString();
+                model.FileType = ds.Tables[0].Rows[0]["FileType"].ToString();
+
+                model.ForeignNo = ds.Tables[0].Rows[0]["ForeignNo"].ToString();
+                model.FileFrom = ds.Tables[0].Rows[0]["FileFrom"].ToString();
+
+                return model;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select recid,PID,archive_form_no,DefaultCompanyType,bh,title,OrderIndex,pym,MustSubmitFlag,IsVisible,AlonePack,");
+            strSql.Append("IsFolder,JS,SG,SJ,JL,FileType,bh+'.'+title AS NewTitle,ForeignNo,FileFrom ");
+            strSql.Append(" FROM T_FileListTmp ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            //strSql.Append(" Order by PID,BH");
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ");
+            if (Top > 0)
+            {
+                strSql.Append(" top " + Top.ToString());
+            }
+            strSql.Append(" recid,PID,archive_form_no,DefaultCompanyType,bh,title,OrderIndex,pym,MustSubmitFlag,IsVisible,AlonePack,IsFolder,JS,SG,SJ,JL,FileType ");
+            strSql.Append(" FROM T_FileListTmp ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" order by " + filedOrder);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+        /// <summary>
+        /// 获得数据列表 分页
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetList(string strWhere, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select recid,PID,archive_form_no,DefaultCompanyType,bh,title,OrderIndex,pym,MustSubmitFlag,IsVisible,AlonePack,IsFolder,JS,SG,SJ,JL,FileType, ");
+            strSql.Append("(select t.systeminfoName from t_systeminfo t where t.CurrentType='CompanyType' and t.systeminfoid=DefaultCompanyType)as DefaultCompanyTypeName, ");
+            strSql.Append("(select t.systeminfoName from t_systeminfo t where t.CurrentType='FileFrom' and t.systeminfoid=FileFrom)as FileFromName, ");
+            strSql.Append("(select t.systeminfoName from t_systeminfo t where t.CurrentType='Archive_Form' and t.SystemInfoCode=archive_form_no)as Archive_FormName ");
+
+            strSql.Append(" FROM T_FileListTmp ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+ 
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun).Tables[0];
+        }
+         
+        #endregion  成员方法
+
+        public int GetCount(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT COUNT(0) FROM T_FileListTmp WHERE 1=1 ");
+            if (!string.IsNullOrEmpty(strWhere))
+                strSql.Append(" And " + strWhere);
+            return DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(DbHelperSQL.GetSingle(strSql.ToString()));
+        }
+
+
+        public int GetCountByFileType(int fileType)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT COUNT(0) FROM dbo.T_FileListTmp B WHERE B.FILETYPE=" + fileType + "");
+            return DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(DbHelperSQL.GetSingle(strSql.ToString()));
+        }
+    }
+}
+

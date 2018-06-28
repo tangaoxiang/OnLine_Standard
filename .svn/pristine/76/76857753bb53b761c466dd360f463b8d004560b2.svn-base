@@ -1,0 +1,129 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+//流程添加/修改
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class WorkFlowAdd : PageBase
+    {
+        T_WorkFlow_BLL workFlowBLL = new T_WorkFlow_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(WorkFlowAdd));
+            MyAddInit();
+            CompanyID.MySelectChange += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownCompanyInfo.SelectChange(ddlCompan_MySelectChange);
+
+            if (!IsPostBack)
+            {
+                chkMenuRight.DataBindEx(SystemSet._WORKFLOWRIGHTCHAR);
+                CompanyID.DataBindEx();
+                ddlCompan_MySelectChange();
+                BindPage(ID);
+
+                if ((CommonEnum.PageState)ViewState["ps"] == CommonEnum.PageState.VIEW)
+                    btnSave.Visible = false;
+            }
+        }
+
+        /// <summary>
+        /// 公司下拉框选择事件,绑定对应流程
+        /// </summary>
+        private void ddlCompan_MySelectChange()
+        {
+            PID.DataBindEx(Common.ConvertEx.ToInt(CompanyID.SelectValue), false);
+        }
+
+        /// <summary>
+        /// 绑定页面
+        /// </summary>
+        /// <param name="ID"></param>
+        private void BindPage(string ID)
+        {
+            if (!String.IsNullOrWhiteSpace(ID))
+            {
+                T_WorkFlow_MDL model = workFlowBLL.GetModel(Common.ConvertEx.ToInt(ID));
+                if (model != null)
+                {
+                    PID.DataBindEx(Common.ConvertEx.ToInt(model.CompanyID), false);
+                    Comm.SetValueToPage(model, this.tbl);
+                    chkMenuRight.setSelectValue = model.RightListID;
+                    ViewState["model"] = model;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 判断流程编号是否存在
+        /// </summary>
+        /// <param name="Action">编辑模式,新增或删除</param>
+        /// <param name="WorkFlowCode">流程编号</param>
+        /// <param name="WorkFlowID">流程编号ID</param>
+        /// <param name="CompanyID">公司ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool ExistsWorkFlowCode(string Action, string WorkFlowCode, int WorkFlowID, int CompanyID)
+        {
+            bool resultCheck = false;
+            try
+            {
+                if (Action == CommonEnum.PageState.ADD.ToString().ToLower())
+                    WorkFlowID = 0;
+
+                if (!String.IsNullOrWhiteSpace(Action) && !String.IsNullOrWhiteSpace(WorkFlowCode))
+                {
+                    if (workFlowBLL.Exists(WorkFlowCode.ToLower(), WorkFlowID, CompanyID))
+                    {
+                        resultCheck = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "判断流程编号是否存在失败", ex);
+            }
+            return resultCheck;
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_WorkFlow_MDL model = new T_WorkFlow_MDL();
+            if (ViewState["model"] != null)
+                model = (T_WorkFlow_MDL)ViewState["model"];
+
+            object obj = Comm.GetValueToObject(model, this.tbl);
+            if (obj != null)
+            {
+                T_WorkFlow_MDL Newmodel = (T_WorkFlow_MDL)obj;
+                Newmodel.RightListID = chkMenuRight.getSelectValue;
+                switch ((CommonEnum.PageState)ViewState["ps"])
+                {
+                    case CommonEnum.PageState.ADD:
+                        workFlowBLL.Add(Newmodel);
+                        break;
+                    case CommonEnum.PageState.EDIT:
+                        T_WorkFlow_MDL tempObj = workFlowBLL.GetModel(Newmodel.WorkFlowID);
+                        workFlowBLL.Update(Newmodel);
+                        break;
+                }
+            }
+            Common.MessageBox.CloseLayerOpenWeb(this.Page);
+        }
+    }
+}

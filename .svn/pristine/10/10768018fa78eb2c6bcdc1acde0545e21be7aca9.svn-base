@@ -1,0 +1,119 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using System.IO;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class AddQuestion : PageBase
+    {
+        string savePath = "/upload/QuestionAttach/";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            int iSingleProjectID = DNTRequest.GetQueryInt("SingleProjectID", 0);
+            int iFileListID = DNTRequest.GetQueryInt("FileListID", 0);
+
+            SingleProjectID.MySelectChanged += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownSingleProject.SelectChanged(SingleProjectID_MySelectChanged);
+
+            if (!IsPostBack)
+            {
+                SingleProjectID.DataBindEx();
+
+                if (iSingleProjectID != 0)
+                {
+                    SingleProjectID.SelectValue = iSingleProjectID.ToString();
+                }
+
+                FileListID.DataBindEx(iSingleProjectID);
+                if (iFileListID != 0)
+                {
+                    FileListID.SelectValue = iFileListID.ToString();
+                }
+                ctrlDropDownQuestionType1.DataBindEx();
+            }
+        }
+
+        private void SingleProjectID_MySelectChanged()
+        {
+            FileListID.DataBindEx(ConvertEx.ToInt(SingleProjectID.SelectValue));
+        }
+
+        protected void btnSubmit_Click(object sender, EventArgs e)
+        {
+            string atachFileName = "";
+            string trueFileName = "";
+            HttpFileCollection uploadFiles = Request.Files;
+            HttpPostedFile userPostFile = null;
+            if (uploadFiles.Count > 0)
+            {
+                userPostFile = uploadFiles[0];
+                if (!String.IsNullOrEmpty(userPostFile.FileName))
+                {
+                    if (userPostFile.FileName.ToLower().EndsWith(".exe") || userPostFile.FileName.ToLower().EndsWith(".bat"))
+                    {
+                        MessageBox.Show(this, "只能上传文档或图片附件。");
+                        return;
+                    }
+                    atachFileName = Common.Common.SaveFile(Server.MapPath(savePath), userPostFile, "Question_");
+                    if (atachFileName != "")
+                    {
+                        trueFileName = userPostFile.FileName.Substring(userPostFile.FileName.LastIndexOf("\\") + 1);
+                    }
+                }
+            }
+
+            T_Question_MDL qtModel = new T_Question_MDL();
+            qtModel = (T_Question_MDL)Comm.GetValueToObject(qtModel, form1);
+            if (qtModel != null)
+            {
+                qtModel.ReadFlag = false;
+                qtModel.QuestionTypeID = Common.ConvertEx.ToInt(ctrlDropDownQuestionType1.SelectValue);
+                qtModel.CreateDate = DateTime.Now;
+                qtModel.CreateUserID = ConvertEx.ToInt(Common.Session.GetSession("userid"));
+                qtModel.CreateUserName = Common.Session.GetSession("UserName");
+                if (atachFileName != "")
+                {
+                    qtModel.AttachName = trueFileName;
+                    qtModel.AttachPath = savePath + atachFileName;
+                    //保存附件信息
+                    //T_FileAttach_MDL attachmodel = new T_FileAttach_MDL();
+                    //attachmodel.Flag = "AddQuestionAttach";
+                    //attachmodel.PriKeyValue = QuestionID;
+                    ////attachmodel.AttachCode = "AddQuestionAttach";
+                    //attachmodel.AttachName = trueFileName;
+                    //attachmodel.AttachPath = savePath + atachFileName;
+                    //attachmodel.OrderIndex = 1;
+                    //attachmodel.CreateDate = DateTime.Now;
+                    //(new T_FileAttach_BLL()).Add(attachmodel);
+                }
+                (new T_Question_BLL()).Add(qtModel);
+
+                //int QuestionID = (new T_Question_BLL()).Add(qtModel);
+                //if (QuestionID > 0)
+                //{
+                //    string str = ctrlDropDownQuestionType1.SelectValue;
+                //    BLL.T_QuestionToUser_BLL questionToUserBLL = new T_QuestionToUser_BLL();
+                //    //foreach (string l1 in selectUserList)
+                //    //{
+                //    //    Model.T_QuestionToUser_MDL questionToUserMDL = new T_QuestionToUser_MDL();
+                //    //    questionToUserMDL.QuestionID = QuestionID;
+                //    //    questionToUserMDL.ToUserID = Common.ConvertEx.ToInt(l1);
+                //    //    questionToUserBLL.Add(questionToUserMDL);
+                //    //}
+                //}
+            }
+            ClientScript.RegisterStartupScript(Page.GetType(), "close", "<script type='text/javascript'>alert('提交成功！');window.close();</script>");
+        }
+    }
+}

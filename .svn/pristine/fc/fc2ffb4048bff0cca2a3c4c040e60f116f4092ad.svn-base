@@ -1,0 +1,321 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="FileInfoList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.File.FileInfoList" %>
+
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlHead.ascx" TagName="ctrlHead" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%--<%@ Register Src="../CommonCtrl/ctrlAuxidict.ascx" TagName="ctrlAuxidict" TagPrefix="uc4" %>--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseInputWidthExt {
+            width: 480px;
+        }
+
+        .promiseTextAreaExt {
+            width: 99%;
+            height: 50px;
+        }
+
+        .ddlWidthExt {
+            width: 155px;
+        }
+
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }
+
+        tr {
+            background-color: #fff;
+        }
+    </style>
+    <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+    <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+        <tr>
+            <td class="left_title_3 promise" colspan="4">&nbsp;
+                文件编号:<asp:Literal runat="server" ID="ltBH"></asp:Literal>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">文件题名
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrltextboxex id="title" canempty="true" description="文件题名" maxlength="200"
+                    cssclass="regedit_input promiseInputWidthExt " runat="server" width="575" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">责任者
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrltextboxex id="zrr" canempty="true" description="责任者" maxlength="20"
+                    cssclass="regedit_input promiseInputWidthExt " runat="server"  width="575"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">文(图)号
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="w_t_h" canempty="true" description="文(图)号" width="250" maxlength="250"
+                    cssclass="regedit_input " runat="server" />
+            </td>
+            <td class="left_title_1 ">实体页数
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="ManualCount" runat="server" mode="Int" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <%--<tr>
+                       <td class="left_title_1 ">
+                         
+                                保管期限
+                        </td>
+                       <td class="left_title_2">
+                            <asp:DropDownList runat="server" ID="bgqx" Width="100px">
+                                <asp:ListItem Value="cq" Text="长期"></asp:ListItem>
+                                <asp:ListItem Value="yj" Text="永久"></asp:ListItem>
+                                <asp:ListItem Value="dq" Text="短期"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td align="center" class="style4">
+                         
+                                密级
+                        </td>
+                        <td align="center">
+                            <asp:DropDownList runat="server" ID="mj" Width="100px">
+                                <asp:ListItem Value="mm" Text="秘密"></asp:ListItem>
+                                <asp:ListItem Value="gk" Text="公开"></asp:ListItem>
+                                <asp:ListItem Value="gn" Text="国内"></asp:ListItem>
+                                <asp:ListItem Value="nb" Text="内部"></asp:ListItem>
+                                <asp:ListItem Value="jm" Text="机密"></asp:ListItem>
+                                <asp:ListItem Value="juem" Text="绝密"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                    </tr>--%>
+         <tr>
+            <td class="left_title_1 ">载体类型
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="ztlx" CssClass="ddlWidthExt" Enabled="false">
+                        <asp:ListItem Text=""></asp:ListItem>
+                        <asp:ListItem Value="dt" Text="底图"></asp:ListItem>
+                        <asp:ListItem Value="swp" Text="缩微片"></asp:ListItem>
+                        <asp:ListItem Value="zp" Text="照片"></asp:ListItem>
+                        <asp:ListItem Value="dp" Text="底片"></asp:ListItem>
+                        <asp:ListItem Value="lyd" Text="录音带"></asp:ListItem>
+                        <asp:ListItem Value="lxd" Text="录象带"></asp:ListItem>
+                        <asp:ListItem Value="gp" Text="光盘"></asp:ListItem>
+                        <asp:ListItem Value="jsjcp" Text="计算机磁盘"></asp:ListItem>
+                        <asp:ListItem Value="jsjcd" Text="计算机磁带"></asp:ListItem>
+                        <asp:ListItem Value="dyjp" Text="电影胶片"></asp:ListItem>
+                        <asp:ListItem Value="cp" Text="唱片"></asp:ListItem>
+                        <asp:ListItem Value="zz" Selected="True" Text="纸质"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+            <td class="left_title_1 ">规格
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="gg" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="A4" Text="A4"></asp:ListItem>
+                        <asp:ListItem Value="A0" Text="A0"></asp:ListItem>
+                        <asp:ListItem Value="A1" Text="A1"></asp:ListItem>
+                        <asp:ListItem Value="A2" Text="A2"></asp:ListItem>
+                        <asp:ListItem Value="A3" Text="A3"></asp:ListItem>
+                        <asp:ListItem Value="B0" Text="B0"></asp:ListItem>
+                        <asp:ListItem Value="B5" Text="B5"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">图纸(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="tzz" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">文字数量(页)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="sl" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">底图(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="dtz" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">图样数量(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="dw" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">照片(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="zpz" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">照片数量(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="wzz" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">底片(张)
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="dpz" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">文本稿本代码
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="wjgbdm" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="zb" Text="正本"></asp:ListItem>
+                        <asp:ListItem Value="fb" Text="副本"></asp:ListItem>
+                        <asp:ListItem Value="cg" Text="草稿"></asp:ListItem>
+                        <asp:ListItem Value="dg" Text="定稿"></asp:ListItem>
+                        <asp:ListItem Value="sg" Text="手稿"></asp:ListItem>
+                        <asp:ListItem Value="ct" Text="草图"></asp:ListItem>
+                        <asp:ListItem Value="yt" Text="原图"></asp:ListItem>
+                        <asp:ListItem Value="dt" Text="底图"></asp:ListItem>
+                        <asp:ListItem Value="lt" Text="蓝图"></asp:ListItem>
+                        <asp:ListItem Value="sxb" Text="试行本"></asp:ListItem>
+                        <asp:ListItem Value="xdb" Text="修订本"></asp:ListItem>
+                        <asp:ListItem Value="fyj" Text="复印件"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">形成开始时间
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="StartTime" runat="server" mode="Date" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">形成结束时间
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="ENDTIME" runat="server" mode="Date" cssclass="regedit_input " />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="left_title_3 promise" colspan="4">电子文件信息
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">文件类型代码
+            </td>
+            <td class="left_title_2" colspan="3">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="wjlxdm" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="wbwj" Text="文本文件(T)"></asp:ListItem>
+                        <asp:ListItem Value="txwj" Text="图象文件(I)"></asp:ListItem>
+                        <asp:ListItem Value="txinwj" Text="图形文件(G)"></asp:ListItem>
+                        <asp:ListItem Value="yxwj" Text="影像文件(V)"></asp:ListItem>
+                        <asp:ListItem Value="sywj" Text="声音文件(A)"></asp:ListItem>
+                        <asp:ListItem Value="cxwj" Text="程序文件(P)"></asp:ListItem>
+                        <asp:ListItem Value="sjwj" Text="数据文件(D)"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">文件格式
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="wjgs" runat="server" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">文件大小
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="wjdx" runat="server" mode="int" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_3 promise" colspan="4">照片信息
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">拍摄地点
+            </td>
+            <td colspan="3" align="left">
+                <uc3:ctrltextboxex id="psdd" canempty="true" description="拍摄地点" maxlength="20" cssclass="regedit_input "
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">拍摄者
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="psz" runat="server" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">拍摄时间
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="pssj" runat="server" mode="Date" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">色别
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="sb" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="cs" Text="彩色"></asp:ListItem>
+                        <asp:ListItem Value="hb" Text="黑白"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+            <td class="left_title_1 ">分别率
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="fbl" runat="server" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">相机品牌
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="xjpp" runat="server" cssclass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">相机型号
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrltextboxex id="xjxh" runat="server" cssclass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">附注
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrltextboxex id="bz" runat="server" textmode="MultiLine" cssclass="regedit_input promiseTextAreaExt " rows="5" />
+            </td>
+        </tr>
+    </table>
+
+
+    <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="left_title_4">
+                <asp:ImageButton runat="server" ID="ltUp"  OnClick="ltUp_Click" Height="22px" ImageUrl="~/Images/up11.png" Width="27px" />
+                <asp:Button ID="Button1" runat="server" Text=" 保存 " Width="52px" CssClass="btn2"
+                    OnClick="Button1_Click" />
+                <asp:Button ID="Button2" runat="server" Text=" 关闭 " Width="52px" CssClass="btn2" Visible="false"  OnClientClick="javascript:self.close()" />
+                <asp:ImageButton runat="server" ID="ltDown" OnClick="ltDown_Click" Height="22px" ImageUrl="~/Images/next1.png" Width="27px" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

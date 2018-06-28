@@ -1,0 +1,272 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.CompanyManage
+{
+    public partial class CompanyReg3_3Edit : PageBase
+    {
+        string action = "add";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ctrlArchiveFormType1.MyArchiveTypeChanged += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlArchiveFormType.ArchiveTypeChanged(ctrlArchiveFormType1_MyArchiveTypeChanged);
+            ctrlDropDownConstructionProject1.MySelectChanged += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownConstructionProject.SelectChanged(ProjSelectChanged);
+
+            if (!IsPostBack)
+            {
+                action = DNTRequest.GetQueryString("action");
+                int SingleProjectID = DNTRequest.GetQueryInt("ID", 0);
+                if (DNTRequest.GetQueryString("SingleProjectID") != "")
+                    SingleProjectID = ConvertEx.ToInt(DNTRequest.GetQueryString("SingleProjectID"));
+
+                ctrlCompanyRegBaseInfo3_31.DataBindEx(SingleProjectID);
+                //专业记载
+                ctrlCompanyRegBaseInfo3_3Ext1.DataBindEx(SingleProjectID);
+                if (action.ToLower() == "add")
+                {
+                    ctrlDropDownConstructionProject1.CompanyId = Common.Session.GetSession("CompanyID");
+                }
+                //ctrlDropDownConstructionProject1.CompanyId = Common.Session.GetSession("CompanyId");
+                ctrlDropDownConstructionProject1.DataBindEx();
+                ctrlArchiveFormType1.DataBindEx();
+                //ctrlArchiveFormType1.SelectValue = "3";
+                ctrlArchiveFormType1.SelectValue = DNTRequest.GetQueryString("ProjectType");
+
+                if (action.ToLower() == "add")
+                    tdconstructionproject.Visible = true;
+                else
+                {
+                    tdconstructionproject.Visible = false;
+                    ctrlDropDownConstructionProject1.enable = false;
+                    ctrlArchiveFormType1.Enabled = false;
+                }
+
+                if (action.ToLower() == "view")
+                {
+                    ctrlCompanyRegBaseInfo3_31.DisabledControl();
+                    ctrlCompanyRegBaseInfo3_3Ext1.DisabledControl();
+                    btnSave.Visible = false;
+
+                    //jdk 9.29
+                    btnBack.Visible = false;
+                }
+                else
+                {
+                    btnClose.Visible = false;
+                }    
+
+                //案卷补录管理页面过来
+                if (DNTRequest.GetQueryString("SuppleMent") == "SuppleMent")
+                {
+                    btnBack.Visible = false;
+                    btnClose.Visible = false;
+                }
+                //ProjSelectChanged();
+            }
+        }
+
+        void ctrlArchiveFormType1_MyArchiveTypeChanged()
+        {
+            Response.Redirect("companyreg3_" +
+                 PublicModel.GetFileTypeForProjectType(ctrlArchiveFormType1.SelectValue) + "Edit.aspx?action=" +
+                 action + "&ProjectType=" + ctrlArchiveFormType1.SelectValue + "&ID=" + DNTRequest.GetQueryString("ID"));
+           // Response.Redirect("companyreg3_" + ctrlArchiveFormType1.SelectValue + "Edit.aspx?action=" + action + "&ID=" + DNTRequest.GetQueryString("ID"));
+        }
+        private void ProjSelectChanged()
+        {
+            BLL.T_Construction_Project_BLL pBLL = new T_Construction_Project_BLL();
+            Model.T_Construction_Project_MDL pMDL = pBLL.GetModel(Common.ConvertEx.ToInt(ctrlDropDownConstructionProject1.SelectValue));
+            ctrlCompanyRegBaseInfo3_31.SetDefaultValue(pMDL);
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_SingleProject_MDL model = new T_SingleProject_MDL();
+            model = ctrlCompanyRegBaseInfo3_31.GetModule(DNTRequest.GetQueryInt("ID", 0));
+
+            c_single_project_MDL c_Single_Mdl = new c_single_project_MDL();
+            c_Single_Mdl = ctrlCompanyRegBaseInfo3_3Ext1.GetModule(DNTRequest.GetQueryInt("ID", 0));
+            c_Single_Mdl.fz = model.fz;
+
+            if (model != null)
+            {
+                string action = DNTRequest.GetQueryString("action");
+                if (model.SingleProjectID <= 0 || action == "add")
+                {
+                    model.ConstructionProjectID = ConvertEx.ToInt(ctrlDropDownConstructionProject1.SelectValue);
+                    model.ProjectType = ctrlArchiveFormType1.SelectValue;
+
+                    //Leo 新增时，需要自动产生项目号
+                    //T_Other_BLL otherBLL = new T_Other_BLL();
+                    //model.gcbm = otherBLL.GetNewEngineerID();
+                    //model.AllotDate = DateTime.Now;
+                    model.gcbm = "";
+                    string UserID = "";
+                    if (Common.Session.GetSession("tUserID") != "")
+                    {
+                        UserID = Common.Session.GetSession("tUserID");
+                    }
+                    else if (Common.Session.GetSession("UserID") != "")
+                    {
+                        UserID = Common.Session.GetSession("UserID");
+                    }
+                    model.CompanyUserID = Common.ConvertEx.ToInt(UserID);
+                    model.CreateDate = DateTime.Now;
+                    model.Status = 0;
+                    int SingleProjectID = (new T_SingleProject_BLL()).Add(model);
+
+                    if (SingleProjectID > 0)
+                        (new T_WorkFlowDefine_BLL()).AddWorkFlowDefine(SingleProjectID);
+
+                    //更新当前用户为本工程管理员
+                    BLL.T_UsersInfo_BLL userBll = new T_UsersInfo_BLL();
+                    Model.T_UsersInfo_MDL userMdl = userBll.GetModel(Common.ConvertEx.ToInt(UserID));
+                    userMdl.IsLeader = true;
+                    userBll.Update(userMdl);
+
+                    //把此用户加入到这个工程用户中去                    
+                    CBLL.SingleProjectRole projectRole = new DigiPower.Onlinecol.Standard.CBLL.SingleProjectRole();
+                    projectRole.Update(SingleProjectID, userMdl.RoleID, userMdl.UserID);
+                    //====================
+
+                    //加入到工程->公司表中去
+                    Model.T_SingleProjectCompany_MDL spcMDL = new T_SingleProjectCompany_MDL();
+                    spcMDL.SingleProjectID = SingleProjectID;
+                    spcMDL.CompanyID = Common.Session.GetSessionInt("CompanyID");
+                    BLL.T_SingleProjectCompany_BLL spcBLL = new T_SingleProjectCompany_BLL();
+                    spcBLL.Add(spcMDL);
+
+                    //专业记载
+                    c_Single_Mdl.SingleProjectID = SingleProjectID;
+                    if ((new c_single_project_BLL()).Exists(SingleProjectID))
+                    {
+                        new c_single_project_BLL().Update(c_Single_Mdl);
+                    }
+                    else
+                    {
+                        (new c_single_project_BLL()).Add(c_Single_Mdl);
+                    }
+
+                    UploadFile(SingleProjectID);
+                }
+                else
+                {
+                    (new T_SingleProject_BLL()).Update(model);
+
+                    //判断工程,如果没有专业记载,则新增,否则修改
+                    if (ConvertEx.ToInt(c_Single_Mdl.SingleProjectID) > 0)
+                    {
+                        new c_single_project_BLL().Update(c_Single_Mdl);
+                    }
+                    else
+                    {
+                        c_Single_Mdl.SingleProjectID = model.SingleProjectID;
+                        new c_single_project_BLL().Add(c_Single_Mdl);
+                    }
+
+                    UploadFile(model.SingleProjectID);
+                }
+            }
+
+            if (DNTRequest.GetQueryString("SuppleMent") == "SuppleMent")
+            {  //案卷补录管理页面过来
+                MessageBox.ShowAndCloseWin(this.Page, "保存成功!");
+            }
+            else
+            {
+                Response.Redirect("~/CompanyManage/SingleProjectList.aspx");
+            }
+        }
+
+        #region 保存上传证件
+        string savePath = "\\Upload\\Pic\\Project";
+        protected void UploadFile(int tSingleProjectID)
+        {
+            HttpFileCollection uploadFiles = HttpContext.Current.Request.Files;//获取所有客户端上传文件对象
+            HttpPostedFile userPostFile = null;
+
+            if (uploadFiles.Count > 0)
+            {
+                for (int i = 0; i < uploadFiles.Count; i++)
+                {
+                    userPostFile = uploadFiles[i];//获取独立的文件对象
+                    if (userPostFile.FileName == "")
+                        continue;
+
+                    string fileName = Common.Common.SaveFile(Server.MapPath(savePath), userPostFile, "R");
+                    if (fileName != "")
+                    {
+                        if (uploadFiles.AllKeys[i] == "file")
+                        {
+                            T_SingleProject_PIC_BLL bll = new T_SingleProject_PIC_BLL();
+                            T_SingleProject_PIC_MDL mdl = new T_SingleProject_PIC_MDL();
+                            mdl.PIC_TITLE = userPostFile.FileName;
+                            mdl.PIC_PATH = savePath.Replace("\\", "/") + "/" + fileName;
+                            mdl.PROJ_SID = tSingleProjectID;
+                            mdl.ORDER_INDEX = 0;
+                            mdl.CREATE_DT = DateTime.Now;
+                            bll.Add(mdl);
+                        }
+                        else if (uploadFiles.AllKeys[i] == "file0" ||
+                                 uploadFiles.AllKeys[i] == "file1" ||
+                                 uploadFiles.AllKeys[i] == "file3")
+                        {
+                            T_FileAttach_BLL bll = new T_FileAttach_BLL();
+                            T_FileAttach_MDL mdl = new T_FileAttach_MDL();
+
+                            List<T_FileAttach_MDL> mdllist = new T_FileAttach_BLL().
+                            GetModelList("PriKeyValue='" + tSingleProjectID + "' and (AttachCode='ghxkz' or AttachCode='sgxkz')");
+
+                            if (uploadFiles.AllKeys[i] == "file0")
+                            {
+                                mdl = mdllist.Find(d => d.AttachCode == "ghxkz");
+                                if (mdl == null)
+                                    mdl = new T_FileAttach_MDL();
+                                mdl.AttachCode = "ghxkz";
+                            }
+                            else if (uploadFiles.AllKeys[i] == "file1")
+                            {
+                                mdl = mdllist.Find(d => d.AttachCode == "sgxkz");
+                                if (mdl == null)
+                                    mdl = new T_FileAttach_MDL();
+                                mdl.AttachCode = "sgxkz";
+                                    
+                            }
+                            else if (uploadFiles.AllKeys[i] == "file3")
+                            {
+                                mdl = mdllist.Find(d => d.AttachCode == "other");
+                                if (mdl == null)
+                                    mdl = new T_FileAttach_MDL();
+                                mdl.AttachCode = "other";
+                            }
+
+                            mdl.AttachName = fileName;
+                            mdl.AttachPath = savePath + "\\" + fileName;
+                            mdl.CreateDate = DateTime.Now;
+                            mdl.PriKeyValue = tSingleProjectID;
+                            mdl.OrderIndex = 0;
+                            mdl.Flag = "Company_Registration";
+
+                            if (mdl.AttachID > 0)
+                                bll.Update(mdl);
+                            else
+                                bll.Add(mdl);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+    }
+}

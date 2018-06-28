@@ -1,0 +1,232 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ArchiveList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.ArchiveList" Title="问题列表" %>
+
+<%@ Register Src="../CommonCtrl/ctrlJSCheckInfo.ascx" TagName="ctrlJSCheckInfo" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%--<%@ Register Src="../CommonCtrl/ctrlSiteMap.ascx" TagName="ctrlSiteMap" TagPrefix="uc2" %>--%>
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSingleProject.ascx" TagName="ctrlDropDownSingleProject"
+    TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .regedit_input {
+            border-radius: 4px;
+            padding: 0px !important;
+            font-size: 13px !important;
+            border: 1px solid #D5D5D5 !important;
+            color: #333 !important;
+            height: 17px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        //全选
+        var selFlag = true;
+        function selectALL() {
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr('disabled') != 'disabled') {
+                    $(this).attr('checked', selFlag);
+                }
+            });
+            selFlag = !selFlag;
+        }
+        //查看工程
+        function lookSingleProjectView() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');
+                    var strURL = '../CompanyManage/CompanyReg3_' +
+                       getFileTypeForProjectType(keyList[2]) + 'Edit.aspx?action=view&ProjectType=' + keyList[2] + '&ID=' + keyList[1];
+                    //var strURL = '../CompanyManage/CompanyReg3_' + keyList[2] + 'Edit.aspx?action=view&ID=' + keyList[1];
+                    openCommonWindowScroll(strURL, 950, 600);
+                });
+            } else {
+                alert('必须有且只能选择一项才可以操作!');
+            }
+        }
+        //打印 
+        function printReport(ReportCode) {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');
+                    var strURL = "../ViewReport.aspx?strWhere=" + keyList[0] + "&ReportCode=" + ReportCode + "";
+                    openCommonWindowScroll(strURL, 800, 600);
+                });
+            } else {
+                alert('必须有且只能选择一项才可以操作!');
+            }
+        }
+        //上移或下移
+        function btnArchiveMove(UpOrDown) {
+            //var checkedLen = $("input[type='checkbox']:checked").length;
+            //if (checkedLen == 1) {
+            //    $("input[type='checkbox']:checked").each(function () {
+            //        var keyList = ($(this).val() + ',').split(',');
+            //        ArchiveList.ArchiveMove(keyList[0], UpOrDown);
+            //        alert('案卷序号移动成功,请手动刷新页面查看效果!');
+            //    });
+            //} else {
+            //    alert('必须选择一项才可以操作!');
+            //}
+        }
+        //批量更新
+        function batchUpdateXH() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');
+                    var XH = $(this).parent().next().next().next().next().next().next().next().next().children().eq(0).val();
+                    ArchiveList.UpdateArchiveXH(keyList[0], XH).value;
+                });
+                alert('案卷序号更新成功,请点击[刷新]按钮查看效果!');
+            } else {
+                alert('必须选择一项才可以操作!');
+            }
+        }
+        //文件明细
+        function ArchiveToFileList() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');
+                    var strURL = "ArchiveToFileList.aspx?Store=<%= Store%>&ArchiveID=" + keyList[0] + "&SingleProjectID=<%= SingleProjectID%>";
+                    window.location.href = strURL;
+                });
+            } else {
+                alert('必须有且只能选择一项才可以操作!');
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td>
+                            <div align="right">
+                                &nbsp;
+                                <asp:Button ID="btnSingleProjectInfo" runat="server" CssClass="button" Text="工程信息"
+                                    OnClientClick="lookSingleProjectView();return false;" />
+                                <asp:Button ID="btnPrint1" runat="server" Text="打印案卷封面" CssClass="button"
+                                    OnClientClick="printReport('Archivefengpi');return false;" />
+                                <asp:Button ID="btnPrint3" runat="server" Text="打印卷内目录" CssClass="button"
+                                    OnClientClick="printReport('Archivemulu');return false;" />
+                                <asp:Button ID="btnPrint2" runat="server" Text="打印卷内备考表" CssClass="button"
+                                    OnClientClick="printReport('juanneibeikao');return false;" />
+
+                                <%--   <asp:Button ID="btnUp" runat="server" CssClass="button" Text="上移"
+                                    OnClientClick="btnArchiveMove(true);return false;" />
+                                <asp:Button ID="btnDown" runat="server" CssClass="button" Text="下移"
+                                    OnClientClick="btnArchiveMove(false);return false;" />--%>
+
+                                <asp:Button ID="btnUpdateXH" runat="server" CssClass="button"
+                                    Text=" 批量更新 " ToolTip="批量更新案卷序号" OnClientClick="batchUpdateXH();return false;" />
+                                <asp:Button ID="btnParticular" runat="server" CssClass="button" Text="文件明细"
+                                    OnClientClick="ArchiveToFileList();return false;" />
+                                <asp:Button ID="btnRefresh" runat="server" CssClass="button" Text=" 刷新 " OnClick="btnSearch_Click" />
+                                <%--      <uc4:ctrlBtnBack ID="ctrlBtnBack1" runat="server" SetCssClass="button" Visible="false" />--%>
+                            </div>
+                        </td>
+                        <td width="30" style="text-align: right;">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="99%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table style="text-align: left; width: 100%">
+                                    <tr>
+                                        <td>
+                                            <label runat="server" id="lblSingleProject">
+                                                &nbsp;工程名称：</label>
+                                            <asp:TextBox ID="txtGCMC" runat="server"></asp:TextBox>
+                                            <label runat="server" id="Label1">
+                                                &nbsp;工程编号：</label>
+
+                                            <asp:TextBox ID="txtGCBH" runat="server"></asp:TextBox>
+                                            <label>
+                                                &nbsp;案卷流水号：</label>
+                                            <asp:TextBox ID="txtShortDH" runat="server" Width="60px"></asp:TextBox>
+                                            <label>
+                                                &nbsp;案卷题名：</label>
+                                            <asp:TextBox ID="txtTitle" runat="server" Width="105px"></asp:TextBox>
+                                            &nbsp;<asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text="查询" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;' onclick='selectALL()'>全选</a>" 
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px" ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox" name="checkOne" value='<%# Eval("ArchiveID")%>,<%# Eval("SingleProjectID")%>,<%# Eval("ProjectType")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="工程编号" DataField="gcbm" HeaderStyle-Width="70px" ItemStyle-Width="70px" />
+                            <asp:BoundField HeaderText="工程名称" DataField="gcmc" HeaderStyle-Width="200px" ItemStyle-Width="200px" />
+                            <asp:BoundField HeaderText="案卷流水号" DataField="ShortDH" HeaderStyle-Width="70px" ItemStyle-Width="70px" />
+                            <asp:BoundField HeaderText="案卷题名" DataField="ajtm" />
+                            <asp:BoundField HeaderText="编制单位" DataField="bzdw" HeaderStyle-Width="180px" ItemStyle-Width="180px" />
+                            <asp:BoundField HeaderText="录入人" DataField="lrr" HeaderStyle-Width="70px" ItemStyle-Width="70px" />
+                            <asp:TemplateField HeaderText="录入时间" HeaderStyle-Width="70px" ItemStyle-Width="70px">
+                                <ItemTemplate>
+                                    <%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToDate(Eval("lrsj")).ToString("yyyy-MM-dd")%>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="案卷序号" HeaderStyle-Width="50px" ItemStyle-Width="50px">
+                                <ItemTemplate>
+                                    <input type="text" value="<%# Eval("xh")%>" style="width: 50px" class="regedit_input"
+                                        <%= Store.ToLower()=="store"?"readonly=\"readonly\"":""%>
+                                        id="txtXH<%# Eval("ArchiveID")%>" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                        onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="操作" HeaderStyle-Width="30px" ItemStyle-Width="30px">
+                                <ItemTemplate>
+                                    <a style="cursor: pointer;" href="ArchiveAdd.aspx?Action=edit&ID=<%# Eval("ArchiveID")%>">编辑</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                    OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                    FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                  CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" LayoutType="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+</asp:Content>

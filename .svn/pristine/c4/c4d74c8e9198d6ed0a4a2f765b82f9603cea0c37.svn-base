@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.MySpace
+{
+    public partial class ProjectPromise : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                
+            }
+            BindGrid();
+        }
+
+        void BindGrid()
+        {
+            T_Construction_Project_BLL bll = new T_Construction_Project_BLL();
+            T_Construction_Project_MDL mdl = new T_Construction_Project_MDL();
+
+            //DataSet ds = bll1.GetList("CompanyID=" + Common.Session.GetSession("CompanyID"));
+            DataSet ds = new DataSet();
+            ds = bll.GetConstructionPromiseList("");
+            //if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == true)
+            //{
+            //    ds = bll.GetListByRight("", ""); 
+            //}
+            //else
+            //{
+            //    ds = bll.GetListByRight(Common.Session.GetSession("CompanyID"), Common.Session.GetSession("RoleID"));
+            //}
+            List<string> collist = new List<string>();
+            //collist.Add("ProjectType");
+            collist.Add("XMH");
+            collist.Add("XMMC");
+            collist.Add("promiseno");            
+            collist.Add("contactperson");
+            collist.Add("tel");
+
+            //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+            ctrlGridEx1.InitGrid("ConstructionProjectID", collist, ds, "~/SystemManage/ProjectPromiseAdd.aspx?action=edit");
+        }
+
+        protected void lbtnAdd_Click(object sender, EventArgs e)
+        {
+            if (ctrlGridEx1.GetSelects().Count > 0)
+            {
+                Response.Redirect("ProjectPromiseAdd.aspx?action=edit&ID="+ctrlGridEx1.GetSelects()[0]);
+            }
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<string> sellist = ctrlGridEx1.GetSelects();
+
+            if (sellist.Count > 0)
+            {
+                BLL.T_ProjectPromise_BLL bll = new T_ProjectPromise_BLL();
+               // BLL.T_Other_BLL otherBLL = new T_Other_BLL();
+                for (int i = 0; i < sellist.Count; i++)
+                {
+                    int ProjectID =Common.ConvertEx.ToInt(sellist[i]);
+                    if (bll.Exists(ProjectID))
+                    {
+                        (new T_ProjectPromise_BLL()).Delete(ProjectID);
+                    }
+                    
+                }
+                BindGrid();
+            }
+        }
+    }
+}

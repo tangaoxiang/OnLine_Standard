@@ -1,0 +1,123 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+
+//报表设计
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportDesign : System.Web.UI.Page
+    {
+        #region 属性及构造函数
+
+        private static string reportFile = "";//报表文件路径
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                BindData();
+            }
+        }
+        #endregion
+
+        #region 事件
+        protected void StiWebDesigner1_SaveReport(object sender, StiWebDesigner.StiSaveReportEventArgs e)
+        {
+            e.Report.Save(reportFile);
+        }
+
+        #endregion
+
+        #region 方法
+        public void BindData()
+        {
+            T_Report_BLL trBll = new T_Report_BLL();
+            T_Report_MDL trMdl = trBll.GetModel(Common.ConvertEx.ToInt(Common.DNTRequest.GetQueryString("id")));
+            if (trMdl != null)
+            {
+                T_Report_Type_BLL tyBll = new T_Report_Type_BLL();
+                T_Report_Type_MDL tyMdl = tyBll.GetModel(Common.ConvertEx.ToInt(trMdl.ReportTypeID));
+                if (tyMdl != null)
+                {
+                    StiReport stiReport = new StiReport();
+                    reportFile = Server.MapPath("../Report/ReportFiles/" + tyMdl.ReportTypeName + "/" + trMdl.ReportFilePath); //报表文件路径
+
+                    if (!System.IO.File.Exists(reportFile))//报表文件不存在则创建
+                        stiReport.Save(reportFile);
+
+                    stiReport.Load(reportFile);//加载报表
+
+                    if (stiReport.Dictionary.DataSources.Count > 0)//删除原有的数据集,以便重新添加
+                        stiReport.Dictionary.DataSources.Clear();
+
+                    List<T_Report_MainSql_MDL> list = new T_Report_MainSql_BLL().GetModelList("ReportID=" + trMdl.ReportID.ToString());
+                    foreach (T_Report_MainSql_MDL tmMdl in list)//循环得到报表下的所有SQL语句
+                    {
+                        string dtName = tmMdl.OtherName.Trim() + "_" + tmMdl.ReportMainSqlID.ToString(); //数据源名称
+                        string MainSql = tmMdl.MainSql;
+
+                        if (MainSql.IndexOf("{") > -1 && MainSql.IndexOf("}") > -1)
+                        {
+                            string RepSql = tmMdl.MainSql.Substring(tmMdl.MainSql.IndexOf("{"), tmMdl.MainSql.LastIndexOf("}") - tmMdl.MainSql.IndexOf("{") + 1);
+                            MainSql = tmMdl.MainSql.Replace(RepSql, "");
+                        }
+
+                        DataSet ds = new T_Other_BLL().GetDataSet(MainSql);
+                        DataTable table = ds.Tables[0];
+
+
+                        //添加六个临时变量,根据查询条件的顺序给其赋值
+                        stiReport.Dictionary.Variables.Add(new StiVariable("temp", "TEMP_UserName", "TEMP_UserName", typeof(String), Common.ConvertEx.ToString(Session["UserName"]), false));
+                        for (int i = 0; i < 6; i++)
+                        {
+                            stiReport.Dictionary.Variables.Add(new StiVariable("temp", "TEMP_" + i.ToString(), "TEMP_" + i.ToString(), typeof(String), "", false));
+                        }
+
+                        StiDataTableSource dtSource = new StiDataTableSource(dtName, dtName);
+                        stiReport.Dictionary.DataSources.Add(dtSource);//新增数据集
+
+                        if (table != null && table.Columns.Count > 0)
+                        {
+                            if (table.Columns.Count == 1)
+                            {
+                                stiReport.Dictionary.DataSources[dtName].Columns.Add(table.Columns[0].ColumnName, table.Columns[0].DataType);
+                            }
+                            else
+                            {
+                                for (int i = 0; i < table.Columns.Count; i++) //循环得到每个SQL语句的列名和数据类型
+                                {
+                                    stiReport.Dictionary.DataSources[dtName].Columns.Add(table.Columns[i].ColumnName, table.Columns[i].DataType);
+                                }
+                            }
+                        }
+
+                        stiReport.Save(reportFile);
+                        stiReport.Load(reportFile);
+                    }
+
+                    StiWebDesigner1.Design(stiReport);//进入报表设计模式
+                }
+            }
+            else
+                Common.MessageBox.Show(this, "报表不存在!");
+        }
+        #endregion
+    }
+}

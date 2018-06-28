@@ -1,0 +1,101 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlDropDownUser : System.Web.UI.UserControl
+    {
+        public delegate void SelectChange();
+        public event SelectChange MySelectChange;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+
+        }
+
+        public string Width
+        {
+            set { ddlUser.Width = new Unit(value); }
+        }
+
+        public string SelectValue
+        {
+            set { ddlUser.SelectedIndex = ddlUser.Items.IndexOf(ddlUser.Items.FindByValue(value)); }
+            get { return ddlUser.SelectedValue; }
+        }
+        public string SelectText
+        {
+            get { return ddlUser.SelectedItem.Text; }
+        }
+
+        public void BindDataByCompanyID(string CompanyID)
+        {
+            BindDataByCompanyID(CompanyID, false, 0);
+        }
+
+        public void BindDataByCompanyID(string CompanyID, int RoleID)
+        {
+            BindDataByCompanyID(CompanyID, false, RoleID);
+        }
+        public void BindDataByCompanyID(string CompanyID, bool bAddSelectAll, int RoleID)
+        {
+            string strwhere = " CompanyID=" + CompanyID;
+            if (RoleID > 0)
+            {
+                strwhere += " AND RoleID=" + RoleID;
+            }
+            
+            BindUser(strwhere, bAddSelectAll);
+        }
+
+        public bool AutoPostBack
+        {
+            set
+            {
+                ddlUser.AutoPostBack = value;
+            }
+        }
+
+        public void BindUser(string strwhere)
+        {
+            BindUser(strwhere, false);
+        }
+
+        public void BindUser(string strwhere, bool bAddSelectAll)
+        {
+            List<T_UsersInfo_MDL> userlist = new List<T_UsersInfo_MDL>();
+            userlist = (new T_UsersInfo_BLL()).GetModelList(strwhere);
+            if (bAddSelectAll == true)
+            {
+                T_UsersInfo_MDL mdl = new T_UsersInfo_MDL();
+                mdl.UserID = 0;
+                mdl.UserName = "全部";
+                userlist.Insert(0, mdl);
+            }
+            ddlUser.DataTextField = "username";
+            ddlUser.DataValueField = "userid";
+            ddlUser.DataSource = userlist;
+            ddlUser.DataBind();
+        }
+
+        protected void ddlUser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (MySelectChange != null)
+            {
+                MySelectChange();
+            }
+        }
+    }
+}

@@ -1,0 +1,127 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="QuestionList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.QuestionList" Title="问题列表" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownCanDefineType.ascx" TagName="ctrlDropDownCanDefineType"
+    TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script language="javascript" type="text/javascript">
+        var selFlag = true;
+        function selectALL() {
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr('disabled') != 'disabled') {
+                    $(this).attr('checked', selFlag);
+                }
+            });
+            selFlag = !selFlag;
+        }
+        function btnDel() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    alert($(this).val());
+                    QuestionList.DeleteQuestion($(this).val()).value;
+                    window.location.href = window.location.href;
+                });
+            } else {
+                alert('必须有且只能选择一项才可以操作!');
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td>
+                            <div align="right">
+                                &nbsp;                    
+                                <asp:Button ID="btnDel" runat="server" CssClass="button" Text=" 删除 "
+                                    OnClientClick="btnDel();return false;" />
+                            </div>
+                        </td>
+                        <td width="30" align="right">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="99%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table style="text-align: left; width: 100%">
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                &nbsp;工程名称：</label>
+                                            <asp:TextBox ID="gcmc" runat="server" CssClass="SelectText"></asp:TextBox>
+                                            <label>
+                                                &nbsp;问题标题：</label>
+                                            <asp:TextBox ID="qsTitle" runat="server" CssClass="SelectText"></asp:TextBox>
+                                            <asp:RadioButton ID="RadioButton1" Text="我提出的问题" runat="server" GroupName="Q" />
+                                            <asp:RadioButton ID="RadioButton2" Text="提给我的问题" runat="server" GroupName="Q" />
+                                            <asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text=" 查询 " />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;' onclick='selectALL()'>全选</a>"
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px"
+                                ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox"
+                                        name="checkOne" value='<%# Eval("QuestionID")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="工程名称" DataField="gcmc" />
+                            <asp:BoundField HeaderText="目录名称" DataField="FileListName" HeaderStyle-Width="300px" ItemStyle-Width="300px" />
+                            <asp:BoundField HeaderText="咨询主题" DataField="Title" HeaderStyle-Width="300px" ItemStyle-Width="300px" />
+                            <asp:BoundField HeaderText="咨询人" DataField="CreateUserName" HeaderStyle-Width="130px" ItemStyle-Width="130px" />
+                            <asp:TemplateField HeaderText="咨询时间" HeaderStyle-Width="70px" ItemStyle-Width="70px">
+                                <ItemTemplate>
+                                    <%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToDate(Eval("CreateDate")).ToString("yyyy-MM-dd")%>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="回复次数" DataField="AnswerCount" HeaderStyle-Width="55px" ItemStyle-Width="55px" />
+                            <asp:TemplateField HeaderText="操作" HeaderStyle-Width="40px" ItemStyle-Width="40px">
+                                <ItemTemplate>
+                                    <a style="cursor: pointer;" href="questioninfo.aspx?ID=<%# Eval("QuestionID")%>">回复</a>&nbsp;
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px" OnPageChanged="AspNetPager_PageChanged"
+                    ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;" FirstPageText="首页"
+                    LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" LayoutType="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always"
+                    SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+</asp:Content>

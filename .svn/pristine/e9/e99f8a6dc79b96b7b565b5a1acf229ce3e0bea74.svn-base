@@ -1,0 +1,665 @@
+using System;
+using System.Data;
+using System.Text;
+using System.Data.SqlClient;
+using DigiPower.Onlinecol.Standard.DbUtility;//请先添加引用
+namespace DigiPower.Onlinecol.Standard.DAL
+{
+    /// <summary>
+    /// 数据访问类T_Construction_Project_DAL。
+    /// </summary>
+    public class T_Construction_Project_DAL
+    {
+        public T_Construction_Project_DAL()
+        { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return DbHelperSQL.GetMaxID("ConstructionProjectID", "T_Construction_Project");
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int ConstructionProjectID)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select count(1) from T_Construction_Project");
+            strSql.Append(" where ConstructionProjectID=@ConstructionProjectID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConstructionProjectID", SqlDbType.Int,8)};
+            parameters[0].Value = ConstructionProjectID;
+
+            return DbHelperSQL.Exists(strSql.ToString(), parameters);
+        }
+
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_Construction_Project_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into T_Construction_Project(");
+            strSql.Append("CompanyID,ProjectType,xmh,xmmc,xmdd,jsdw,lxpzdw,tdsyzh,ydghxkzh,lxpzwh,tdcrnx,kgxj,jgsj,zydmj,zjzmj,ds,gcjs,rjl,lhl,cws,jzmd,zcd,zbfl,zbxs,zzj,cqzhs,zjs,wzcl,tz,dt,zp,dp,lyd,lxd,gp,cd,cp,swjp,qt,bgqx,mj,jgrq,yjdw,dh,swh,cfwzqsh,fz)");
+            strSql.Append(" values (");
+            strSql.Append("@CompanyID,@ProjectType,@xmh,@xmmc,@xmdd,@jsdw,@lxpzdw,@tdsyzh,@ydghxkzh,@lxpzwh,@tdcrnx,@kgxj,@jgsj,@zydmj,@zjzmj,@ds,@gcjs,@rjl,@lhl,@cws,@jzmd,@zcd,@zbfl,@zbxs,@zzj,@cqzhs,@zjs,@wzcl,@tz,@dt,@zp,@dp,@lyd,@lxd,@gp,@cd,@cp,@swjp,@qt,@bgqx,@mj,@jgrq,@yjdw,@dh,@swh,@cfwzqsh,@fz)");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+					new SqlParameter("@CompanyID", SqlDbType.Int,8),
+					new SqlParameter("@ProjectType", SqlDbType.NVarChar,50),
+					new SqlParameter("@xmh", SqlDbType.NVarChar,20),
+					new SqlParameter("@xmmc", SqlDbType.NVarChar,254),
+					new SqlParameter("@xmdd", SqlDbType.NVarChar,254),
+					new SqlParameter("@jsdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@lxpzdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@tdsyzh", SqlDbType.NVarChar,20),
+					new SqlParameter("@ydghxkzh", SqlDbType.NVarChar,20),
+					new SqlParameter("@lxpzwh", SqlDbType.NVarChar,20),
+					new SqlParameter("@tdcrnx", SqlDbType.Int,8),
+					new SqlParameter("@kgxj", SqlDbType.NVarChar,10),
+					new SqlParameter("@jgsj", SqlDbType.NVarChar,10),
+					new SqlParameter("@zydmj", SqlDbType.Float,8),
+					new SqlParameter("@zjzmj", SqlDbType.Float,8),
+					new SqlParameter("@ds", SqlDbType.Int,8),
+					new SqlParameter("@gcjs", SqlDbType.Float,8),
+					new SqlParameter("@rjl", SqlDbType.Float,8),
+					new SqlParameter("@lhl", SqlDbType.Float,8),
+					new SqlParameter("@cws", SqlDbType.Int,8),
+					new SqlParameter("@jzmd", SqlDbType.Float,8),
+					new SqlParameter("@zcd", SqlDbType.Float,8),
+					new SqlParameter("@zbfl", SqlDbType.NVarChar,20),
+					new SqlParameter("@zbxs", SqlDbType.NVarChar,20),
+					new SqlParameter("@zzj", SqlDbType.Float,8),
+					new SqlParameter("@cqzhs", SqlDbType.Int,8),
+					new SqlParameter("@zjs", SqlDbType.Int,8),
+					new SqlParameter("@wzcl", SqlDbType.Int,8),
+					new SqlParameter("@tz", SqlDbType.Int,8),
+					new SqlParameter("@dt", SqlDbType.Int,8),
+					new SqlParameter("@zp", SqlDbType.Int,8),
+					new SqlParameter("@dp", SqlDbType.Int,8),
+					new SqlParameter("@lyd", SqlDbType.Int,8),
+					new SqlParameter("@lxd", SqlDbType.Int,8),
+					new SqlParameter("@gp", SqlDbType.Int,8),
+					new SqlParameter("@cd", SqlDbType.Int,8),
+					new SqlParameter("@cp", SqlDbType.Int,8),
+					new SqlParameter("@swjp", SqlDbType.Int,8),
+					new SqlParameter("@qt", SqlDbType.NVarChar,100),
+					new SqlParameter("@bgqx", SqlDbType.NVarChar,10),
+					new SqlParameter("@mj", SqlDbType.NVarChar,50),
+					new SqlParameter("@jgrq", SqlDbType.SmallDateTime),
+					new SqlParameter("@yjdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@dh", SqlDbType.NVarChar,20),
+					new SqlParameter("@swh", SqlDbType.NVarChar,20),
+					new SqlParameter("@cfwzqsh", SqlDbType.NVarChar,254),
+					new SqlParameter("@fz", SqlDbType.NVarChar)};
+            parameters[0].Value = model.CompanyID;
+            parameters[1].Value = model.ProjectType;
+            parameters[2].Value = model.xmh;
+            parameters[3].Value = model.xmmc;
+            parameters[4].Value = model.xmdd;
+            parameters[5].Value = model.jsdw;
+            parameters[6].Value = model.lxpzdw;
+            parameters[7].Value = model.tdsyzh;
+            parameters[8].Value = model.ydghxkzh;
+            parameters[9].Value = model.lxpzwh;
+            parameters[10].Value = model.tdcrnx;
+            parameters[11].Value = model.kgxj;
+            parameters[12].Value = model.jgsj;
+            parameters[13].Value = model.zydmj;
+            parameters[14].Value = model.zjzmj;
+            parameters[15].Value = model.ds;
+            parameters[16].Value = model.gcjs;
+            parameters[17].Value = model.rjl;
+            parameters[18].Value = model.lhl;
+            parameters[19].Value = model.cws;
+            parameters[20].Value = model.jzmd;
+            parameters[21].Value = model.zcd;
+            parameters[22].Value = model.zbfl;
+            parameters[23].Value = model.zbxs;
+            parameters[24].Value = model.zzj;
+            parameters[25].Value = model.cqzhs;
+            parameters[26].Value = model.zjs;
+            parameters[27].Value = model.wzcl;
+            parameters[28].Value = model.tz;
+            parameters[29].Value = model.dt;
+            parameters[30].Value = model.zp;
+            parameters[31].Value = model.dp;
+            parameters[32].Value = model.lyd;
+            parameters[33].Value = model.lxd;
+            parameters[34].Value = model.gp;
+            parameters[35].Value = model.cd;
+            parameters[36].Value = model.cp;
+            parameters[37].Value = model.swjp;
+            parameters[38].Value = model.qt;
+            parameters[39].Value = model.bgqx;
+            parameters[40].Value = model.mj;
+            parameters[41].Value = model.jgrq;
+            parameters[42].Value = model.yjdw;
+            parameters[43].Value = model.dh;
+            parameters[44].Value = model.swh;
+            parameters[45].Value = model.cfwzqsh;
+            parameters[46].Value = model.fz;
+
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+        }
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_Construction_Project_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("update T_Construction_Project set ");
+            strSql.Append("CompanyID=@CompanyID,");
+            strSql.Append("ProjectType=@ProjectType,");
+            strSql.Append("xmh=@xmh,");
+            strSql.Append("xmmc=@xmmc,");
+            strSql.Append("xmdd=@xmdd,");
+            strSql.Append("jsdw=@jsdw,");
+            strSql.Append("lxpzdw=@lxpzdw,");
+            strSql.Append("tdsyzh=@tdsyzh,");
+            strSql.Append("ydghxkzh=@ydghxkzh,");
+            strSql.Append("lxpzwh=@lxpzwh,");
+            strSql.Append("tdcrnx=@tdcrnx,");
+            strSql.Append("kgxj=@kgxj,");
+            strSql.Append("jgsj=@jgsj,");
+            strSql.Append("zydmj=@zydmj,");
+            strSql.Append("zjzmj=@zjzmj,");
+            strSql.Append("ds=@ds,");
+            strSql.Append("gcjs=@gcjs,");
+            strSql.Append("rjl=@rjl,");
+            strSql.Append("lhl=@lhl,");
+            strSql.Append("cws=@cws,");
+            strSql.Append("jzmd=@jzmd,");
+            strSql.Append("zcd=@zcd,");
+            strSql.Append("zbfl=@zbfl,");
+            strSql.Append("zbxs=@zbxs,");
+            strSql.Append("zzj=@zzj,");
+            strSql.Append("cqzhs=@cqzhs,");
+            strSql.Append("zjs=@zjs,");
+            strSql.Append("wzcl=@wzcl,");
+            strSql.Append("tz=@tz,");
+            strSql.Append("dt=@dt,");
+            strSql.Append("zp=@zp,");
+            strSql.Append("dp=@dp,");
+            strSql.Append("lyd=@lyd,");
+            strSql.Append("lxd=@lxd,");
+            strSql.Append("gp=@gp,");
+            strSql.Append("cd=@cd,");
+            strSql.Append("cp=@cp,");
+            strSql.Append("swjp=@swjp,");
+            strSql.Append("qt=@qt,");
+            strSql.Append("bgqx=@bgqx,");
+            strSql.Append("mj=@mj,");
+            strSql.Append("jgrq=@jgrq,");
+            strSql.Append("yjdw=@yjdw,");
+            strSql.Append("dh=@dh,");
+            strSql.Append("swh=@swh,");
+            strSql.Append("cfwzqsh=@cfwzqsh,");
+            strSql.Append("fz=@fz");
+            strSql.Append(" where ConstructionProjectID=@ConstructionProjectID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConstructionProjectID", SqlDbType.Int,8),
+					new SqlParameter("@CompanyID", SqlDbType.Int,8),
+					new SqlParameter("@ProjectType", SqlDbType.NVarChar,50),
+					new SqlParameter("@xmh", SqlDbType.NVarChar,20),
+					new SqlParameter("@xmmc", SqlDbType.NVarChar,254),
+					new SqlParameter("@xmdd", SqlDbType.NVarChar,254),
+					new SqlParameter("@jsdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@lxpzdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@tdsyzh", SqlDbType.NVarChar,20),
+					new SqlParameter("@ydghxkzh", SqlDbType.NVarChar,20),
+					new SqlParameter("@lxpzwh", SqlDbType.NVarChar,20),
+					new SqlParameter("@tdcrnx", SqlDbType.Int,8),
+					new SqlParameter("@kgxj", SqlDbType.NVarChar,10),
+					new SqlParameter("@jgsj", SqlDbType.NVarChar,10),
+					new SqlParameter("@zydmj", SqlDbType.Float,8),
+					new SqlParameter("@zjzmj", SqlDbType.Float,8),
+					new SqlParameter("@ds", SqlDbType.Int,8),
+					new SqlParameter("@gcjs", SqlDbType.Float,8),
+					new SqlParameter("@rjl", SqlDbType.Float,8),
+					new SqlParameter("@lhl", SqlDbType.Float,8),
+					new SqlParameter("@cws", SqlDbType.Int,8),
+					new SqlParameter("@jzmd", SqlDbType.Float,8),
+					new SqlParameter("@zcd", SqlDbType.Float,8),
+					new SqlParameter("@zbfl", SqlDbType.NVarChar,20),
+					new SqlParameter("@zbxs", SqlDbType.NVarChar,20),
+					new SqlParameter("@zzj", SqlDbType.Float,8),
+					new SqlParameter("@cqzhs", SqlDbType.Int,8),
+					new SqlParameter("@zjs", SqlDbType.Int,8),
+					new SqlParameter("@wzcl", SqlDbType.Int,8),
+					new SqlParameter("@tz", SqlDbType.Int,8),
+					new SqlParameter("@dt", SqlDbType.Int,8),
+					new SqlParameter("@zp", SqlDbType.Int,8),
+					new SqlParameter("@dp", SqlDbType.Int,8),
+					new SqlParameter("@lyd", SqlDbType.Int,8),
+					new SqlParameter("@lxd", SqlDbType.Int,8),
+					new SqlParameter("@gp", SqlDbType.Int,8),
+					new SqlParameter("@cd", SqlDbType.Int,8),
+					new SqlParameter("@cp", SqlDbType.Int,8),
+					new SqlParameter("@swjp", SqlDbType.Int,8),
+					new SqlParameter("@qt", SqlDbType.NVarChar,100),
+					new SqlParameter("@bgqx", SqlDbType.NVarChar,10),
+					new SqlParameter("@mj", SqlDbType.NVarChar,50),
+					new SqlParameter("@jgrq", SqlDbType.SmallDateTime),
+					new SqlParameter("@yjdw", SqlDbType.NVarChar,100),
+					new SqlParameter("@dh", SqlDbType.NVarChar,20),
+					new SqlParameter("@swh", SqlDbType.NVarChar,20),
+					new SqlParameter("@cfwzqsh", SqlDbType.NVarChar,254),
+					new SqlParameter("@fz", SqlDbType.NVarChar)};
+            parameters[0].Value = model.ConstructionProjectID;
+            parameters[1].Value = model.CompanyID;
+            parameters[2].Value = model.ProjectType;
+            parameters[3].Value = model.xmh;
+            parameters[4].Value = model.xmmc;
+            parameters[5].Value = model.xmdd;
+            parameters[6].Value = model.jsdw;
+            parameters[7].Value = model.lxpzdw;
+            parameters[8].Value = model.tdsyzh;
+            parameters[9].Value = model.ydghxkzh;
+            parameters[10].Value = model.lxpzwh;
+            parameters[11].Value = model.tdcrnx;
+            parameters[12].Value = model.kgxj;
+            parameters[13].Value = model.jgsj;
+            parameters[14].Value = model.zydmj;
+            parameters[15].Value = model.zjzmj;
+            parameters[16].Value = model.ds;
+            parameters[17].Value = model.gcjs;
+            parameters[18].Value = model.rjl;
+            parameters[19].Value = model.lhl;
+            parameters[20].Value = model.cws;
+            parameters[21].Value = model.jzmd;
+            parameters[22].Value = model.zcd;
+            parameters[23].Value = model.zbfl;
+            parameters[24].Value = model.zbxs;
+            parameters[25].Value = model.zzj;
+            parameters[26].Value = model.cqzhs;
+            parameters[27].Value = model.zjs;
+            parameters[28].Value = model.wzcl;
+            parameters[29].Value = model.tz;
+            parameters[30].Value = model.dt;
+            parameters[31].Value = model.zp;
+            parameters[32].Value = model.dp;
+            parameters[33].Value = model.lyd;
+            parameters[34].Value = model.lxd;
+            parameters[35].Value = model.gp;
+            parameters[36].Value = model.cd;
+            parameters[37].Value = model.cp;
+            parameters[38].Value = model.swjp;
+            parameters[39].Value = model.qt;
+            parameters[40].Value = model.bgqx;
+            parameters[41].Value = model.mj;
+            parameters[42].Value = model.jgrq;
+            parameters[43].Value = model.yjdw;
+            parameters[44].Value = model.dh;
+            parameters[45].Value = model.swh;
+            parameters[46].Value = model.cfwzqsh;
+            parameters[47].Value = model.fz;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int ConstructionProjectID)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from T_Construction_Project ");
+            strSql.Append(" where ConstructionProjectID=@ConstructionProjectID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConstructionProjectID", SqlDbType.Int,8)};
+            parameters[0].Value = ConstructionProjectID;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_Construction_Project_MDL GetModel(int ConstructionProjectID)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 ConstructionProjectID,CompanyID,ProjectType,xmh,xmmc,xmdd,jsdw,lxpzdw,tdsyzh,ydghxkzh,lxpzwh,tdcrnx,kgxj,jgsj,zydmj,zjzmj,ds,gcjs,rjl,lhl,cws,jzmd,zcd,zbfl,zbxs,zzj,cqzhs,zjs,wzcl,tz,dt,zp,dp,lyd,lxd,gp,cd,cp,swjp,qt,bgqx,mj,jgrq,yjdw,dh,swh,cfwzqsh,fz from T_Construction_Project ");
+            strSql.Append(" where ConstructionProjectID=@ConstructionProjectID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@ConstructionProjectID", SqlDbType.Int,8)};
+            parameters[0].Value = ConstructionProjectID;
+
+            DigiPower.Onlinecol.Standard.Model.T_Construction_Project_MDL model = new DigiPower.Onlinecol.Standard.Model.T_Construction_Project_MDL();
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                if (ds.Tables[0].Rows[0]["ConstructionProjectID"].ToString() != "")
+                {
+                    model.ConstructionProjectID = int.Parse(ds.Tables[0].Rows[0]["ConstructionProjectID"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["CompanyID"].ToString() != "")
+                {
+                    model.CompanyID = int.Parse(ds.Tables[0].Rows[0]["CompanyID"].ToString());
+                }
+                model.ProjectType = ds.Tables[0].Rows[0]["ProjectType"].ToString();
+                model.xmh = ds.Tables[0].Rows[0]["xmh"].ToString();
+                model.xmmc = ds.Tables[0].Rows[0]["xmmc"].ToString();
+                model.xmdd = ds.Tables[0].Rows[0]["xmdd"].ToString();
+                model.jsdw = ds.Tables[0].Rows[0]["jsdw"].ToString();
+                model.lxpzdw = ds.Tables[0].Rows[0]["lxpzdw"].ToString();
+                model.tdsyzh = ds.Tables[0].Rows[0]["tdsyzh"].ToString();
+                model.ydghxkzh = ds.Tables[0].Rows[0]["ydghxkzh"].ToString();
+                model.lxpzwh = ds.Tables[0].Rows[0]["lxpzwh"].ToString();
+                if (ds.Tables[0].Rows[0]["tdcrnx"].ToString() != "")
+                {
+                    model.tdcrnx = int.Parse(ds.Tables[0].Rows[0]["tdcrnx"].ToString());
+                }
+                model.kgxj = ds.Tables[0].Rows[0]["kgxj"].ToString();
+                model.jgsj = ds.Tables[0].Rows[0]["jgsj"].ToString();
+                if (ds.Tables[0].Rows[0]["zydmj"].ToString() != "")
+                {
+                    model.zydmj = decimal.Parse(ds.Tables[0].Rows[0]["zydmj"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["zjzmj"].ToString() != "")
+                {
+                    model.zjzmj = decimal.Parse(ds.Tables[0].Rows[0]["zjzmj"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["ds"].ToString() != "")
+                {
+                    model.ds = int.Parse(ds.Tables[0].Rows[0]["ds"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["gcjs"].ToString() != "")
+                {
+                    model.gcjs = decimal.Parse(ds.Tables[0].Rows[0]["gcjs"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["rjl"].ToString() != "")
+                {
+                    model.rjl = decimal.Parse(ds.Tables[0].Rows[0]["rjl"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["lhl"].ToString() != "")
+                {
+                    model.lhl = decimal.Parse(ds.Tables[0].Rows[0]["lhl"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["cws"].ToString() != "")
+                {
+                    model.cws = int.Parse(ds.Tables[0].Rows[0]["cws"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["jzmd"].ToString() != "")
+                {
+                    model.jzmd = decimal.Parse(ds.Tables[0].Rows[0]["jzmd"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["zcd"].ToString() != "")
+                {
+                    model.zcd = decimal.Parse(ds.Tables[0].Rows[0]["zcd"].ToString());
+                }
+                model.zbfl = ds.Tables[0].Rows[0]["zbfl"].ToString();
+                model.zbxs = ds.Tables[0].Rows[0]["zbxs"].ToString();
+                if (ds.Tables[0].Rows[0]["zzj"].ToString() != "")
+                {
+                    model.zzj = decimal.Parse(ds.Tables[0].Rows[0]["zzj"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["cqzhs"].ToString() != "")
+                {
+                    model.cqzhs = int.Parse(ds.Tables[0].Rows[0]["cqzhs"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["zjs"].ToString() != "")
+                {
+                    model.zjs = int.Parse(ds.Tables[0].Rows[0]["zjs"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["wzcl"].ToString() != "")
+                {
+                    model.wzcl = int.Parse(ds.Tables[0].Rows[0]["wzcl"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["tz"].ToString() != "")
+                {
+                    model.tz = int.Parse(ds.Tables[0].Rows[0]["tz"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["dt"].ToString() != "")
+                {
+                    model.dt = int.Parse(ds.Tables[0].Rows[0]["dt"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["zp"].ToString() != "")
+                {
+                    model.zp = int.Parse(ds.Tables[0].Rows[0]["zp"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["dp"].ToString() != "")
+                {
+                    model.dp = int.Parse(ds.Tables[0].Rows[0]["dp"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["lyd"].ToString() != "")
+                {
+                    model.lyd = int.Parse(ds.Tables[0].Rows[0]["lyd"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["lxd"].ToString() != "")
+                {
+                    model.lxd = int.Parse(ds.Tables[0].Rows[0]["lxd"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["gp"].ToString() != "")
+                {
+                    model.gp = int.Parse(ds.Tables[0].Rows[0]["gp"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["cd"].ToString() != "")
+                {
+                    model.cd = int.Parse(ds.Tables[0].Rows[0]["cd"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["cp"].ToString() != "")
+                {
+                    model.cp = int.Parse(ds.Tables[0].Rows[0]["cp"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["swjp"].ToString() != "")
+                {
+                    model.swjp = int.Parse(ds.Tables[0].Rows[0]["swjp"].ToString());
+                }
+                model.qt = ds.Tables[0].Rows[0]["qt"].ToString();
+                model.bgqx = ds.Tables[0].Rows[0]["bgqx"].ToString();
+                model.mj = ds.Tables[0].Rows[0]["mj"].ToString();
+                if (ds.Tables[0].Rows[0]["jgrq"].ToString() != "")
+                {
+                    model.jgrq = DateTime.Parse(ds.Tables[0].Rows[0]["jgrq"].ToString());
+                }
+                model.yjdw = ds.Tables[0].Rows[0]["yjdw"].ToString();
+                model.dh = ds.Tables[0].Rows[0]["dh"].ToString();
+                model.swh = ds.Tables[0].Rows[0]["swh"].ToString();
+                model.cfwzqsh = ds.Tables[0].Rows[0]["cfwzqsh"].ToString();
+                model.fz = ds.Tables[0].Rows[0]["fz"].ToString();
+                return model;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ConstructionProjectID,CompanyID,ProjectType,xmh,xmmc,xmdd,jsdw,lxpzdw,tdsyzh,ydghxkzh,lxpzwh,tdcrnx,kgxj,jgsj,zydmj,zjzmj,ds,gcjs,rjl,lhl,cws,jzmd,zcd,zbfl,zbxs,zzj,cqzhs,zjs,wzcl,tz,dt,zp,dp,lyd,lxd,gp,cd,cp,swjp,qt,bgqx,mj,jgrq,yjdw,dh,swh,cfwzqsh,fz ");
+            strSql.Append(" FROM T_Construction_Project ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ");
+            if (Top > 0)
+            {
+                strSql.Append(" top " + Top.ToString());
+            }
+            strSql.Append(" ConstructionProjectID,CompanyID,ProjectType,xmh,xmmc,xmdd,jsdw,lxpzdw,tdsyzh,ydghxkzh,lxpzwh,tdcrnx,kgxj,jgsj,zydmj,zjzmj,ds,gcjs,rjl,lhl,cws,jzmd,zcd,zbfl,zbxs,zzj,cqzhs,zjs,wzcl,tz,dt,zp,dp,lyd,lxd,gp,cd,cp,swjp,qt,bgqx,mj,jgrq,yjdw,dh,swh,cfwzqsh,fz ");
+            strSql.Append(" FROM T_Construction_Project ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" order by " + filedOrder);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /*
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        {
+            SqlParameter[] parameters = {
+                    new SqlParameter("@tblName", SqlDbType.VarChar, 255),
+                    new SqlParameter("@fldName", SqlDbType.VarChar, 255),
+                    new SqlParameter("@PageSize", SqlDbType.Int),
+                    new SqlParameter("@PageIndex", SqlDbType.Int),
+                    new SqlParameter("@IsReCount", SqlDbType.Bit),
+                    new SqlParameter("@OrderType", SqlDbType.Bit),
+                    new SqlParameter("@strWhere", SqlDbType.VarChar,1000),
+                    };
+            parameters[0].Value = "T_Construction_Project";
+            parameters[1].Value = "ID";
+            parameters[2].Value = PageSize;
+            parameters[3].Value = PageIndex;
+            parameters[4].Value = 0;
+            parameters[5].Value = 0;
+            parameters[6].Value = strWhere;	
+            return DbHelperSQL.RunProcedure("UP_GetRecordByPage",parameters,"ds");
+        }*/
+
+        #endregion  成员方法
+
+        ///<summary>
+        ///项目-责任书
+        /// </summary>
+        public DataSet GetConstructionPromiseList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select a.constructionprojectid,a.xmh,xmmc,b.contactperson,b.tel,b.promiseno from t_construction_project a left join  t_projectPromise b on a.ConstructionProjectID=b.ProjectID ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" And " + strWhere);
+            }
+            strSql.Append("order by b.promiseno,a.constructionprojectid");
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+
+        /// <summary>
+        /// 获得数据列表,有权限控制
+        /// </summary>
+        public DataTable GetListByRight(string CompanyID, string RoleID, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun)
+        {
+            string strSql = "";
+            //strSql = "select DISTINCT A.* from T_Construction_Project A,T_SingleProject B,T_SingleProjectUser C WHERE A.ConstructionProjectID=B.ConstructionProjectID AND B.SingleProjectID=C.SingleProjectID ";
+            strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID";
+            if (CompanyID.Trim() != "" && RoleID.Trim() != "")
+            {
+                strSql = "";
+                strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID WHERE (RoleID=" + RoleID + " OR CompanyID=" + CompanyID + ")";
+            }
+            //strSql += " Order By A.ConstructionProjectID DESC";
+
+            return PageCtrl.QueryForDataTableSqlServer(strSql, PageSize, curPage, PRIMARYKey, OrderByName, out recCoun).Tables[0];
+        }    
+
+        /// <summary>
+        /// 获得数据列表,有权限控制
+        /// </summary>
+        public DataTable GetListByRight(string CompanyID, string RoleID, string Area_Code, int PageSize, int curPage, string PRIMARYKey, string OrderByName, out int recCoun,string where)
+        {
+            string strSql = "";
+            //strSql = "select DISTINCT A.* from T_Construction_Project A,T_SingleProject B,T_SingleProjectUser C WHERE A.ConstructionProjectID=B.ConstructionProjectID AND B.SingleProjectID=C.SingleProjectID ";
+            strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID ";
+            if (Area_Code != "")
+            {
+                strSql += " where b.Area_Code like '" + Area_Code + "%' " + where;
+            }
+            else
+            {
+                strSql += " where 1=1 " + where;
+            }
+
+            if (CompanyID.Trim() != "" && RoleID.Trim() != "")
+            {
+                strSql = "";
+                strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID WHERE (RoleID=" + RoleID + " OR CompanyID=" + CompanyID + ")";
+            }
+            //strSql += " Order By A.ConstructionProjectID DESC";
+
+            return PageCtrl.QueryForDataTableSqlServer(strSql.ToString(), PageSize, curPage, PRIMARYKey, OrderByName, out recCoun).Tables[0];
+        }
+
+        /// <summary>
+        /// 获得数据列表,有权限控制
+        /// </summary>
+        public DataSet GetListByRight(string CompanyID, string RoleID)
+        {
+            string strSql = "";
+            //strSql = "select DISTINCT A.* from T_Construction_Project A,T_SingleProject B,T_SingleProjectUser C WHERE A.ConstructionProjectID=B.ConstructionProjectID AND B.SingleProjectID=C.SingleProjectID ";
+            strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID";
+            if (CompanyID.Trim() != "" && RoleID.Trim() != "")
+            {
+                strSql = "";
+                strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID WHERE (RoleID=" + RoleID + " OR CompanyID=" + CompanyID + ")";
+            }
+            strSql += " Order By ConstructionProjectID DESC";
+
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得数据列表,有权限控制
+        /// </summary>
+        public DataSet GetListByRight(string CompanyID, string RoleID, string Area_Code)
+        {
+            string strSql = "";
+            //strSql = "select DISTINCT A.* from T_Construction_Project A,T_SingleProject B,T_SingleProjectUser C WHERE A.ConstructionProjectID=B.ConstructionProjectID AND B.SingleProjectID=C.SingleProjectID ";
+            strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID ";
+            if (Area_Code != "")
+            {
+                strSql += " where b.Area_Code like '" + Area_Code + "%'";
+            }
+
+            if (CompanyID.Trim() != "" && RoleID.Trim() != "")
+            {
+                strSql = "";
+                strSql = "select DISTINCT A.* from T_Construction_Project A LEFT JOIN T_SingleProject B ON A.ConstructionProjectID=B.ConstructionProjectID LEFT JOIN T_SingleProjectUser C ON B.SingleProjectID=C.SingleProjectID WHERE (RoleID=" + RoleID + " OR CompanyID=" + CompanyID + ")";
+            }
+            strSql += " Order By ConstructionProjectID DESC";
+
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+
+        public DataSet GetConstructionListByCompanyID(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select * from T_Construction_Project WHERE 1=1");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" AND " + strWhere);
+            }
+            strSql.Append(" Order By ConstructionProjectID DESC");
+
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+    }
+}
+

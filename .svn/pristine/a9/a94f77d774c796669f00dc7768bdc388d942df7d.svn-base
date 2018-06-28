@@ -1,0 +1,341 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.CBLL;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class Rwfp : System.Web.UI.Page
+    {
+        public int _singleProject;
+        public int _workFlowID;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(Rwfp));
+
+            _singleProject = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("SingleProjectID"));
+            _workFlowID = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("WorkFlowID"));
+            if (!IsPostBack)
+            {
+                ddlUser.BindDataByCompanyID(Common.Session.GetSession("CompanyId"), 66);
+
+                ctrlCompanyQucikReg.DataBindEx(_singleProject);
+
+                ctrlArchiveTypeDetail1.DataBindEx();
+                Model.T_SingleProject_MDL spMDL = (new BLL.T_SingleProject_BLL()).GetModel(_singleProject);
+                if (spMDL != null)
+                {
+                    ctrlArchiveTypeDetail1.SelectValue = spMDL.zdh;
+                }
+                else
+                {
+                    ctrlArchiveTypeDetail1.SelectValue = "I0000";
+                }
+                if (Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcmc")) != "")
+                {
+                    hidgcmc.Value = Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcmc"));
+                }
+                if (Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcbm")) != "")
+                {
+                    hidgcbh.Value = Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcbm"));
+                }
+            }
+
+            if (_singleProject > 0)
+            {
+                SetStatus(_singleProject);
+            }
+        }
+
+        //设置工程状态
+        void SetStatus(int SingleProjectID)
+        {
+            T_SingleProject_MDL spMdl = null;
+            spMdl = GetModel(SingleProjectID);
+            int status = Common.ConvertEx.ToInt(spMdl.Status);
+
+            if (status == 0)
+                ltStatus.Text = "工程未确认";
+            else if (status == 1)
+                ltStatus.Text = "工程已确认通过";
+            else if (status == 2)
+                ltStatus.Text = "工程已确认不通过";
+            else if (status == 119)
+                ltStatus.Text = "工程已删除";
+            else ltStatus.Text = "工程已删除";
+        }
+
+        //设置iframe地址
+        void SetIframe(string typeid, int SingleProjectID)
+        {
+           // string url = "/companymanage/companyreg3_" + typeid + "edit.aspx?action=view&id=" + SingleProjectID;
+            string url = "/companymanage/companyreg3_" +
+                PublicModel.GetFileTypeForProjectType(typeid) + "edit.aspx?action=view&ProjectType=" + typeid + "&id=" + SingleProjectID;
+            //iframe1.Attributes.Add("src", url);
+        }
+
+        //取工程数据
+        T_SingleProject_MDL GetModel(int SingleProjectID)
+        {
+            return (new T_SingleProject_BLL()).GetModel(SingleProjectID);
+        }
+
+        /// <summary>
+        /// 分配并提交任务
+        /// </summary>
+        /// <param name="_singleProject">工程ID</param>
+        /// <param name="ChargeUserID">业务指导人员</param>
+        /// <param name="zdh">分类</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string AllotSingleProject(string _singleProject, string ChargeUserID, string zdh, string workFlowID)
+        {
+            try
+            {
+                //btnSave01_Click(sender, e);//先要确认通过
+
+                //激活工程
+                BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+                T_SingleProject_MDL spMDL = spBLL.GetModel(ConvertEx.ToInt(_singleProject));
+                spMDL.Status = 1;
+                int CompanyID = 0;
+
+                if (String.IsNullOrEmpty(spMDL.gcbm))
+                {
+                    //产生工程号
+                    T_Other_BLL otherBLL = new T_Other_BLL();
+                    spMDL.gcbm = otherBLL.GetNewEngineerID();
+                    spBLL.Update(spMDL);
+
+                    //更新项目号
+                    T_Construction_Project_BLL cpBLL = new T_Construction_Project_BLL();
+                    Model.T_Construction_Project_MDL cpMDL = cpBLL.GetModel(spMDL.ConstructionProjectID);
+                    CompanyID = cpMDL.CompanyID;
+                    if (String.IsNullOrEmpty(cpMDL.xmh))
+                    {
+                        cpMDL.xmh = otherBLL.GetNewProjectID();
+                        cpBLL.Update(cpMDL);
+                    }
+                }
+
+                //激活用户
+                BLL.T_UsersInfo_BLL userBLL2 = new T_UsersInfo_BLL();
+                T_UsersInfo_MDL userMDL2 = userBLL2.GetModel(spMDL.CompanyUserID);
+                if (userMDL2 != null)
+                {
+                    userMDL2.IsValid = true;
+                    userBLL2.Update(userMDL2);
+                }                           
+
+                //发送邮件通知
+
+                //MessageBox.Show(this, "确实通过,产生的工程号是：" + spMDL.gcbm);
+
+                //=============以上为Button1的功能
+
+
+                #region 修改工程分配信息
+                T_SingleProject_MDL model = new T_SingleProject_MDL();
+                model = (new T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(_singleProject));
+
+                if (model != null)
+                {
+                    model.AllotDate = DateTime.Now;
+                    model.AllotUserID = ConvertEx.ToInt(Common.Session.GetSession("UserId")); //分配人员
+                    model.ChargeUserID = ConvertEx.ToInt(ChargeUserID);   //业务指导人员
+
+                    model.zdh = zdh.ToString();
+
+                    (new T_SingleProject_BLL()).Update(model);
+                }
+                #endregion
+
+                //修改流程状态,流程不在这里提交了，需要手动点提交
+                //bool result = (new WorkFlowManage()).GoNextProjectWorkFlowSataus(ConvertEx.ToInt(_singleProject), ConvertEx.ToInt(_workFlowID));
+                //(new T_WorkFlowDefine_BLL()).UpdateProjectWorkFlowStatus(ConvertEx.ToInt(_workFlowID), ConvertEx.ToInt(_singleProject));
+
+                //生成归档目录
+                //Leo 需加入工程类别
+                //if (result)
+                //{
+                model = (new T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(_singleProject));
+                //T_SingleProject_MDL ProjectMDL = (new T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(_singleProject));
+
+                //result = (new UserOperate()).CopyFileList(ConvertEx.ToInt(Common.Session.GetSession("UserID")), Common.Session.GetSession("UserName"), ConvertEx.ToInt(_singleProject), ProjectMDL.ProjectType);
+
+                //BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+                //T_SingleProject_MDL extMDL = spBLL.GetModel(ProjectMDL.SingleProjectID);
+
+                //result = (new UserOperate()).CopyFileList(model.CompanyUserID, "", ConvertEx.ToInt(_singleProject), model.ProjectType);
+                //生成归档目录
+                //只生成建设单位。其它类别单的自已来选
+                (new UserOperate()).CopyFileList(CompanyID, model.CompanyUserID, "", ConvertEx.ToInt(_singleProject), model.ProjectType);
+                //}
+
+                //Leo 把此用户加入到这个工程用户中去 
+                BLL.T_UsersInfo_BLL userBLL = new T_UsersInfo_BLL();
+                int RoleID = userBLL.GetModel(Common.ConvertEx.ToInt(ChargeUserID)).RoleID;
+                int UserID = Common.ConvertEx.ToInt(ChargeUserID);
+                CBLL.SingleProjectRole projectRole = new DigiPower.Onlinecol.Standard.CBLL.SingleProjectRole();
+                projectRole.Update(model.SingleProjectID, RoleID, UserID);
+
+                //相关流程的用户也需要加入，否则流程走不下去===现在有了受理，可以达到这个功能，不需要加了。让用户受理下来。受理还没做完呢？
+                BLL.T_WorkFlow_BLL workFlowBLL = new T_WorkFlow_BLL();
+                DataSet workFlowDS = workFlowBLL.GetList(" OrderIndex=1");
+                if (workFlowDS.Tables.Count > 0)
+                {
+                    foreach (DataRow row in workFlowDS.Tables[0].Rows)
+                    {
+                        projectRole.Update(model.SingleProjectID, Common.ConvertEx.ToInt(row["RoleID"]), Common.ConvertEx.ToInt(row["UserID"]));
+                    }
+                }
+
+                //Leo 记录处理结果，及处理时间
+                //Model.T_WorkFlowDoResult_MDL doResultMDL = new T_WorkFlowDoResult_MDL();
+                //doResultMDL.SingleProjectID = ConvertEx.ToInt(_singleProject);
+                //doResultMDL.WorkFlowID = ConvertEx.ToInt(_workFlowID);
+                //doResultMDL.DoUserID = Common.ConvertEx.ToInt(Common.Session.GetSession("UserID"));
+                //doResultMDL.DoUserName = Common.Session.GetSession("UserName");
+                //doResultMDL.DoDateTime = System.DateTime.Now;
+                //doResultMDL.DoFinishFlag = true;
+                //BLL.T_WorkFlowDoResult_BLL doResultBLL = new T_WorkFlowDoResult_BLL();
+                //doResultBLL.Add(doResultMDL);
+
+                //if (result)
+                //    Response.Redirect("~/MyTaskList.aspx");
+
+                //在这里发邮件，会好些。太早发邮件会给用户带来迷湖
+                string strMsgBody = "您好！<br />";
+                strMsgBody += "您报建的工程：" + model.gcmc + "，已确认通过，产生的工程编号是：" + model.gcbm + "，您现在已经可以通过注册时的账号密码登记系统操作了！";
+
+                Model.T_UsersInfo_MDL userMDL = userBLL.GetModel(model.CompanyUserID);
+                Common.CSendEmail.SendEmail("档案馆", userMDL.EMail, "工程报建确认通知", strMsgBody, "");
+
+                //提交到下一个流程
+                WorkFlowManage workflowmanage = new WorkFlowManage();
+                workflowmanage.GoNextProjectWorkFlowSataus(model.SingleProjectID, ConvertEx.ToInt(workFlowID));
+
+                //将指导人员指导环节的所有 [受理]全部 做,这样,除了管理员和受理人员外,其他人都看不到流程下的工程
+                T_WorkFlowDefine_BLL workFlowDefineBLL = new T_WorkFlowDefine_BLL();
+                IList<T_WorkFlowDefine_MDL> workFlowDefineLT = workFlowDefineBLL.GetModelList(" SingleProjectID=" + model.SingleProjectID + " and WorkFlowID in(4,15,17,28) ");
+                if (workFlowDefineLT != null && workFlowDefineLT.Count > 0)
+                {
+                    foreach (T_WorkFlowDefine_MDL wkdMDL in workFlowDefineLT)
+                    {
+                        wkdMDL.SubmitStatus = 2;//受理完成状态
+                        wkdMDL.RecvUserID = Common.ConvertEx.ToInt(ChargeUserID);
+                        wkdMDL.RecvDateTime = DateTime.Now;
+                        workFlowDefineBLL.Update(wkdMDL);
+                    }
+                }
+                return "已完成分配，产生的工程号是：" + spMDL.gcbm + " ，并已提交本工程！";
+            }
+            catch (Exception ex)
+            {
+                return SystemSet._RETURN_FAILURE_VALUE+ex.Message;
+            }
+        }
+
+        protected void btnSave01_Click(object sender, EventArgs e)
+        {
+            //激活工程
+            BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMDL = spBLL.GetModel(_singleProject);
+            spMDL.Status = 1;
+
+            if (String.IsNullOrEmpty(spMDL.gcbm))
+            {
+                //产生工程号
+                T_Other_BLL otherBLL = new T_Other_BLL();
+                spMDL.gcbm = otherBLL.GetNewEngineerID();
+                spBLL.Update(spMDL);
+            }
+
+            //激活用户
+            BLL.T_UsersInfo_BLL userBLL = new T_UsersInfo_BLL();
+            T_UsersInfo_MDL userMDL = userBLL.GetModel(spMDL.CompanyUserID);
+            userMDL.IsValid = true;
+            userBLL.Update(userMDL);
+
+            //发送邮件通知
+
+            MessageBox.Show(this, "确实通过,产生的工程号是：" + spMDL.gcbm);
+        }
+
+        protected void btnUnPass_Click(object sender, EventArgs e)
+        {
+            BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMDL = spBLL.GetModel(_singleProject);
+            spMDL.Status = 2;
+            spMDL.gcbm = "";
+            spBLL.Update(spMDL);
+
+            //停用用户
+            BLL.T_UsersInfo_BLL userBLL = new T_UsersInfo_BLL();
+            T_UsersInfo_MDL userMDL = userBLL.GetModel(spMDL.CompanyUserID);
+            userMDL.IsValid = false;
+            userBLL.Update(userMDL);
+            MessageBox.Show(this, "已停用本工程");
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            /*
+            spMDL.Status = 119; //Status=119:表示工程已删除
+            spMDL.gcbm = "";
+            spBLL.Update(spMDL);
+            userMDL.IsValid = false;
+            userBLL.Update(userMDL);
+             */
+            BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMDL = spBLL.GetModel(_singleProject);
+            BLL.T_UsersInfo_BLL userBLL = new T_UsersInfo_BLL();
+            T_UsersInfo_MDL userMDL = userBLL.GetModel(spMDL.CompanyUserID);
+
+            //删除工程和用户
+            int SingleProjectID = spMDL.SingleProjectID;
+            int ConstructionProjectID = spMDL.ConstructionProjectID;
+            int CompanyID = userMDL.CompanyID;
+            int singleprojectcount = (new T_SingleProject_BLL()).GetSingleProjectCountByCompany(CompanyID);
+            if (spMDL.ProjectType == "1")//房屋
+            {
+                (new a_single_project_BLL()).Delete(SingleProjectID);
+                (new construction_project_a_BLL()).Delete(ConstructionProjectID);
+            }
+            else if (spMDL.ProjectType == "2")//道路
+            {
+                (new b_single_project_BLL()).Delete(SingleProjectID);
+                (new construction_project_b_BLL()).Delete(ConstructionProjectID);
+            }
+            else if (spMDL.ProjectType == "3" || spMDL.ProjectType == "4")//地下管线 桥梁
+            {
+                (new c_single_project_BLL()).Delete(SingleProjectID);
+                (new construction_project_c_BLL()).Delete(ConstructionProjectID);
+            }
+            spBLL.DeleteSingleProjectTable(SingleProjectID, "T_SingleProjectUser");
+            spBLL.DeleteSingleProjectTable(SingleProjectID, "T_SingleProjectCompany");
+            spBLL.Delete(SingleProjectID);
+
+            if (singleprojectcount == 1)
+            {
+                (new T_Construction_Project_BLL()).Delete(ConstructionProjectID);
+                (new T_Company_BLL()).Delete(CompanyID);
+                (new T_Role_BLL()).DeleteRoleByCompanyID(CompanyID);
+                (new T_Role_BLL()).DeleteRoleRightByCompanyID(CompanyID);
+                userBLL.Delete(userMDL.UserID);
+            }
+            Response.Redirect("../MyTaskList.aspx?WorkFlowID="+_workFlowID); ;
+        }
+    }
+}

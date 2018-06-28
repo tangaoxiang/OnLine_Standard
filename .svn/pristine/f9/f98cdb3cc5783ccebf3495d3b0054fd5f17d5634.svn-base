@@ -1,0 +1,55 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="menuprocess.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main.menuprocess" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body onload="javascript:window.location.href='<%=href %>'">
+    <form id="form1" runat="server">
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <p>
+            </p>
+            <table height="200" cellspacing="0" cellpadding="0" width="300" align="center" border="0">
+                <tbody>
+                    <tr>
+                        <td background="../Images/loading.gif">
+                            <table height="151" cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td width="5%" height="71">
+                                            &nbsp;</td>
+                                        <td width="95%" height="71">
+                                            &nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="bottom" width="5%" height="26">
+                                            &nbsp;</td>
+                                        <td valign="bottom" width="95%" height="26">
+                                            &nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="5%">
+                                            &nbsp;</td>
+                                        <td width="95%" align="center">
+                                            <img height="16" src="../Images/process.gif" width="177"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

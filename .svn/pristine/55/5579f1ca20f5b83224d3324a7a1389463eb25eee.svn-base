@@ -1,0 +1,347 @@
+﻿<%@ Page Title="照片收集汇总" Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true"
+    CodeBehind="ImageWjdj.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.ImageWjdj" %>
+
+
+<%@ Register Src="../CommonCtrl/ctrlOptStatus.ascx" TagName="ctrlOptStatus" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlProjectBaseInfo.ascx" TagName="ctrlProjectBaseInfo"
+    TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownFileList.ascx" TagName="ctrlDropDownFileList"
+    TagPrefix="uc5" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <style type="text/css">
+        #tableList td {
+            padding: 2px 4px 2px 2px !important;
+        }
+
+        .regedit_input {
+            width: 100% !important;
+            padding: 0px !important;
+            font-size: 13px !important;
+            border: 1px solid #D5D5D5 !important;
+            color: #333 !important;
+            height: 23px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <script src="../Javascript/Common/jquery.maskedinput.min.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            $("input[name='pssj']").mask("9999-99-99");
+        });
+        function Jvalidator(obj) {
+            if (obj.value != "" && obj.value != "____-__-__") {
+                if (Common.isDate2("", obj) == false) {
+                    obj.select();
+                    obj.value = "";
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function getFileStatus() {
+            var status = '';
+            $("#ctl00_Main_rdbFileStatus_RadioButtonList1 input[type='radio']").each(function () {
+                if ($(this).is(":checked"))
+                    status = $(this).val();
+                return;
+            });
+            return status;
+        }
+
+        function getNewUrl() {
+            var url = window.location.href;
+            if ($('#ctl00_Main_ddlFileType_DropDownList1').val() != "") {
+                url = Common.urlreplace(url, 'ddlFileType', escape($('#ctl00_Main_ddlFileType_DropDownList1').val()));
+            }
+            if (getFileStatus() != "") {
+                url = Common.urlreplace(url, 'fileStatus', getFileStatus());
+            }
+            if ($('#CurrentPageIndex').text() != "") {
+                url = Common.urlreplace(url, 'PageIndex', $('#CurrentPageIndex').text());
+            }
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+        //工程ID
+        function GetSingleProjectID() {
+            return $('#HidSingleProjectID').val();
+        }
+        //流程ID
+        function GetWorkFlowID() {
+            return $('#Hidworkflowid').val();
+        }
+        //工程类型
+        function GetSingleProjectType() {
+            return $('#Hidprojecttype').val();
+        }
+        //著录
+        function btnZL() {
+            if (Common.isCheckBoxOneChecked()) {
+                var keyList = Common.getChkOneKeyToArray();
+                if (keyList[1].toLocaleLowerCase() == 'false' || keyList[1] == '0') {
+                    var url = "../File/ImageFileInfoList.aspx?action=" + PageState.Edit + "&ID=" +
+                            keyList[0] + "&SingleProjectID=" + GetSingleProjectID() + '&rn=' + Math.random();
+
+                    var height = "600px";
+                    if (screen.height < 900) height = "100%";
+                    Common.fnLayerOpen("文件编号[" + keyList[5] + "]信息著录", "830px", height, url, true, "著录成功!");
+                } else {
+                    Common.fnLayerAlert("请勾选文件级来文件详细著录!");
+                }
+            }
+        }
+        //文件信息预览
+        function btnZLView() {
+            if (Common.isCheckBoxOneChecked()) {
+                var keyList = Common.getChkOneKeyToArray();
+                var url = "../File/ImageFileInfoList.aspx?action=" + PageState.View + "&ID=" +
+                        keyList[0] + "&SingleProjectID=" + GetSingleProjectID() + '&rn=' + Math.random();
+
+                var height = "600px";
+                if (screen.height < 900) height = "100%";
+                Common.fnLayerOpen("文件编号[" + keyList[5] + "]信息著录", "830px", height, url, false, "");
+            }
+        }
+        //上传
+        function btnUpload() {
+            if (Common.isCheckBoxOneChecked()) {
+                var keyList = Common.getChkOneKeyToArray();
+                if (keyList[5].length > 1) {
+                    var FileListID = 0;
+                    if (keyList[1].toLocaleLowerCase() == 'true' || keyList[1] == '1')
+                        FileListID = keyList[0];
+                    else
+                        FileListID = keyList[3];
+
+                    var Url = "BatChUpload/BatchUpload.aspx?FileListID=" + FileListID + "&SingleProjectID=" +
+                        GetSingleProjectID() + "&WorkFlowID=" + GetWorkFlowID() + '&rn=' + Math.random();
+                    layer.open({
+                        type: 2,
+                        title: "文件编号[" + keyList[5] + "]照片上传",
+                        maxmin: false,
+                        resize: false,
+                        shadeClose: false,
+                        area: ['470px', '520px'],
+                        content: Url,
+                        end: function () {
+                            window.location.href = getNewUrl();
+                        }
+                    });
+                } else {
+                    Common.fnLayerAlert("请勾选子目录级来上传!");
+                }
+            }
+        }
+        function lookPDF(bh, filelistID) {
+            var strURL = "../File/PreviewImage.aspx?ID=" + filelistID + "&SingleProjectID=" + GetSingleProjectID() + "";
+            window.top.parent.ParentOpenDiv('文件编号[' + bh + ']声像文件预览', strURL, '80%', '95%');
+        }
+
+        //删除
+        function btnDel() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                layer.confirm('确定要删除选中文件?', function () {
+                    $("input[type='checkbox']:checked").each(function () {
+                        var keyList = ($(this).val() + ',').split(',');
+                        var len = ImageWjdj.DeleteFileList(Number(keyList[0])).value;
+                    });
+                    Common.fnLayerAlertAndRefresh("文件删除成功!");
+                });
+            } else {
+                Common.fnLayerAlert('必须选择一项才可以操作!');
+            }
+        }
+        //保存
+        function btnSave() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var singleProjectID = GetSingleProjectID();                      //工程ID
+                    var keyList = ($(this).val() + ',').split(',');                  //数据集合
+
+                    if (keyList[1].toLocaleLowerCase() == 'false' || keyList[1] == '0') { //只保存非节点数据                     
+                        var objTitle = $(this).parent().next().next().children().eq(0);
+                        var oldTitle = objTitle.val();
+
+                        var objPsz = objTitle.parent().next().children().eq(0);
+                        var oldPsz = objPsz.val();
+
+                        var objPssj = objPsz.parent().next().children().eq(0);
+                        var oldPssj = objPssj.val();
+
+                        var objPsdd = objPssj.parent().next().children().eq(0);
+                        var oldPsdd = objPsdd.val();
+
+                        var objOrderIndex = objPsdd.parent().next().children().eq(0);
+                        var oldOrderIndex = objOrderIndex.val();
+
+                        var len = ImageWjdj.ExctFileList(keyList[0], oldTitle, oldPsz, oldPsdd, oldPssj, oldOrderIndex).value;
+                    }
+                });
+                Common.fnLayerAlertAndRefresh("文件保存成功!");
+            } else {
+                Common.fnLayerAlert('必须选择一项才可以操作!');
+            }
+        }
+        //恢复条目状态
+        function btnResetStatus(status) {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');                  //数据集合
+
+                    if (keyList[1].toLocaleLowerCase() == 'false' || keyList[1] == '0') { //只保存非节点数据                     
+                        var len = ImageWjdj.ResetFileStatus(GetSingleProjectID(), keyList[0], status).value;
+                    }
+                });
+                Common.fnLayerAlertAndRefresh("操作成功!");
+            } else {
+                Common.fnLayerAlert('必须选择一项才可以操作!');
+            }
+        }
+        //查看工程信息
+        function btnLookSingle() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                window.top.parent.ParentOpenDiv('工程信息-预览', '../CompanyManage/CompanyReg3_' + Common.getFileTypeForProjectType(GetSingleProjectType()) + 'Edit.aspx?action=' + PageState.View + '&SingleProjectID=' + GetSingleProjectID() + '&rn=' + Math.random() + '&ProjectType=' + GetSingleProjectType(), '900px', '90%');
+            }
+        }
+        //返回
+        function btnBack() {
+            window.location.href = '../MyTaskList.aspx?WorkFlowID=<%= workFlowID%>&rn=' + Math.random();
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="HidSingleProjectID" value="<%= singleProjectID%>" />
+    <input type="hidden" id="Hidworkflowid" value="<%= workFlowID%>" />
+    <input type="hidden" id="Hidprojecttype" value="<%= projecttype%>" />
+    <input type="hidden" id="HidsingleProjectNo" value="<%= singleProjectNo%>" />
+    <input type="hidden" id="HidDefaultCompanyType" value="<%= HttpContext.Current.Session["CompanyType"]%>" />
+    <input type="hidden" id="hidOpenFlag" />
+
+    <uc3:ctrlProjectBaseInfo ID="ctrlProjectBaseInfo1" runat="server" />
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">文件类别：</td>
+                    <td class="c2">
+                        <uc5:ctrlDropDownFileList ID="ddlFileType" Width="150" bShowNO="false"
+                            runat="server" AutoPostBack="false" />
+                    </td>
+                    <td class="condition">文件状态：</td>
+                    <td style="width: 350px;">
+                        <uc2:ctrlOptStatus ID="rdbFileStatus" runat="server" />
+                    </td>
+                    <td class="ss">
+                        <asp:Button ID="btnSearch" runat="server" Text=" 查询 " OnClick="btnSearch_Click" />
+                        <input type="reset" value="重 置" />
+                    </td>
+                </tr>
+            </table>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl" id="anlImagewjdjBtnList">
+                        <input type="button" id="MrcBtnLookSingle" title="工程信息" onclick="btnLookSingle()" value="工程信息" />
+                        <input type="button" id="MrcBtnZLView" title="文件信息" onclick="btnZLView()" value="文件信息" />
+                        <input type="button" id="MrcBtnAccptY" title="验收通过,针对文件级" onclick="btnResetStatus(20)" value="验收通过" />
+                        <input type="button" id="MrcBtnAccptN" title="验收不通过,针对文件级" onclick="btnResetStatus(900)" value="验收不通过" />
+
+
+                        <input type="button" id="MrcBtnSave" title="保存,针对文件级" onclick="btnSave()" value="保存" />
+                        <input type="button" id="MrcBtnResetStatus" title="状态恢复,针对文件级" onclick="btnResetStatus(0)" value="状态恢复" />
+                        <input type="button" id="MrcUpload" title="上传,请选择目录级来上传" onclick="btnUpload()" value="上传" />
+                        <input type="button" id="MrcBtnZL" title="著录,针对文件级" onclick="btnZL()" value="著录" />
+
+                        <input type="button" id="MrcBtnDel" title="删除,针对文件级" onclick="btnDel()" value="删除" />
+                        <input type="button" id="MrcBtnBack" title="返回列表页面" onclick="btnBack()" value="返回" />
+                    </div>
+                    <table id="tableList">
+                        <thead>
+                            <tr>
+                                <th width="30px" style="cursor: pointer;"
+                                    onclick="Common.selCheckBoxAll(this)" selall="0">全选</th>
+                                <th width="60px">编号</th>
+                                <th>文件题名</th>
+                                <th width="120px">拍摄者</th>
+                                <th width="80px">拍摄日期</th>
+                                <th width="120px">拍摄地点</th>
+                                <th width="80px">序号</th>
+                                <th width="30px">原文</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <input type="checkbox" name="checkOne"
+                                                value='<%# Eval("FileListID")%>,<%# Eval("IsFolder")%>,
+                                                <%# Eval("recID")%>,<%# Eval("PID")%>,<%# Eval("DefaultCompanyType")%>,<%# Eval("BH")%>' /></td>
+                                        </td>
+                                           <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                               <%# Eval("bh")%>
+                                           </td>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <%# getInputTextForIsFolder(Eval("IsFolder"),Eval("title"),"100",null)%> </td>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <%# getInputTextForIsFolder(Eval("IsFolder"),Eval("psz"),"20",null)%> </td>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <%# getInputTextForIsFolder(Eval("IsFolder"),(Eval("pssj")==DBNull.Value?"":Convert.ToDateTime(Eval("pssj")).ToString("yyyy-MM-dd")),"10","name=\"pssj\" onblur=\"return Jvalidator(this);\"")%> 
+                                        </td>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <%# getInputTextForIsFolder(Eval("IsFolder"),Eval("psdd"),"25",null)%> 
+                                        </td>
+                                        <td <%# getTdColorForFileStatus(Eval("Status"))%>>
+                                            <%# getInputTextForIsFolder(Eval("IsFolder"),Eval("OrderIndex"),"3"," name=\"OrderIndex\" onkeyup=\"this.value=this.value.replace(/\\D/g,'')\" onafterpaste=\"this.value=this.value.replace(/\\D/g,'')\" ")%> 
+                                        </td>
+                                        <td>
+                                            <img style="cursor: pointer;" onclick="lookPDF('<%# Eval("BH")%>',<%# Eval("FileListID")%>)"
+                                                src="../Javascript/Layer/image/EFILE_1.png" alt="点击查看" />
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var iscompany = '<%=DigiPower.Onlinecol.Standard.Web.PublicModel.isCompany()%>';
+        var action = '<%=Action%>';
+        if (action.toLowerCase().indexOf(PageState.View) > -1) {
+            $("#anlImagewjdjBtnList").find("input").hide();
+            $("#MrcBtnLookSingle").show();
+            $("#MrcBtnBack").show();
+            $("#MrcBtnZLView").show();
+        } else if (action.toLowerCase().indexOf(PageState.Check) > -1) {
+            $("#anlImagewjdjBtnList").find("input").hide();
+            $("#MrcBtnLookSingle").show();
+            $("#MrcBtnBack").show();
+            $("#MrcBtnZLView").show();
+            $("#MrcBtnAccptY").show();
+            $("#MrcBtnAccptN").show();
+        }
+    </script>
+</asp:Content>

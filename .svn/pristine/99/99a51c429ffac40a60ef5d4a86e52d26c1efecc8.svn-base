@@ -1,0 +1,258 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Configuration;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class QuickReg : System.Web.UI.Page
+    {
+        T_Role_BLL roleBLL = new T_Role_BLL();
+        T_UsersInfo_BLL userBLL = new T_UsersInfo_BLL();
+        T_Company_BLL companyBLL = new T_Company_BLL();
+        T_SingleProject_BLL singleProjectBLL = new T_SingleProject_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(QuickReg));
+            if (!this.IsPostBack)
+            {
+                CompanyType.Value = SystemSet._JSCOMPANYINFO.ToString();
+                BindDate();
+            }
+        }
+
+        /// <summary>
+        /// 数据绑定
+        /// </summary>
+        protected void BindDate()
+        {
+            AREA_CODE.BindDdlArea(true);  //区域
+            ProjectType.DataBindEx();     //工程类别
+        }
+
+        /// <summary>
+        /// 判断统一社会信用代码是否唯一
+        /// </summary>                               
+        /// <param name="LoginName">账号ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool CheckCompanyCode(string CompanyCode)
+        {
+            bool resultCheck = false;
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(CompanyCode))
+                {
+                    if (companyBLL.Exists("lower(CompanyCode)='" + CompanyCode.Trim().ToLower() + "' and CompanyID!=0 "))
+                    {
+                        resultCheck = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "判断统一社会信用代码是否唯一失败", ex);
+            }
+            return resultCheck;
+        }
+
+        /// <summary>
+        /// 判断登陆账号是否存在
+        /// </summary>
+        /// <param name="LoginName">账号ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool CheckLoginName(string LoginName)
+        {
+            bool resultCheck = false;
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(LoginName))
+                {
+                    if (userBLL.Exists("lower(LoginName)='" + LoginName.Trim().ToLower() + "' and UserID!=0 "))
+                    {
+                        resultCheck = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "判断登陆账号是否存在失败", ex);
+            }
+            return resultCheck;
+        }
+
+        /// <summary>
+        /// 判断密码是否合法(字母和数组组成)
+        /// </summary>                             
+        /// <param name="Pwd">账号ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool CheckPassword(string Pwd)
+        {
+            return PublicModel.CheckAccountOrPwdValidity(Pwd);
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                #region 建设单位信息
+                T_Company_MDL companyMDL = new T_Company_MDL();
+
+                companyMDL = Comm.GetValueToObject(companyMDL, table_Company) as T_Company_MDL;
+                companyMDL.CreateDate = DateTime.Now;
+                companyMDL.IsCompany = true;
+                companyMDL.CreateIP = Common.DNTRequest.GetIP();
+                companyMDL.CreateUserID = 0;//公司创建人
+
+                int companyID = companyBLL.Add(companyMDL);
+                #endregion
+
+                if (companyID > 0)
+                {
+                    #region 项目信息
+                    T_Construction_Project_MDL cpModel = new T_Construction_Project_MDL();
+                    T_Construction_Project_BLL cpBll = new T_Construction_Project_BLL();
+
+                    cpModel.CompanyID = companyID;                     //所属单位
+                    cpModel.xmmc = xmmc.Text;                          //项目名称
+                    cpModel.xmh = string.Empty;                        //项目号
+                    if (jgsj.Text.Length > 0)
+                        cpModel.jgrq = Common.ConvertEx.ToDate(jgsj.Text);  //开工时间
+                    cpModel.jgsj = jgsj.Text;
+                    cpModel.ProjectType = ProjectType.SelectValue;
+                    int constructionProjectID = cpBll.Add(cpModel);
+                    #endregion
+
+                    #region 工程信息
+                    T_SingleProject_MDL singleProjectMDL = new T_SingleProject_MDL();
+
+                    singleProjectMDL = Comm.GetValueToObject(singleProjectMDL, tablemain) as T_SingleProject_MDL;
+                    singleProjectMDL.AREA_CODE = AREA_CODE.SelectValue;
+                    singleProjectMDL.ConstructionProjectID = constructionProjectID;
+                    singleProjectMDL.CreateDate = DateTime.Now;
+                    singleProjectMDL.Status = 0;//初始为0，未分配
+                    singleProjectMDL.jsdw = companyMDL.CompanyName;              //建设单位，是当前单位  
+                    singleProjectMDL.gcdd = gcdd.Text.Trim();
+                    singleProjectMDL.WorkFlow_DoStatus = 0;
+
+                    int singleProjectID = singleProjectBLL.Add(singleProjectMDL); //工程ID
+                    UploadFile(singleProjectID);                                  //上传证书
+
+                    #endregion
+
+                    #region 用户信息 ,角色默认给先前定义好的建设单位角色
+                    T_UsersInfo_MDL userMDL = new T_UsersInfo_MDL();
+                    userMDL = (T_UsersInfo_MDL)Comm.GetValueToObject(userMDL, tLoginInfo);
+                    userMDL.RoleID = roleBLL.GetRoleIdByRoleCode(SystemSet._ROLECODE_JSCOMPANY, singleProjectMDL.AREA_CODE);
+                    userMDL.Passwd = DESEncrypt.Encrypt(Passwd.Text);
+                    userMDL.UserType = SystemSet.EumUserType.Company.ToString();
+                    userMDL.UserName = userMDL.LoginName;
+                    userMDL.CompanyID = companyID;
+                    userMDL.Createdate = DateTime.Now;
+                    userMDL.LastLoginTime = DateTime.Now;
+                    userMDL.IsLeader = true;
+                    userMDL.IsValid = false;
+                    userMDL.Createdby = "工程报建产生";
+                    int userID = userBLL.Add(userMDL);
+                    #endregion
+
+                    #region 添加工程用户关联信息
+                    PublicModel.AddSingleProjectUser(singleProjectID, userMDL);
+                    #endregion
+
+                    #region 添加工程公司关联信息
+                    PublicModel.AddSingleProjectCompany(singleProjectID, companyID);
+                    #endregion
+
+                    #region 添加工程流程环节
+                    new T_WorkFlowDefine_BLL().AddWorkFlowDefine(singleProjectID, singleProjectMDL.AREA_CODE);
+                    #endregion
+
+                    #region 更新工程表的 CompanyUserID为当前建设单位用户ID
+                    singleProjectMDL = singleProjectBLL.GetModel(singleProjectID);
+                    singleProjectMDL.CompanyUserID = userID;
+                    singleProjectBLL.Update(singleProjectMDL);
+                    #endregion
+
+                    #region 报建完成提示信息
+                    this.Page.ClientScript.RegisterStartupScript(this.Page.GetType(), "IsSuccess",
+                        "<script>"
+                         + " layer.alert('您已经成功注册，但您注册的信息，必需确认后才可以登录使用。请耐心等待，或致电：" + SystemSet._QUICKREGTEL + "', { btnAlign: 'c' }, function (i) {"
+                         + "     var index = parent.layer.getFrameIndex(window.name);"
+                         + "     parent.layer.close(index);"
+                         + "}); "
+                        + "</script>");
+                    #endregion
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "建设单位工程报建", ex);
+                Common.MessageBox.FnLayerAlert(this.Page, "工程报建保存失败:" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 证书附件上传
+        /// </summary>
+        /// <param name="tSingleProjectID"></param>
+        protected void UploadFile(int tSingleProjectID)
+        {
+            HttpFileCollection uploadFiles = HttpContext.Current.Request.Files;//获取所有客户端上传文件对象
+            HttpPostedFile userPostFile = null;
+
+            if (uploadFiles.Count > 0)
+            {
+                for (int i = 0; i < uploadFiles.Count; i++)
+                {
+                    userPostFile = uploadFiles[i];//获取独立的文件对象
+                    string fileName = Common.Common.SaveFile(Server.MapPath(savePath), userPostFile, "R");
+
+                    if (fileName != "")
+                    {
+                        T_FileAttach_BLL bll = new T_FileAttach_BLL();
+                        T_FileAttach_MDL mdl = new T_FileAttach_MDL();
+                        mdl.AttachName = fileName;
+                        mdl.AttachPath = savePath + fileName;
+                        mdl.CreateDate = DateTime.Now;
+                        mdl.PriKeyValue = tSingleProjectID;
+                        mdl.OrderIndex = 0;
+                        mdl.Flag = "Company_Registration";
+
+                        if (Hid_ghxkz.Value != "")
+                        {
+                            Hid_ghxkz.Value = "";
+                            mdl.AttachCode = SystemSet.EumProject_Credentials.ghxkz.ToString();
+                        }
+                        else if (Hid_sgxkz.Value != "")
+                        {
+                            Hid_sgxkz.Value = "";
+                            mdl.AttachCode = SystemSet.EumProject_Credentials.sgxkz.ToString();
+                        }
+                        else if (Hid_other.Value != "")
+                        {
+                            mdl.AttachCode = SystemSet.EumProject_Credentials.other.ToString();
+                        }
+
+                        bll.Add(mdl);
+                    }
+                }
+            }
+        }
+        string savePath = "/Upload/Pic/";
+    }
+}

@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using System.Data.SqlClient;
+using DigiPower.Onlinecol.Standard.DbUtility;
+
+namespace DigiPower.Onlinecol.Standard.Log
+{
+    internal class Log_DAL
+    {
+        #region  成员方法
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(Log_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into T_OperationLog(");
+            strSql.Append("TableName,Type,ClassName,MethodName,SqlString,ErrorMsg,UserName,OperationDate,CreateIP,Result)");
+            strSql.Append(" values (");
+            strSql.Append("@TableName,@Type,@ClassName,@MethodName,@SqlString,@ErrorMsg,@UserName,@OperationDate,@CreateIP,@Result)");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+					new SqlParameter("@TableName", SqlDbType.NVarChar,50),
+					new SqlParameter("@Type", SqlDbType.NVarChar,300),
+					new SqlParameter("@ClassName", SqlDbType.NVarChar,50),
+					new SqlParameter("@MethodName", SqlDbType.NVarChar,50),
+					new SqlParameter("@SqlString", SqlDbType.NVarChar,1000),
+					new SqlParameter("@ErrorMsg", SqlDbType.NVarChar,1000),
+					new SqlParameter("@UserName", SqlDbType.NVarChar,50),
+					new SqlParameter("@OperationDate", SqlDbType.SmallDateTime),
+					new SqlParameter("@CreateIP", SqlDbType.NVarChar,50),
+					new SqlParameter("@Result", SqlDbType.NVarChar,50)};
+            parameters[0].Value = model.TableName;
+            parameters[1].Value = model.Type;
+            parameters[2].Value = model.ClassName;
+            parameters[3].Value = model.MethodName;
+            parameters[4].Value = model.SqlString;
+            parameters[5].Value = model.ErrorMsg;
+            parameters[6].Value = model.UserName;
+            parameters[7].Value = model.OperationDate;
+            parameters[8].Value = model.CreateIP;
+            parameters[9].Value = model.Result;
+
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int LogID)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("delete from T_OperationLog ");
+            strSql.Append(" where LogID=@LogID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@LogID", SqlDbType.Int,4)};
+            parameters[0].Value = LogID;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public Log_MDL GetModel(int LogID)
+        {
+
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 LogID,TableName,Type,ClassName,MethodName,SqlString,ErrorMsg,UserName,OperationDate,CreateIP,Result from T_OperationLog ");
+            strSql.Append(" where LogID=@LogID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@LogID", SqlDbType.Int,4)};
+            parameters[0].Value = LogID;
+
+            Log_MDL model = new Log_MDL();
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                if (ds.Tables[0].Rows[0]["LogID"].ToString() != "")
+                {
+                    model.LogID = int.Parse(ds.Tables[0].Rows[0]["LogID"].ToString());
+                }
+                model.TableName = ds.Tables[0].Rows[0]["TableName"].ToString();
+                model.Type = ds.Tables[0].Rows[0]["Type"].ToString();
+                model.ClassName = ds.Tables[0].Rows[0]["ClassName"].ToString();
+                model.MethodName = ds.Tables[0].Rows[0]["MethodName"].ToString();
+                model.SqlString = ds.Tables[0].Rows[0]["SqlString"].ToString();
+                model.ErrorMsg = ds.Tables[0].Rows[0]["ErrorMsg"].ToString();
+                model.UserName = ds.Tables[0].Rows[0]["UserName"].ToString();
+                if (ds.Tables[0].Rows[0]["OperationDate"].ToString() != "")
+                {
+                    model.OperationDate = DateTime.Parse(ds.Tables[0].Rows[0]["OperationDate"].ToString());
+                }
+                model.CreateIP = ds.Tables[0].Rows[0]["CreateIP"].ToString();
+                model.Result = ds.Tables[0].Rows[0]["Result"].ToString();
+                return model;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select LogID,TableName,Type,ClassName,MethodName,SqlString,ErrorMsg,UserName,OperationDate,CreateIP,Result ");
+            strSql.Append(" FROM T_OperationLog ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select ");
+            if (Top > 0)
+            {
+                strSql.Append(" top " + Top.ToString());
+            }
+            strSql.Append(" LogID,TableName,Type,ClassName,MethodName,SqlString,ErrorMsg,UserName,OperationDate,CreateIP,Result ");
+            strSql.Append(" FROM T_OperationLog ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            strSql.Append(" order by " + filedOrder);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+        #endregion  成员方法
+    }
+}

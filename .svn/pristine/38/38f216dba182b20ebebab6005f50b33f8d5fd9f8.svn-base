@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div style="text-align: center; vertical-align: middle;width:100%">
+    <p></p>
+    <div style="text-align: left; width:600px;">
+        <p></p>
+         <p></p>
+        <p>
+            您的操作非法，可能存在以下情况：</p>
+        <p>
+            1、输入的非法字符，如单引号，分号等，不可以作为名称之类的用词</p>
+        <p>
+            2、日期，邮件，货币等未按正确格式输入，或用户试图绕过系统校验。</p>
+        <p>
+            3、非系统正常链接，用户非法操作</p>
+        <p>
+            <a href="#" onclick="history.back(-1);">返回重新操作</a></p>
+        <p>
+            如您任有疑问，请随时联系系统管理员！电话：0558-2162331 阜阳市城建档案馆业务科</p>
+            </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+
+//案卷管理
+namespace DigiPower.Onlinecol.Standard.Web.SuppleMent
+{
+    public partial class SmArchiveList : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(SmArchiveList));
+            ctrlGridEx1.MyGridView_DataRowBound += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlGridEx.GridView_DataRowBound(ctrlGridEx1_MyGridView_DataRowBound);
+            if (!IsPostBack)
+            {
+                MyAddInit();
+            }
+            BindGrid();
+        }
+
+        #region 方法
+
+        /// <summary>
+        /// 返回工程类型
+        /// </summary>
+        /// <param name="SingleProjectId"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string getProjectType(string SingleProjectId)
+        {
+            string ProjectType = "";
+            T_SingleProject_MDL Mdl = new T_SingleProject_BLL().GetModel(ConvertEx.ToInt(SingleProjectId));
+            if (Mdl != null)
+            {
+                ProjectType = Mdl.ProjectType;
+            }
+            return ProjectType;
+        }
+
+        public void BindGrid()
+        {
+            T_Archive_BLL trBll = new T_Archive_BLL();
+            DataSet ds = new DataSet();
+
+            string strWhere = "";
+
+            //工程状态必须走到了 整理接收 以后环节 才可以做补卷管理 
+            strWhere += " AND D.WorkFlow_DoStatus >=(select WorkFlowID from T_WorkFlow where WorkFlowCode='WINRECV') ";
+
+            if (Common.Session.GetSession("SuperAdmin").ToLower() == "true")
+            {//超级管理员看全部
+                strWhere += " AND D.AREA_CODE LIKE '" + Session["AREA_CODE"].ToString() + "%'";
+            }
+            else if (Common.Session.GetSession("SuperAdmin").ToLower() == "false" || Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//档案馆人员看本区域全部  
+                strWhere += " AND D.AREA_CODE = '" + Session["OLD_AREA_CODE"].ToString() + "%'";
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("IsCompany")) && Common.ConvertEx.ToBool(Common.Session.GetSession("IsLeader")))
+            {//建设单位只看到自己
+                strWhere += " AND A.SingleProjectID in (select SingleProjectID from T_SingleProject  A,(select distinct ConstructionProjectID from T_Construction_Project ";
+                strWhere += " where CompanyID=" + Common.Session.GetSession("CompanyID") + ") B where A.ConstructionProjectID=B.ConstructionProjectID)";
+            }
+            if (TextBox1.Text != "")
+            {
+                strWhere += " AND D.gcmc LIKE '%" + TextBox1.Text + "%'";
+            }
+            if (txtGCBH.Text != "")
+            {
+                strWhere += " AND D.gcbm LIKE '%" + txtGCBH.Text + "%'";
+            }
+
+            //案卷题名
+            if (txtTitle.Text.Trim().Length > 0)
+            {
+                strWhere += " AND A.ajtm like '%" + txtTitle.Text.Trim() + "%' ";
+            }
+            ds = trBll.GetList(strWhere, true);
+            List<string> collist = new List<string>();
+
+            collist.Add("gcbm");
+            collist.Add("gcmc");
+            //collist.Add("ShortDH");
+            collist.Add("ajtm");
+            collist.Add("bzdw");
+            //collist.Add("bgqx");
+            //collist.Add("mj");
+            collist.Add("lrr");
+            collist.Add("lrsj");
+            collist.Add("xh");
+
+            ctrlGridEx1.InitGrid("ArchiveID", collist, ds, "SmArchiveList.aspx");
+        }
+
+        #endregion
+
+        #region 事件
+
+        //GridView DataRowBound事件
+        protected void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DataRowView view = e.Row.DataItem as DataRowView;
+                string StrInput = ConvertEx.ToDate(view["lrsj"]).ToString("yyyy-MM-dd");
+                StrInput += "<input type=\"hidden\" name=\"ArchiveID\" value=\"" + ConvertEx.ToString(view["ArchiveID"]) + "\" />";
+                StrInput += "<input type=\"hidden\" name=\"SingleProjectID\" value=\"" + ConvertEx.ToString(view["SingleProjectID"]) + "\" />";
+                e.Row.Cells[6].Text = StrInput;
+
+                string tModifyURL = "<a href='SmArchiveToFileList.aspx?SingleProjectID=" + ConvertEx.ToString(view["SingleProjectID"]) + "&ArchiveID=" +
+                    ConvertEx.ToString(view["ArchiveID"]) + "'>文件明细</a>";
+                e.Row.Cells[8].Text = tModifyURL;
+            }
+        }
+
+        //查询
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            T_Archive_MDL model = new T_Archive_MDL();
+            Search(this.tblSearch, model);
+            this.BindGrid();
+        }
+
+
+        //上移
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_Archive_BLL arBLL = new T_Archive_BLL();
+                T_Archive_MDL arMDL = arBLL.GetModel(ArchiveID);
+                arBLL.UpdateXH(ConvertEx.ToInt(arMDL.SingleProjectID), ConvertEx.ToInt(arMDL.xh), true);
+                BindGrid();
+            }
+        }
+
+        //下移
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_Archive_BLL arBLL = new T_Archive_BLL();
+                T_Archive_MDL arMDL = arBLL.GetModel(ArchiveID);
+                arBLL.UpdateXH(ConvertEx.ToInt(arMDL.SingleProjectID), ConvertEx.ToInt(arMDL.xh), false);
+                BindGrid();
+            }
+        }
+
+        #endregion
+
+    }
+}

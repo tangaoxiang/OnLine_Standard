@@ -1,0 +1,86 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text.RegularExpressions;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Components;
+using Stimulsoft.Report.Web;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.CompanyManage
+{
+    public partial class ArchiveZRSPrint : System.Web.UI.Page
+    {
+        private string _ProID = "";
+
+
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Request.QueryString["ID"] != null)
+                this._ProID = Request.QueryString["ID"].ToString();
+            if (string.IsNullOrEmpty(_ProID)) this._ProID = Common.Session.GetSession("tConstructionProjectID").ToString();
+            if (!string.IsNullOrEmpty(_ProID))
+            {
+                this.bindReport(_ProID);
+            }
+        }
+
+
+        private void bindReport(string _ProID)
+        {
+           
+            string str_gcmc = "";
+            string str_bsdw = "";
+            string str_jsdw = "";
+            string str_gcdz = "";
+            BLL.T_Construction_Project_BLL bll = new T_Construction_Project_BLL();
+            Model.T_Construction_Project_MDL mdl = new T_Construction_Project_MDL();
+            mdl = bll.GetModel(Common.ConvertEx.ToInt(_ProID));
+            //DataSet dssingleproject=singproject.GetList("singleprojectid=" + singleprojectid);
+            //if (dssingleject.Tables[0].Rows.Count > 0)
+            //{
+            //    str_gcmc = dssingleproject.Tables[0].Rows[0]["gcmc"].ToString()+"归档目录列表";
+            // }
+
+            if (mdl != null)
+            {
+                str_gcmc = mdl.xmmc;
+                str_bsdw = mdl.jsdw;
+                str_gcdz = mdl.xmdd;
+
+             }
+     
+            string strReport=Server.MapPath(@"../UserReport/Template/dabszrs.mrt");
+
+            StiReport report = new StiReport();
+            report.Load(strReport);
+
+          
+                StiText sti_bsdw = (StiText)report.GetComponentByName("txtSendCompany");
+                StiText sti_jsdw = (StiText)report.GetComponentByName("txtAceptCompany");
+                StiText sti_gcmc = (StiText)report.GetComponentByName("txtProjectName");
+                StiText sti_gcdz = (StiText)report.GetComponentByName("txtAdress");
+                if (sti_bsdw != null) sti_bsdw.Text = str_bsdw;//动态设置报送单位 
+                if (sti_jsdw != null) sti_jsdw.Text = str_jsdw;//动态设置接收单位  
+                if (sti_gcmc != null) sti_gcmc.Text = str_gcmc;//动态设置项目名称  
+                if (sti_gcdz != null) sti_gcdz.Text = str_gcdz;//动态设置地址  
+                report.Compile();
+                report.Render(false);
+              StiWebViewer1.Report = report;
+       }
+
+      
+
+    }
+}

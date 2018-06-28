@@ -1,0 +1,104 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CompanyReg3_3Edi0t.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.CompanyManage.CompanyReg3_3Edit" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownConstructionProject.ascx" TagName="ctrlDropDownConstructionProject" TagPrefix="uc3" %>
+
+<%@ Register Src="../CommonCtrl/ctrlArchiveFormType.ascx" TagName="ctrlArchiveFormType" TagPrefix="uc4" %>
+<%@ Register Src="../CommonCtrl/ctrlCompanyRegBaseInfo3_3.ascx" TagName="ctrlCompanyRegBaseInfo3_3" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlCompanyRegBaseInfo3_3Ext.ascx" TagName="ctrlCompanyRegBaseInfo3_3Ext" TagPrefix="uc2" %>
+
+<%@ Register Src="../CommonCtrl/ctrlBtnWindowClose.ascx" TagName="ctrlBtnWindowClose" TagPrefix="uc5" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc6" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>其它/地下专业管线</title>
+    <%--    <link rel="stylesheet" type="text/css" href="../CSS/default2.css" />
+    <link rel="stylesheet" type="text/css" href="../CSS/default.css" />--%>
+
+
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../JS/Validate.js"></script>
+    <script type="text/javascript" src="../JS/WebCalendar.js"></script>
+    <script type="text/javascript" src="../JSNew/20140618/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="../JSNew/20140618/jquery.artDialog.source.js?skin=blue"></script>
+    <script type="text/javascript" src="../JSNew/20140618/iframeTools.source.js"></script>
+    <script type="text/javascript" src="../JSNew/20140618/fn.js"></script>
+    <script type="text/javascript" language="javascript">
+        var win = art.dialog.top;
+
+        var rtnObject = new Object();
+        rtnObject.OK = 'success';
+        rtnObject.Error = 'failure';
+    </script>
+    <style type="text/css">
+        select {
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server"  enctype="multipart/form-data">
+        <table id="tdconstructionproject" runat="server" visible="false" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+            <tr>
+                <td class="left_title_3 promise" colspan="4">工程所属项目 
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1">所属项目：</td>
+                <td class="left_title_2" colspan="3">
+                    <uc3:ctrlDropDownConstructionProject ID="ctrlDropDownConstructionProject1"
+                        runat="server" />
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1">工程类别：</td>
+                <td class="left_title_2" colspan="3">
+                    <uc4:ctrlArchiveFormType ID="ctrlArchiveFormType1" runat="server" AutoPostBack="true" />
+                </td>
+            </tr>
+        </table>
+        <uc1:ctrlCompanyRegBaseInfo3_3 ID="ctrlCompanyRegBaseInfo3_31" runat="server" />
+
+        <div>
+            <table id="table3" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+                <tr>
+                    <td class="left_title_3 promise">
+                        <a href="#" onclick="return DisplayContent();" style="font-size: 13px;">其它/地下专业管线
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="display: none;" id="tkContent">
+            <uc2:ctrlCompanyRegBaseInfo3_3Ext ID="ctrlCompanyRegBaseInfo3_3Ext1"
+                runat="server" />
+        </div>
+        <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="left_title_4">
+                    <asp:Button ID="btnSave" runat="server" Text=" 保存 " class="btn2" OnClick="btnSave_Click" />
+                    &nbsp;<uc5:ctrlBtnWindowClose ID="btnClose" SetCssClass="btn2" runat="server" OnClientClickClose="window.close();" />
+                    <uc6:ctrlBtnBack ID="btnBack" runat="server" SetCssClass="btn2" />
+                </td>
+            </tr>
+        </table>
+        <br />
+
+        <script type="text/javascript">
+            function DisplayContent() {
+                var obj = document.getElementById("tkContent");
+                var status = obj.style.display;
+                if (status == "none") {
+                    obj.style.display = "block";
+                }
+                else {
+                    obj.style.display = "none";
+                }
+                return false;
+            }
+        </script>
+
+    </form>
+</body>
+</html>

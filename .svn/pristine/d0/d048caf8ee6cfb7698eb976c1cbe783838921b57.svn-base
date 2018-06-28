@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class Main : System.Web.UI.Page
+    {
+        public string Link = string.Empty;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Common.Session.GetSession("RoleID") == "")
+            {
+                Response.Write("<script>window.location.href='UserLoginGather.aspx?rn='+Math.random();</script>");
+            }
+
+            if (!this.IsPostBack)
+            {
+                Link += "<link rel=\"stylesheet\" href=\"/Javascript/Layer/css/sccl.css\" />";
+                Link += "<link rel=\"stylesheet\" href=\"/Javascript/Layer/skin/qingxin/skin.css\" id=\"layout-skin\" type=\"text/css\" />";
+
+                ltUserName.Text = Common.Session.GetSession("UserName");
+                ltRoleName.Text = Common.Session.GetSession("RoleName");
+                ltCompanyName.Text = Common.Session.GetSession("CompanyName") + "(" + Common.Session.GetSession("CompanyTypeName") + ")";
+                if (!PublicModel.isCompany())
+                {             
+                    T_Area_MDL areaMDL = new T_Area_BLL().GetModelList("area_code=" + Common.Session.GetSession("OLD_AREA_CODE")).ToList().FirstOrDefault(); ;
+                    ltAppTitle.Text = (areaMDL == null ? "" : areaMDL.area_name) + SystemSet._APPTITLE;
+                }
+                else
+                {
+                    ltAppTitle.Text = Common.Session.GetSession("CompanyName") + SystemSet._APPTITLE;
+                }
+            }
+        }
+    }
+}

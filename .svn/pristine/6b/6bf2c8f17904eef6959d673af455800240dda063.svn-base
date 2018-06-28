@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class ProjectUserList : PageBase
+    {
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //if (!IsPostBack)
+            //    ctrlGridEx1.PageCount = 10;
+            if (!string.IsNullOrEmpty(Request.QueryString["SingleProjectID"].ToString()))
+                BindGrid(Request.QueryString["SingleProjectID"].ToString());
+        }
+
+        void BindGrid(string SingleProjectID)
+        {
+            BLL.UserOperate bll = new UserOperate();
+            DataSet ds = bll.GetArchiveUser("SingleProjectID='" + SingleProjectID + "'");
+            List<string> li = new List<string>();
+            li.Add("OperateUserID");
+            li.Add("OperateUserName");
+
+            //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+            ctrlGridEx1.InitGrid("OperateUserID", li, ds, "");
+        }
+    }
+}

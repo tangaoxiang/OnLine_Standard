@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class Main : System.Web.UI.Page
+    {
+        public string Link = string.Empty; 
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                Link += "<link rel=\"stylesheet\" href=\"/Javascript/Layer/css/sccl.css\" />";
+                Link += "<link rel=\"stylesheet\" href=\"/Javascript/Layer/skin/qingxin/skin.css\" id=\"layout-skin\" type=\"text/css\" />";
+            }
+        }
+    }
+}

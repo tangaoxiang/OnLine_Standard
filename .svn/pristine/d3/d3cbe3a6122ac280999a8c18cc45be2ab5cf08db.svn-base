@@ -1,0 +1,83 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="ProjectPromise.aspx.cs"  Inherits="DigiPower.Onlinecol.Standard.Web.MySpace.ProjectPromise" Title="无标题页" %>
+<%@ Register src="../CommonCtrl/ctrlGridEx.ascx" tagname="ctrlGridEx" tagprefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+<script type="text/javascript" src="../JS/default.js"></script>
+<script type="text/javascript" src="../JS/common.js"></script>
+<link href="../CSS/default.css" type="text/css" rel="Stylesheet" />
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="30" background="../images/tab_05.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="12" height="30"><img src="../images/tab_03.gif" width="12" height="30" /></td>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="46%" valign="middle"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+            </table></td>
+            <td width="54%">
+            
+            <table border="0" align="right" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="60">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td width="60"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+                  <tr>                   
+                    <td class="STYLE1">
+                        <div align="center">
+                            <asp:LinkButton ID="LinkButton1" runat="server" onclick="lbtnAdd_Click"  CssClass="btnStyleAddPic">责任书</asp:LinkButton>
+                        </div>
+                    </td>                    
+                  </tr>
+                </table></td>                
+                <td><table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="STYLE1"><div align="center">
+                    
+                   <asp:LinkButton ID="btnDelete" runat="server" OnClientClick="return confirm('确定删除所选项吗？')" onclick="btnDelete_Click" CssClass="btnStyleDeletePic">删除</asp:LinkButton>
+                    
+                    </div></td>
+                  </tr>
+                </table>
+            
+            </td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+        <td width="16"><img src="../images/tab_07.gif" width="16" height="30" /></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="8" background="../images/tab_12.gif">&nbsp;</td>
+        <td style="padding-top:2px; padding-bottom:2px;">
+        
+            <uc1:ctrlGridEx ID="ctrlGridEx1" runat="server" />
+        
+          </td>
+        <td width="8" background="../images/tab_15.gif">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="10" background="../images/Bottom19.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="12" height="10"><img src="../Images/Bottom18.gif" width="12" height="10" /></td>
+        <td height="10" valign="top" width="100%"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="10"></td>
+          </tr>
+        </table></td>
+        <td width="16"><img src="../Images/Bottom20.gif" width="16" height="10" /></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+
+</asp:Content>

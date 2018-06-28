@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage {
+    public partial class ConstructionList : PageBase {
+        T_Construction_Project_BLL bll1 = new T_Construction_Project_BLL();
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e) {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ConstructionList));
+            if (!IsPostBack) {
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("txtxmmc")))
+                    txtXMMC.Text = Server.UrlDecode(DNTRequest.GetQueryString("txtxmmc"));
+
+                BindGrid(1);
+            }
+        }
+
+        /// <summary>
+        /// 绑定
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        private void BindGrid(int pageIndex) {
+            DataTable dt = new DataTable();
+            if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0) {
+                pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                ViewState["CurrentPageIndex"] = pageIndex;
+            } else {
+                pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+            }
+
+            if (PublicModel.isSuperAdmin()) {
+                string _where = "";
+                if (txtXMMC.Text.Trim().Length > 0)
+                    _where += "AND A.xmmc like '%" + txtXMMC.Text.Trim() + "%'";
+                dt = bll1.GetListPaging("", "", "", pageSize, pageIndex, out itemCount, _where);
+            } else if (PublicModel.isArchiveUser()) {//档案馆用户看自己的                                                                                                                       
+                dt = bll1.GetListPaging("", "", Common.Session.GetSession("OLD_AREA_CODE"), pageSize, pageIndex, out itemCount);
+            } else { //其他人只能看自己的                                                                                            
+                dt = bll1.GetListPaging(Common.Session.GetSession("CompanyID"), Common.Session.GetSession("RoleID"), pageSize, pageIndex, out itemCount);
+            }
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+            AspNetPager.CurrentPageIndex = pageIndex;
+
+            rpData.DataSource = dt;
+            rpData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e) {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e) {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 删除项目,所属有工程则不能删除
+        /// </summary>
+        /// <param name="ConstructionProjectID"></param>            
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool DeleteConstruction(string ConstructionProjectID) {
+            bool flag = false;
+            T_Construction_Project_MDL mdl = bll1.GetModel(ConvertEx.ToInt(ConstructionProjectID));
+            if (mdl != null) {
+                if (!new T_Other_BLL().GetSingleProjectExistByConstructionID(ConstructionProjectID)) {
+                    bll1.Delete(mdl.ConstructionProjectID);
+                    flag = true;
+                    PublicModel.writeLog(SystemSet.EumLogType.DelData.ToString(),
+                        string.Concat("T_Construction_Project;key=", ConstructionProjectID, ";xmmc=", mdl.xmmc));
+                }
+            }
+            return flag;
+        }
+    }
+}

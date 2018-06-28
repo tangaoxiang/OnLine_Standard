@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlDengJiBaseInfo : System.Web.UI.UserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                if (ORDER_INDEX.Text == "")
+                {
+                    BLL.T_JiaoJieDengJi_BLL jJBLL = new T_JiaoJieDengJi_BLL();
+                    Model.T_JiaoJieDengJi_MDL mdl = jJBLL.GetMaxMDL();
+
+                    if (mdl != null)
+                    {
+                        ORDER_INDEX.Text = (mdl.ORDER_INDEX + 1).ToString();
+                        PROJ_NO.Text = mdl.PROJ_NO;
+                        //AJH.Text = mdl.AJH;
+                        PROJ_NAME.Text = mdl.PROJ_NAME;
+                        JSDW.Text = mdl.JSDW;
+                    }
+                    else
+                    {
+                        ORDER_INDEX.Text = "1";
+                    }
+                }
+            }
+        }
+
+        public void SetDS(Model.T_JiaoJieDengJi_MDL MDL)
+        {
+            Comm.SetValueToPage(MDL, this.tbl);
+        }
+
+        public T_JiaoJieDengJi_MDL GetModule(int SID)
+        {
+            T_JiaoJieDengJi_MDL mdl = new T_JiaoJieDengJi_MDL();
+            if (SID > 0)
+            {
+                BLL.T_JiaoJieDengJi_BLL bll = new T_JiaoJieDengJi_BLL();
+                mdl = bll.GetModel(SID);
+            }
+            object obj = Comm.GetValueToObject(mdl, tbl);
+            return (T_JiaoJieDengJi_MDL)obj;
+        }
+    }
+}

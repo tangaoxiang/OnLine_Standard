@@ -1,0 +1,215 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true"
+    CodeBehind="ImageFileInfoList.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.File.ImageFileInfoList" %>
+
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlHead.ascx" TagName="ctrlHead" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%--<%@ Register Src="../CommonCtrl/ctrlAuxidict.ascx" TagName="ctrlAuxidict" TagPrefix="uc4" %>--%>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseInputWidthExt {
+            width: 480px;
+        }
+
+        .promiseTextAreaExt {
+            width: 99%;
+            height: 40px;
+        }
+
+        .ddlWidthExt {
+            width: 150px;
+        }      table {
+        background-color: #c9c7c0;
+        margin-top: 3px;
+    }
+
+    tr {
+        background-color: #fff;
+    }
+    </style>
+    <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+    <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+        <tr>
+            <td class="left_title_3 promise" colspan="4">照片信息
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">文件题名
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrlTextBoxEx ID="title" canEmpty="true" Description="文件题名" MaxLength="20"
+                    CssClass="regedit_input promiseInputWidthExt " runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">拍摄地点
+            </td>
+            <td colspan="3" align="left">
+                <uc3:ctrlTextBoxEx ID="psdd" canEmpty="true" Description="拍摄地点" MaxLength="20" CssClass="regedit_input promiseInputWidthExt"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">拍摄者
+            </td>
+            <td colspan="3" align="left">
+                <uc3:ctrlTextBoxEx ID="psz" runat="server" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">拍摄时间
+            </td>
+            <td colspan="3" align="left">
+                <uc3:ctrlTextBoxEx ID="pssj" runat="server" mode="Date" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">色别
+            </td>
+            <td class="left_title_2">
+                <asp:DropDownList runat="server" ID="sb" CssClass="ddlWidthExt">
+                    <asp:ListItem Value="cs" Text="彩色"></asp:ListItem>
+                    <asp:ListItem Value="hb" Text="黑白"></asp:ListItem>
+                </asp:DropDownList>
+            </td>
+            <td class="left_title_1 ">分别率
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="fbl" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">相机品牌
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="xjpp" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">相机型号
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="xjxh" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">X轴分辨率
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="XAXIS_RESOLUTION" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">Y轴分辨率
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="YAXIS_RESOLUTION" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">图像宽度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="IMAGE_WIDTH" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">图像高度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="IMAGE_HEIGHT" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">焦距
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="DATA_FICAL_LENGTH" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">光圈
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="DATA_APERTURE" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">光圈系数
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="DATA_APERTURE_XS" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">闪光
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="FLASH" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">白平衡
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="WHITE_BALANCE" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">感光度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="ISO_SPEED_RATINGS" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">曝光程序
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="EXPOSURE_PROGRAM" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">曝光模式
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="EXPOSURE_MODE" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">曝光时间
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="DATA_EXPOSURE_TIME" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">清晰度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="QUALITY" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">对比度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="CONTRAST" runat="server" CssClass="regedit_input " />
+            </td>
+            <td class="left_title_1 ">饱和度
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="SATURATION" runat="server" CssClass="regedit_input " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 ">附注
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrlTextBoxEx ID="bz" runat="server" TextMode="MultiLine" CssClass="regedit_input promiseTextAreaExt " Rows="3" />
+            </td>
+        </tr>
+    </table>
+
+
+    <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="left_title_4">
+                <asp:Button ID="Button1" runat="server" Text=" 保存 " Width="52px" CssClass="btn2"
+                    OnClick="Button1_Click" />
+                &nbsp;
+                <asp:Button ID="Button2" runat="server" Text=" 关闭 " Width="52px" CssClass="btn2"
+                    OnClientClick="window.close();" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

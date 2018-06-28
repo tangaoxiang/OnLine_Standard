@@ -1,0 +1,183 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" 
+    CodeBehind="BaoSongInfo.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.BaoSongInfo" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseLabelExt {
+            width: 30%;
+        }
+
+        .promiseInputWidthExt {
+            width: 380px;
+        }
+
+        .promiseInputWidthExt2 {
+            width: 158px;
+        }
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }  
+        tr {
+            background-color: #fff;
+        }
+    </style>
+    <script type="text/javascript">
+        function printrpt()
+        {
+            var url = "../ViewReport.aspx?strWhere=SingleProjectID=" + $("#ctl00_ContentPlaceHolder1_hidSingleProjectId").val() + "&ReportCode=" + $("#ctl00_ContentPlaceHolder1_hidReportCode").val();
+            openCommonWindowScroll(url, 1000, 1200);
+            window.close();
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+    <table id="Table1" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+        <tr>
+            <td class="left_title_3 promise" colspan="2"><asp:Label ID="lblrpttitile" runat="server" Text=""></asp:Label></td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <asp:Label ID="lblysbh" runat="server" Text=""></asp:Label></td>
+            <td class="left_title_2">
+              <uc3:ctrlTextBoxEx ID="ysbh" runat="server" canEmpty="false"  CssClass="regedit_input promiseInputWidthExt "/>
+                <asp:HiddenField ID="hidReadyCheckBookID" runat="server" Value="0" />
+                <asp:HiddenField ID="hidReportCode" runat="server" Value="" />
+                <asp:HiddenField ID="hidSingleProjectId" runat="server" Value="" />
+             </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    层数/长度</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="cscd" canEmpty="false"  runat="server"  CssClass="regedit_input promiseInputWidthExt "/>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    建设单位项目负责人</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="jsdwfzr_Name" canEmpty="false"  runat="server"  CssClass="regedit_input promiseInputWidthExt "/>
+            </td>
+        </tr>        
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    建设单位项目负责人电话</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="jsdwfzr_Tel" canEmpty="false"  runat="server"  CssClass="regedit_input promiseInputWidthExt " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    档案员</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="ArchiveUserName" canEmpty="false"  runat="server"  CssClass="regedit_input promiseInputWidthExt " />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    档案员电话</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="ArchiveUser_Tel" canEmpty="false"  runat="server"  CssClass="regedit_input promiseInputWidthExt "/>
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    报送单位</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="jsdw" runat="server"  CssClass="regedit_input promiseInputWidthExt "
+                    enabled="false" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    建设工程档案总数</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtTotalScroll" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="5"
+                    mode="Int" runat="server" />卷(盒)
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">文字材料
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtCharacterScroll" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="5"
+                    mode="Int" runat="server" />
+                卷                          
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">图   纸
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtPicScroll" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="5"
+                    mode="Int" runat="server" />
+                卷                         
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">照   片</td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtPhotoPageCount" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="5"
+                    mode="Int" runat="server" />
+                张</td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">录像带 
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtRadioCount" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="5"
+                    mode="Int" runat="server" />
+                盒                             
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">其他材料
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtOtherMaterial" canEmpty="false" CssClass="regedit_input promiseInputWidthExt" MaxLength="100"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">工程档案移交目录
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="txtDirectoryScroll" canEmpty="false" CssClass="regedit_input promiseInputWidthExt2" MaxLength="5"
+                    mode="Int" runat="server" />
+                份，共
+                <uc3:ctrlTextBoxEx ID="txtDirectoryPage" canEmpty="false" CssClass="regedit_input promiseInputWidthExt2" MaxLength="5"
+                    mode="Int" runat="server" />
+                张
+            </td>
+        </tr>
+    </table>
+
+    <table id="table2" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="left_title_4">
+                <asp:Button ID="btnSave" runat="server" Text="保 存" OnClick="btnSave_Click" CssClass="SelectButton"
+                    Width="55px" />
+                <asp:Button ID="btnprint" runat="server" Text="打 印" CssClass="SelectButton" OnClientClick="printrpt()"
+                    Width="55px" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

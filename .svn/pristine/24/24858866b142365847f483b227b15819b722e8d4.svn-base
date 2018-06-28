@@ -1,0 +1,162 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.File
+{
+    public partial class UpLoadEFileList : PageBase
+    {
+        #region 属性及构造方法
+
+        //文件ID
+        public string FileID = "";
+
+        //工程编号
+        public string ProNo = "000000";     
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 20;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(UpLoadEFileList));
+            MyAddInit();
+            ProNo = Common.DNTRequest.GetQueryString("ProNo");
+            FileID = Common.DNTRequest.GetQueryString("ID");
+
+            if (!IsPostBack)
+            {
+                BindGridView(1);
+            }
+        }
+
+        #endregion
+
+        #region 方法
+        public string GetEFileURL(string RootPath, string FilePath)
+        {
+            string LastPath = RootPath.Substring(0, RootPath.Length - 1);
+            int iPos1 = LastPath.LastIndexOf('\\');
+            LastPath = LastPath.Substring(iPos1 + 1);
+            string mHttpUrl = "http://" + Request.ServerVariables["HTTP_HOST"] + "/" + LastPath;
+            return mHttpUrl + "/" + ProNo + "/ODOC/" + FilePath;
+        }
+
+        /// <summary>
+        /// 保存电子文件排序编号
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateEFileIndex(string archiveListCellRptID, string OrderIndex)
+        {
+            T_EFile_BLL bll = new T_EFile_BLL();
+            T_EFile_MDL model = new T_EFile_MDL();
+
+            model = bll.GetModel(ConvertEx.ToInt(archiveListCellRptID));
+            if (model != null)
+            {
+                model.OrderIndex = ConvertEx.ToInt(OrderIndex);
+                bll.Update(model);
+            }
+        }
+
+        /// <summary>
+        /// 删除电子文件
+        /// </summary>
+        /// <param name="ArchiveListCellRptID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void DeleteFile(string archiveListCellRptID, string singleProjectID)
+        {
+            T_EFile_BLL bll = new T_EFile_BLL();
+
+            T_EFile_MDL model = new T_EFile_MDL();
+            model = bll.GetModel(Convert.ToInt32(archiveListCellRptID));
+            if (model != null)
+            {
+                //删除电子文件
+                //if (model != null && model.PDFFilePath != "" && System.IO.File.Exists(PdfPath + model.PDFFilePath))
+                //{
+                //    System.IO.File.Delete(PdfPath + model.PDFFilePath);
+                //}
+                string filePath = string.Concat(model.RootPath, singleProjectID, "\\ODOC\\", model.FilePath);
+
+                if (filePath != "" && System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                //删除电子文件记录
+                bll.Delete(Convert.ToInt32(archiveListCellRptID));
+
+                //Leo 更新文件夹，晚上重新生产一次
+                int FileListID = model.FileListID;
+                BLL.T_FileList_BLL fileListBLL = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+                Model.T_FileList_MDL fileListMDL = fileListBLL.GetModel(FileListID);
+                fileListMDL.CONVERT_FLAG = false;
+                fileListBLL.Update(fileListMDL);
+            }
+        }
+
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView(int pageIndex)
+        {
+            T_EFile_BLL bll = new T_EFile_BLL();
+
+            string strWhere = " FileListID = " + FileID + " and FileType = 0 ";
+            DataTable dt = bll.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+        #endregion
+
+        private void InsertIntoLog(string text)
+        {
+            BLL.T_OperationLog_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_OperationLog_BLL();
+            Model.T_OperationLog_MDL mdl = new DigiPower.Onlinecol.Standard.Model.T_OperationLog_MDL();
+
+            mdl.CreateDate = DateTime.Now;
+            mdl.CreateIP = Request.UserHostAddress;
+            mdl.Description = text;
+            mdl.ErrorMsg = text;
+            mdl.UserID = Common.ConvertEx.ToInt(Session["UserId"]);
+            mdl.UserName = Common.Session.GetSession("UserName");
+            bll.Add(mdl);
+        }
+    }
+}

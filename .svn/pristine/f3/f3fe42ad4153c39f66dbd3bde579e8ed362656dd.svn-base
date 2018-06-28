@@ -1,0 +1,502 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="Wjdj.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.Wjdj" Title="文件登记/收集/汇总" %>
+
+
+<%@ Register Src="../CommonCtrl/ctrlOptStatus.ascx" TagName="ctrlOptStatus" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo"
+    TagPrefix="uc4" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownFileList.ascx" TagName="ctrlDropDownFileList"
+    TagPrefix="uc5" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownCompanyInfo.ascx" TagName="ctrlDropDownCompanyInfo"
+    TagPrefix="uc6" %>
+<%@ Register Src="../CommonCtrl/ctrlProjectBaseInfo.ascx" TagName="ctrlProjectBaseInfo"
+    TagPrefix="uc3" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .regedit_input {
+            /*border-radius: 4px;*/
+            padding: 0px !important;
+            font-size: 13px !important;
+            border: 1px solid #D5D5D5 !important;
+            color: #333 !important;
+            height: 17px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <script src="../JS/jquery.maskedinput.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            $("input[name='startTime']").mask("9999/99/99");
+        });
+        function Jvalidator(obj) {
+            if (obj.value != "____/__/__") {
+                if (isDate(obj.value.trim()) == false) {
+                    obj.select();
+                    obj.value = "";
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        //工程ID
+        function GetSingleProjectID() {
+            return $('#HidSingleProjectID').val();
+        }
+        //流程ID
+        function GetWorkFlowID() {
+            return $('#Hidworkflowid').val();
+        }
+        //工程类型
+        function GetSingleProjectType() {
+            return $('#Hidprojecttype').val();
+        }  
+        var selFlag = true;
+        function selectALL() {
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr('disabled') != 'disabled') {
+                    $(this).attr('checked', selFlag);
+                }
+            });
+            selFlag = !selFlag;
+        }
+
+        //新增
+        function addFileListTmp() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen == 1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var singleProjectID = GetSingleProjectID();                      //工程ID
+                    var keyList = ($(this).val() + ',').split(',');                  //数据集合
+                    var objMycode = $(this).parent().next().next().children().eq(0);
+                    var oldMycode = objMycode.val();
+
+                    var objWjtm = objMycode.parent().next().children().eq(0);
+                    var oldWjtm = objWjtm.val();
+
+                    var objZrz = objWjtm.parent().next().children().eq(0);
+                    var oldZrz = objZrz.val();
+
+                    var objWth = objZrz.parent().next().children().eq(0);
+                    var oldWth = objWth.val();
+
+                    var objStartTime = objWth.parent().next().children().eq(0);
+                    var oldStartTime = objStartTime.val();
+
+                    var objManualCount = objStartTime.parent().next().children().eq(0);
+                    var oldManualCount = objManualCount.val();
+
+                    var strPID = 0;
+                    if (keyList[1].toLocaleLowerCase() == 'true' || keyList[1] == '1')
+                        strPID = keyList[2];
+                    else
+                        strPID = keyList[3];
+
+                    var bh = Wjdj.GetBH(singleProjectID, keyList[0]).value;      //文件编号  
+                    var DefaultCompanyType=keyList[4];
+                    var IsFolder = "0";          
+                    var len = Wjdj.ExctFileList(IsFolder, 0, singleProjectID, "", "", "", "", "", bh, strPID,"",DefaultCompanyType).value;     
+                 
+                    if (len != 0) {
+                        var jsstr = '<tr class=\"gv_table_center\" align=\"left\" valign=\"middle\" style=\"color:Black;background-color:White;border-color:#D05B6E;font-size:9pt;\">';
+                        jsstr += '<td class=\"tr1\" style=\"width:24px;\">';
+                        jsstr += '  <input style=\"border-bottom-color: blue;\" type=\"checkbox\" name=\"checkOne\" value=\'' + len + ',0,0,' + strPID + ',' + DefaultCompanyType + '\' />';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:60px;\">' + bh + '</td>';
+                        jsstr += "<td style=\"width:50px;\">";
+                        jsstr += '  <input type=\"text\" style=\"width: 50px\" value="' + oldMycode + '" class=\"regedit_input\" maxlength=\"20\"/>';
+                        jsstr += '</td>';
+                        jsstr += '<td>';
+                        jsstr += '  <input type=\"text\" class=\"regedit_input\" value="' + oldWjtm + '" style=\"width: 100%;\" maxlength=\"100\"/>';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:120px;\">';
+                        jsstr += '  <input type=\"text\" style=\"width: 120px\" value="' + oldZrz + '" class=\"regedit_input\" maxlength=\"40\" />';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:80px;\">';
+                        jsstr += '  <input type=\"text\" style=\"width: 80px\" value="' + oldWth + '" class=\"regedit_input\" maxlength=\"50\" /> ';
+                        jsstr += '</td> ';
+                        jsstr += '<td style=\"width:75px;\"> ';
+                        jsstr += '  <input type=\"text\" style=\"width: 67px\" value="' + oldStartTime + '" class=\"regedit_input\" onblur = \"return Jvalidator(this);\" name="startTime"/> ';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:50px;\"> ';
+                        jsstr += '  <input type=\"text\" style=\"width: 50px\" value="' + oldManualCount + '" class=\"regedit_input\" onkeyup=\"this.value=this.value.replace(/\D/g,\'\')\" onafterpaste=\"this.value=this.value.replace(/\D\g,\'\')\" />';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:50px;\">0<\/td>';
+                        jsstr += '<td style=\"width:50px;\"><\/td>';
+                        jsstr += '<td style=\"width:80px;\"><\/td>';
+
+                        jsstr += '<td style=\"width:30px;\">';
+                        jsstr += '  <a onclick="lookPDF(0,\'' + bh + '\',' + len + ')">查看<\/a>';
+                        jsstr += '</td>';
+                        jsstr += '<td style=\"width:100px;\">';
+                        jsstr += '  <a onclick="loadFile(0,\'' + bh + '\',' + len + ')">上传<\/a>&nbsp;';
+                        jsstr += '  <a onclick="updateFile(0,' + len + ')">著录<\/a>&nbsp;';
+                        jsstr += '  <a onclick="delFile(0,this,' + len + ')">删除<\/a>&nbsp;';
+                        jsstr += '  <a onclick="addCellFile(0,\'' + bh + '\',' + len + ')">施工用表<\/a>&nbsp;';
+                        jsstr += '</td>';
+                        jsstr += '</tr>';
+                        $(this).parent().parent().append(jsstr);
+                        $(function () {
+                            $("input[name='startTime']").mask("9999/99/99");
+                        });
+                    } else {
+                        alert('操作失败,请联系管理员！');
+                    }
+                });
+            } else if (checkedLen == 0) {
+                alert('您必须先选中一行表示插入的位置！');
+            } else {
+                alert('每次只能选中一行来操作！');
+            }
+        }
+
+        //著录
+        function updateFile(IsFolder,filelistID) {
+            if (IsFolder == 0) { 
+                var strURL = "../File/FileInfoList.aspx?ID=" + filelistID+"&SingleProjectID="+GetSingleProjectID();
+                openCommonWindowScroll(strURL, 880, 710);
+            }
+        }
+        //照片管理
+        function addSingleProjectImage() {
+            var strURL = "../WorkFlow/ImageWjdj.aspx?SingleProjectId=" + GetSingleProjectID() + "&WorkFlowID=" + GetWorkFlowID();
+            window.top.Content.CreateTitle('工程编号[' + $('#HidsingleProjectNo').val() + ']照片收集', 5, strURL);
+        }
+        //上传
+        function loadFile(IsFolder,bh, filelistID) {
+            if (IsFolder == 0) { 
+                var strURL = "../File/UpLoadEFileList.aspx?ID=" + filelistID + "&ProNo=" + GetSingleProjectID() + "&WorkFlowID=" + GetWorkFlowID();
+                window.top.Content.CreateTitle('文件编号[' + bh + ']电子文件上传', 1, strURL);
+            }
+        }
+        //施工用表
+        function addCellFile(IsFolder,bh, filelistID) {
+            if (IsFolder == 0) { 
+                var strURL = "../File/FileCellList.aspx?ID=" + filelistID + "&ProNo=" + GetSingleProjectID() + "&WorkFlowID=" + GetWorkFlowID();
+                window.top.Content.CreateTitle('文件编号[' + bh + ']新增施工用表', 2, strURL);
+            }
+        }
+        //查看电子文件 
+        function lookPDF(IsFolder,bh, filelistID) {
+            if(Wjdj.RKLookPDFFlag(GetSingleProjectID()).value){             
+                if (IsFolder == 0) { 
+                    var strURL = "../File/DocumentEdit.aspx?ID=" + filelistID + "&SingleProjectID=" + GetSingleProjectID();
+                    window.top.Content.CreateTitle('文件编号[' + bh + ']查看电子文件', 3, strURL);
+                }
+            }else{
+                alert("出于安全考虑,已入库工程不能查看电子文件,如需查看,请联系管理员!");
+            } 
+        }
+        //在线提问
+        function addQuestion(){
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen ==1) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');
+                    var strURL = "addquestion.aspx?ID=" + keyList[0] + "&SingleProjectID=" + GetSingleProjectID();
+                    openCommonWindowScroll(strURL, 600, 600);                  
+                });                  
+            } else {
+                alert('必须有且只能选择一项才可以操作!');
+            }             
+        }
+        //问题列表
+        function questionList(){
+            var strURL = "QuestionList.aspx?strWhere=SingleProjectID=" + GetSingleProjectID();
+            openCommonWindowScroll(strURL, 1000, 620);
+        }                                                               
+        //删除
+        function delFile(IsFolder,obj, FileListID) {
+            if (IsFolder == 0 && $(this).attr('disabled') != 'disabled') {
+                if (confirm('确定要删除选中行数据?')) {
+                    var len = Wjdj.DeleteFileList(Number(FileListID)).value;//先删除数据库中对应的真实数据
+                    if (len) {
+                        alert('操作成功!');
+                        $(obj).parent().parent().remove();
+                    } else {
+                        alert('模板文件不能删除,如需删除请联系管理员!');
+                    }
+                };
+            }
+        }
+        //批量删除
+        function delBatchDelFile() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                if (confirm('确定要删除选中行数据?')) {
+                    $("input[type='checkbox']:checked").each(function () {
+                        var keyList = ($(this).val() + ',').split(',');
+                        var len = Wjdj.DeleteFileList(Number(keyList[0])).value;                     
+                    });
+                    alert('操作成功!');
+                    window.location.href = window.location.href;                   
+                }
+            } else {
+                alert('必须选择一项才可以操作!');
+            }
+        }
+        //批量保存
+        function saveFile(){
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var singleProjectID = GetSingleProjectID();                      //工程ID
+                    var keyList = ($(this).val() + ',').split(',');                  //数据集合
+         
+                    if (keyList[1].toLocaleLowerCase() == 'false' || keyList[1]=='0'){ //只保存非节点数据                     
+                        var objMycode = $(this).parent().next().next().children().eq(0);
+                        var oldMycode = objMycode.val();
+                        
+                        var objWjtm = objMycode.parent().next().children().eq(0);
+                        var oldWjtm = objWjtm.val();
+
+                        var objZrz = objWjtm.parent().next().children().eq(0);
+                        var oldZrz = objZrz.val();
+
+                        var objWth = objZrz.parent().next().children().eq(0);
+                        var oldWth = objWth.val();
+
+                        var objStartTime = objWth.parent().next().children().eq(0);
+                        var oldStartTime = objStartTime.val();
+
+                        var objManualCount = objStartTime.parent().next().children().eq(0);
+                        var oldManualCount = objManualCount.val();
+                        var len = Wjdj.ExctFileList(0, keyList[0], singleProjectID, oldWjtm, oldZrz, oldWth,oldStartTime, oldManualCount, '', '',oldMycode,'').value;
+                    }
+                });   
+                alert('保存成功!');
+               
+                //存储搜索条件
+                var urlpar =null;
+                urlpar = window.location.href.toString().split('?');
+                var _par = $("#ctl00_ContentPlaceHolder1_ctrlDropDownFileList_DropDownList1").val() + ",";
+                _par += $("#ctl00_ContentPlaceHolder1_TextBox1").val() + ",";
+                _par += $("#ctl00_ContentPlaceHolder1_Status_RadioButtonList1").find("input[type='radio'][checked=true]").val() + ",";
+                _par += $("#ctl00_ContentPlaceHolder1_ctrlDropDownCompanyInfo1_ddlArea").val() + ",";
+                _par += $("#ctl00_ContentPlaceHolder1_AspNetPager").find("div").eq(0).find("strong").eq(1).attr("innerText")+"&";
+                if(urlpar[1].indexOf("search=")>-1)
+                {
+                    urlpar[1]=urlpar[1].substring(urlpar[1].indexOf("&")+1);
+                }
+                urlpar[1] = "?search=" + _par + urlpar[1];
+                window.location.href = urlpar[0].toString() + urlpar[1].toString();
+            } else {
+                alert('必须选择一项才可以操作!');
+            } 
+        } 
+        //恢复条目状态
+        function resetStatus(){
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var keyList = ($(this).val() + ',').split(',');                  //数据集合
+         
+                    if (keyList[1].toLocaleLowerCase() == 'false' || keyList[1]=='0'){ //只保存非节点数据                     
+                        var len = Wjdj.ResetStatus(keyList[0]).value;
+                    }
+                });   
+                alert('恢复成功!');
+                window.location.href = window.location.href;
+            } else {
+                alert('必须选择一项才可以操作!');
+            }  
+        }
+        //修复异常
+        function resetConvertFlag(){
+            Wjdj.ResetConvertFlag(GetSingleProjectID()).value; 
+            alert('异常处理完成，请重新登录，电子文件需第二天才可以查看！');     
+        }
+        //打印
+        function print(){
+            var strURL = "../ViewReport.aspx?strWhere=SingleProjectID=" + GetSingleProjectID() + "&ReportCode=printArchive";
+            openCommonWindowScroll(strURL, 880, 620);
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <input type="hidden" id="HidSingleProjectID" value="<%= singleProjectID%>" />
+    <input type="hidden" id="Hidworkflowid" value="<%= workFlowID%>" />
+    <input type="hidden" id="Hidprojecttype" value="<%= projecttype%>" />
+    <input type="hidden" id="HidsingleProjectNo" value="<%= singleProjectNo%>" />
+    <input type="hidden" id="HidDefaultCompanyType" value="<%= HttpContext.Current.Session["CompanyType"]%>" />
+
+
+    <uc3:ctrlProjectBaseInfo ID="ctrlProjectBaseInfo1" runat="server" />
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td width="10px">&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <div align="left">
+
+                                <asp:Button ID="btnQuestion" runat="server" CssClass="button" OnClientClick="addQuestion();return false;"
+                                    Text="在线提问" />
+                                <asp:Button ID="btnQuestionList" runat="server" CssClass="button" OnClientClick="questionList();return false;"
+                                    Text="问题列表" />
+                            </div>
+                        </td>
+                        <td>
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="right" style="text-align: right;">&nbsp;
+                                       <asp:Button ID="btnSave002" runat="server" CssClass="button" Text=" 恢复 "
+                                           OnClientClick="resetStatus();return false;" />
+                                        <asp:Button ID="btnSave001" runat="server" CssClass="button"
+                                            Text=" 保存 " OnClientClick="saveFile();return false;" />
+                                        <asp:Button ID="btnModify001" runat="server" CssClass="button"
+                                            Text=" 新增 " OnClientClick="addFileListTmp();return false;" />
+                                        <asp:Button ID="btnDelete001" runat="server" Text=" 批量删除 "
+                                            OnClientClick="delBatchDelFile();return false;" CssClass=" button" />
+                                        <asp:Button ID="btnImageManage" runat="server" CssClass="button"
+                                            Text=" 声像管理 " OnClientClick="addSingleProjectImage();return false;" />
+                                        <asp:Button ID="btnPrint" runat="server" CssClass="button"
+                                            Text=" 打印 " OnClientClick="print();return false;" />
+                                        <asp:Button ID="BTN_RESET" runat="server" CssClass=" button" Text="修复异常"
+                                            OnClientClick="resetConvertFlag();return false;"
+                                            ToolTip="当前工程有任何问题，都可以处掉到！" />
+                                        <input type="button" value="返回" class="button" onclick="window.location.href = '../MyTaskList.aspx?WorkFlowID=<%= workFlowID%>    '" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="30" align="right">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="99%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table style="text-align: left; width: 100%">
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                单位：<uc6:ctrlDropDownCompanyInfo ID="ctrlDropDownCompanyInfo1" runat="server" />
+                                            </label>
+                                            <label>
+                                                &nbsp;文件类别：<uc5:ctrlDropDownFileList ID="ctrlDropDownFileList" Width="150" bShowNO="false"
+                                                    AutoPostBack="false" runat="server" />
+                                                &nbsp;文件：</label><asp:TextBox ID="TextBox1" runat="server" CssClass="SelectText"
+                                                    Width="80px"></asp:TextBox>
+                                            <asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text=" 查询 " /><uc2:ctrlOptStatus ID="Status" runat="server" />
+                                            <asp:Button ID="btnRefresh" runat="server" CssClass="button" Text=" 刷新 " OnClick="btnSearch_Click" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False" OnRowDataBound="gvData_RowDataBound">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;' onclick='selectALL()'>全选</a>"
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px" ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox"
+                                        name="checkOne" value='<%# Eval("FileListID")%>,<%# Eval("IsFolder")%>,<%# Eval("recID")%>,<%# Eval("PID")%>,<%# Eval("DefaultCompanyType")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="编号" DataField="bh" HeaderStyle-Width="60px" ItemStyle-Width="60px" />
+                            <asp:TemplateField HeaderText="内部编号" HeaderStyle-Width="50px" ItemStyle-Width="50px">
+                                <ItemTemplate>
+                                    <input type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# Eval("MyCode")%>"
+                                        style="width: 50px" class="regedit_input" maxlength="20" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="文件题名">
+                                <ItemTemplate>
+                                    <input type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# Eval("title")%>"
+                                        class="regedit_input" style="width: 100%;" maxlength="100" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="责任者" HeaderStyle-Width="120px" ItemStyle-Width="120px">
+                                <ItemTemplate>
+                                    <input type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# 
+                                   (DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))<1 &&
+                                    DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("Status"))<1 && 
+                                    String.IsNullOrWhiteSpace(Eval("zrr").ToString()))?DigiPower.Onlinecol.Standard.Common.Session.GetSession("CompanyName") : Eval("zrr")%>"
+                                        style="width: 120px" class="regedit_input" maxlength="40" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="文(图)号" HeaderStyle-Width="80px" ItemStyle-Width="80px">
+                                <ItemTemplate>
+                                    <input type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# Eval("w_t_h")%>"
+                                        style="width: 80px" class="regedit_input" maxlength="50" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="形成日期" HeaderStyle-Width="67px" ItemStyle-Width="67px">
+                                <ItemTemplate>
+                                    <input name="startTime" type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# Eval("StartTime")%>"
+                                        onblur="return Jvalidator(this);" style="width: 67px" class="regedit_input" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="实体页数" HeaderStyle-Width="50px" ItemStyle-Width="50px">
+                                <ItemTemplate>
+                                    <input type="text" <%# SetTextDisabled(Eval("IsFolder"))%> value="<%# Eval("ManualCount")%>"
+                                        style="width: 50px" class="regedit_input"
+                                        onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="上传页数" DataField="pagescount" HeaderStyle-Width="50px" ItemStyle-Width="50px" />
+                            <asp:TemplateField HeaderText="需要归档" HeaderStyle-Width="50px" ItemStyle-Width="50px">
+                                <ItemTemplate>
+                                    <%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(DigiPower.Onlinecol.Standard.Common.ConvertEx.ToBool(Eval("mustsubmitflag")),true)%>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="业务科审核意见" DataField="Remark" HeaderStyle-Width="80px" ItemStyle-Width="80px" />
+                            <asp:TemplateField HeaderText="原文" HeaderStyle-Width="30px" ItemStyle-Width="30px">
+                                <ItemTemplate>
+                                    <a onclick="lookPDF(<%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))%>,'<%# Eval("bh")%>',<%# Eval("FileListID")%>)"
+                                        <%# SetTextDisabled(Eval("IsFolder"))%>>查看</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderStyle-Width="100px" ItemStyle-Width="100px">
+                                <ItemTemplate>
+                                    <a <%# SetTextDisabled(Eval("IsFolder"))%> onclick="loadFile(<%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))%>,'<%# Eval("bh")%>',<%# Eval("FileListID")%>)">上传</a>&nbsp;&nbsp;
+                                    <a <%# SetTextDisabled(Eval("IsFolder"))%> onclick="updateFile(<%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))%>,<%# Eval("FileListID")%>)">著录</a>&nbsp;&nbsp;
+                                    <a <%# SetTextDisabled(Eval("IsFolder"))%> onclick="delFile(<%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))%>,this,<%# Eval("FileListID")%>)">删除</a>&nbsp;
+                                    <a <%# SetTextDisabled(Eval("IsFolder"))%> onclick="addCellFile(<%# DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("IsFolder"))%>,'<%# Eval("bh")%>',<%# Eval("FileListID")%>)">施工用表</a>&nbsp;
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                    OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                    FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                    CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+</asp:Content>

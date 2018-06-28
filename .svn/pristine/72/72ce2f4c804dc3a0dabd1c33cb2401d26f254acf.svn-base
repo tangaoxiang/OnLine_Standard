@@ -1,0 +1,256 @@
+﻿using System;
+using System.Web;
+using com.kinggrid.pdf;
+using System.IO;
+using com.kinggrid.pdf.executes;
+using com.kinggrid.pdf.executes.fields;
+using Org.KGBouncyCastle.X509;
+using Newtonsoft.Json.Linq;
+using Org.KGBouncyCastle.Utilities.Encoders;
+using System.Text;
+using com.kinggrid.encrypt;
+using Newtonsoft.Json;
+using System.Data;
+using System.Collections.Generic;
+
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public class KGHandlerEx : IHttpHandler
+    {
+        /// <summary>
+        /// 您将需要在您网站的 web.config 文件中配置此处理程序，
+        /// 并向 IIS 注册此处理程序，然后才能进行使用。有关详细信息，
+        /// 请参见下面的链接: http://go.microsoft.com/?linkid=8101007
+        /// </summary>
+        #region IHttpHandler Members
+
+        public bool IsReusable
+        {
+
+            get { return true; }
+        }
+
+        BLL.T_FileList_BLL fileBLL = new BLL.T_FileList_BLL();
+
+        public void ProcessRequest(HttpContext context)
+        {
+            //string resouces = context.Request.PhysicalApplicationPath + "resouces";
+            //string result = @"F:\WorkSpace\J-金格\芜湖\vs20150212\WebApplication2\WebApplication2\result";
+            string option = context.Request.Form["option"];
+            if (option == null) option = context.Request.QueryString["option"];
+
+            if ("calculateHash".Equals(option))
+            {
+                string cert = context.Request.Form["cert"];
+                string imgData = context.Request.Form["imgData"];
+                string imgWidth = context.Request.Form["imgWidth"];
+                string imgHeight = context.Request.Form["imgHeight"];
+                string imgExt = context.Request.Form["imgExt"];
+                string singleProjectID = context.Request.Form["singleProjectID"];
+                string companyID = context.Request.Form["companyID"];
+                string isAll = context.Request.Form["isAll"];
+
+                List<string> pdfList = GetCleanPdfPath(singleProjectID, companyID, isAll);
+                if (pdfList.Count > 0)
+                {
+
+                    KGPdfHummer hummer = null;
+                    string tagPdf = string.Empty;
+                    FileStream files = null;
+                    try
+                    {
+                        if (imgData == null)
+                        {
+                            throw new Exception("签章获取错误！");
+                        }
+                        else
+                        {
+                            JArray objList = new JArray();
+                            X509CertificateParser x509CertificateParser;
+                            X509Certificate x509Certificate;
+                            DigitalSignatureByKey digitalSignatureByKey;
+                            PdfSignature pdfSignature;
+                            KGBase64 base64;
+                            string base64str, data, ext;
+                            byte[] imgb;
+                            int width, height;
+                            JObject obj;
+                            foreach (string sourcePdf in pdfList)
+                            {
+                                tagPdf = GetTagertPdf(sourcePdf);
+                                files = new FileStream(tagPdf, FileMode.Create);
+                                hummer = KGPdfHummer.CreateSignature(sourcePdf, null, true, files, null, true);
+                                x509CertificateParser = new X509CertificateParser();
+                                // 公钥证书
+                                x509Certificate = x509CertificateParser.ReadCertificate(Hex.Decode(cert));
+
+                                digitalSignatureByKey = new DigitalSignatureByKey();
+                                hummer.SetCertificate(x509Certificate, digitalSignatureByKey);
+
+                                pdfSignature = hummer.PdfSignature;
+
+                                base64 = new KGBase64();
+                                base64str = imgData.Substring(0, 65);
+                                data = imgData.Substring(65, imgData.Length - 65);
+
+                                base64.SetBase64Table(base64str);
+                                imgb = base64.Decode(data);
+                                ext = imgExt.Substring(1);
+
+                                width = (int)(float.Parse(imgWidth) * 7200F / 254F);
+                                height = (int)(float.Parse(imgHeight) * 7200F / 254F);
+                                pdfSignature.SetImage(imgb, ext, width, height);
+                                pdfSignature.SetXY(width / 2, height / 2);
+
+
+                                hummer.DoSignature();
+
+                                obj = new JObject()
+                                    {
+                                        new JProperty("file",tagPdf),
+                                        new JProperty("hash",digitalSignatureByKey.GetHash()),
+                                        new JProperty("contentsPostion",digitalSignatureByKey.GetContentsPostion()),
+                                    };
+                                objList.Add(obj);
+                            }
+                            context.Response.Write(objList.ToString());
+                        }
+                    }
+                    finally
+                    {
+                        try { if (files != null) files.Close(); }
+                        catch { }
+                        if (hummer != null) hummer.Close();
+                    }
+                }
+            }
+            else if ("rewriteSigned".Equals(option))
+            {
+                //String contentsPostion = context.Request.Form["contentsPostion"];
+                //String contents = context.Request.Form["contents"];
+                string cert = context.Request.Form["cert"];
+                JArray objList = (JArray)JsonConvert.DeserializeObject(context.Request.Form["jArray"]);
+                string singleProjectID = context.Request.Form["singleProjectID"];
+                string companyID = context.Request.Form["companyID"];
+                if (objList != null && objList.Count > 0)
+                {
+                    // 公钥证书
+                    X509CertificateParser x509CertificateParser = new X509CertificateParser();
+                    X509Certificate x509Certificate = x509CertificateParser.ReadCertificate(Hex.Decode(cert));
+                    DigitalSignatureByKey digitalSignatureByKey;
+                    foreach (JObject obj in objList)
+                    {
+                        string file = Common.ConvertEx.ToString(obj["file"]);
+                        long pos = Common.ConvertEx.ToLong(obj["contentsPostion"]);
+                        string contents = Common.ConvertEx.ToString(obj["contents"]);
+
+                        digitalSignatureByKey = new DigitalSignatureByKey();
+                        digitalSignatureByKey.RewriteContents(file, x509Certificate.GetEncoded(), pos, contents);
+                        UpdateSignatureStatus(singleProjectID, companyID, file);
+                    }
+
+                }
+                context.Response.Write("完成域数字签名！");
+            }
+        }
+
+        private void UpdateSignatureStatus(string projectID, string companyID, string pdfPath)
+        {
+            string fileName = Path.GetFileName(pdfPath);
+            if (!string.IsNullOrWhiteSpace(projectID) &&
+                !string.IsNullOrWhiteSpace(companyID) &&
+                !string.IsNullOrWhiteSpace(pdfPath))
+            {
+                string strWhere = string.Format("SingleProjectID={0}  AND CompanyID={1} AND PDFFilePath='{2}'",
+                    projectID, companyID, fileName);
+                strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1";
+                IList<Model.T_FileList_MDL> fileList = fileBLL.GetModelList(strWhere);
+                if (fileList.Count > 0)
+                {
+                    fileList[0].SIGNATURE_FLAG = true;
+                    fileList[0].SIGNATURE_DT = DateTime.Now.ToShortTimeString();
+                    fileBLL.Update(fileList[0]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 生成签章文件路径
+        /// </summary>
+        /// <param name="sourcePdf"></param>
+        /// <returns></returns>
+        private string GetTagertPdf(string sourcePdf)
+        {
+            string mPDF = string.Empty;
+
+            if (!string.IsNullOrEmpty(sourcePdf))
+            {
+                mPDF = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(sourcePdf)),
+                    "MPDF", Path.GetFileName(sourcePdf));
+            }
+            return mPDF;
+        }
+
+        /// <summary>
+        /// 获取未签章pdf集合
+        /// </summary>
+        private List<string> GetCleanPdfPath(string singleProjectID, string companyID, string isAll)
+        {
+            List<string> cleanPdfPath = new List<string>();
+            string strWhere = "SingleProjectID=" + singleProjectID;
+
+            if (isAll == "1")
+            {//Leo 超级管理员看全部    档案馆的人也可以看全部   
+                strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND  ISNULL(SIGNATURE_FLAG,0)=0";
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(companyID) && companyID != "0")
+                {
+                    Model.T_Company_MDL comMDL = new BLL.T_Company_BLL().GetModel(
+                        Common.ConvertEx.ToInt(companyID));
+
+                    if (comMDL != null)
+                    {
+                        strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND  ISNULL(SIGNATURE_FLAG,0)=0";
+                        strWhere += string.Format(" AND CompanyID={0}", comMDL.CompanyID);
+                    }
+                }
+            }
+
+            IList<Model.T_FileList_MDL> fileList = fileBLL.GetModelList(strWhere);
+            if (fileList.Count > 0)
+            {
+                string mPdfPath = string.Empty;
+                string oPdfPath = string.Empty;
+                string rootPath = string.Empty;
+                foreach (Model.T_FileList_MDL file in fileList)
+                {
+                    rootPath = Path.Combine(file.RootPath, file.SingleProjectID.ToString(), "OMPDF");
+                    if (!Directory.Exists(rootPath))
+                        Directory.CreateDirectory(rootPath);
+
+                    mPdfPath = Path.Combine(file.RootPath, file.SingleProjectID.ToString(), "MPDF", file.PDFFilePath);
+                    oPdfPath = Path.Combine(rootPath, file.PDFFilePath);
+                    if (!System.IO.File.Exists(oPdfPath) && !System.IO.File.Exists(mPdfPath))
+                    {
+                        file.PDFFilePath = string.Empty;
+                        file.CONVERT_FLAG = false;
+                        //fileBLL.Update(file);
+                        continue;
+                    }
+                    else if (System.IO.File.Exists(mPdfPath))
+                    {
+                        if (!System.IO.File.Exists(oPdfPath))
+                            System.IO.File.Copy(mPdfPath, oPdfPath);
+                    }
+                    cleanPdfPath.Add(oPdfPath);
+                }
+            }
+            return cleanPdfPath;
+        }
+
+        #endregion
+    }
+}

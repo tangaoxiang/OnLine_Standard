@@ -1,0 +1,107 @@
+﻿@charset "utf-8";
+
+body {
+    background: #97adc4 url(../images/Login/login_bgcolor.png) repeat-x;
+    width: 100%;
+}
+
+p {
+    text-align: center;
+    font-family: verdana;
+    font-size: 80%;
+}
+
+.mid {
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin:-245px 0 0 -512px;
+    width: 1024px;
+    height: 320px;
+}
+
+/*设为首页按钮*/
+.home_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat;
+    position: relative;
+    bottom: -8px;
+    cursor: pointer;
+}
+    /*设为首页按钮2*/
+    .home_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -23px;
+    }
+
+/*收藏按钮*/
+.favorites_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat 0 -46px;
+    position: relative;
+    bottom: -8px;
+    cursor: pointer;
+}
+    /*收藏按钮2*/
+    .favorites_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -69px;
+    }
+
+/*反馈按钮*/
+.email_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat 0 -92px;
+    position: relative;
+    bottom: -8px;
+    cursor: pointer;
+}
+    /*反馈按钮2*/
+    .email_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -115px;
+    }
+
+/*登陆按钮*/
+.login_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat 0 -138px;
+    position: relative;
+    cursor: pointer;
+}
+    /*登陆按钮2*/
+    .login_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -161px;
+    }
+
+/*注册按钮*/
+.reg_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat 0 -184px;
+    cursor: pointer;
+}
+    /*注册按钮2*/
+    .reg_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -207px;
+    }
+
+/*注册按钮*/
+.getPW_button {
+    width: 88px;
+    display: block;
+    height: 23px;
+    background: url('../images/Login/LoginBtn.png') no-repeat 0 -230px;
+    cursor: pointer;
+}
+    /*注册按钮2*/
+    .getPW_button:active {
+        background: url('../images/Login/LoginBtn.png') no-repeat 0 -253px;
+    }
+

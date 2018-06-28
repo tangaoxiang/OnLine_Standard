@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Text;
+using System.IO;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+using System.Data;
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class AJFLML : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                DDL_ARCHIVE_TYPE.DataBindEx();
+            }
+        }
+
+        protected void btnSeach_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(" and ShortDH <>'' AND LEFT(DH,1)='" + DDL_ARCHIVE_TYPE.SelectValue.ToString().Substring(0, 1) + "'");
+            if (!string.IsNullOrEmpty(TXT_AJ_DH.Text) && TXT_AJ_DH.Text.Length > 0)
+            {
+                sb.Append(" and a.dh like '%" + TXT_AJ_DH.Text + "%'");
+            }
+            if (!string.IsNullOrEmpty(TXT_AJTM.Text) && TXT_AJTM.Text.Length > 0)
+            {
+                sb.Append(" and a.ajtm like '%" + TXT_AJTM.Text + "%'");
+            }
+
+            if (!string.IsNullOrEmpty(TXT_ZDJH1.Text) && TXT_ZDJH1.Text.Length > 0)
+            {
+                sb.Append(" and a.SHORTDH>=" + TXT_ZDJH1.Text + "");
+            }
+            if (!string.IsNullOrEmpty(TXT_ZDJH2.Text) && TXT_ZDJH2.Text.Length > 0)
+            {
+                sb.Append(" and a.SHORTDH<=" + TXT_ZDJH2.Text + "");
+            }
+
+            string reportPath = Server.MapPath("/Report/ReportFiles/城建档案案卷分类目录.mrt");
+            if (System.IO.File.Exists(reportPath))
+            {
+                StiReport Report = new StiReport();
+                Report.Load(reportPath);//加载报表                
+
+                BLL.T_Archive_BLL arcBLL = new T_Archive_BLL();
+                DataSet DS = arcBLL.getArchicve("top 2000", sb.ToString(), DDL_ARCHIVE_TYPE.SelectText, "left(a.DH,10),a.xh");
+                DataTable dt = DataTableEx.AddDataTableRowNO(DS.Tables[0]);
+                Report.RegData("Datatable", dt);
+
+                Report.Compile();
+                Report.Render();
+                StiWebViewer1.Report = Report;
+            }
+        }
+
+        protected void BTN_EXPORT_Click(object sender, EventArgs e)
+        {
+            //string xlsModel = MapPath(".") + "\\ReportFiles\\xls城建档案案卷分类目录.xls";
+            //BLL.T_Archive_BLL archBLL = new T_Archive_BLL();
+            //DataSet DS = archBLL.getArchicve("", " and ShortDH <>'' ", "", "left(a.DH,10),a.xh");
+            //string outFileName = "\\ExportExcel\\" + Guid.NewGuid() + ".xls";
+            //Common.ExcelHelper.AJFML_ToExcel(DS.Tables[0], xlsModel, MapPath(".") + outFileName);
+            //Response.Redirect("/Report" + outFileName.Replace("\\", "/"));
+        }
+    }
+}

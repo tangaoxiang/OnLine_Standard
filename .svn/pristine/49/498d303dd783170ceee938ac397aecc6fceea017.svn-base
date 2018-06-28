@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Net;
+using System.Net.Mail;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class FindPassword : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnGetPasswrod_Click(object sender, EventArgs e)
+        {
+            string userName = txtName.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
+            {
+                string LoginString = "a.loginname = '" + userName + "' and a.EMail ='" + email + "'";
+                BLL.T_UsersInfo_BLL bll = new BLL.T_UsersInfo_BLL();
+                List<T_UsersInfo_MDL> userinfomdl = bll.GetModelList(LoginString);
+                if (userinfomdl.Count > 0 && userinfomdl[0].IsValid == true && userinfomdl[0].EMail != null)
+                {
+                    CSendEmail(userinfomdl[0].EMail, DESEncrypt.Decrypt(userinfomdl[0].Passwd));
+                    Common.MessageBox.Show(this, "密码已经发送到您的邮箱，请及时修改！");
+                }
+                else
+                {
+                    Common.MessageBox.Show(this, "登录名和邮箱不正确，请联系管理员！");
+                }
+            }
+            else
+            {
+                Common.MessageBox.Show(this, "登录名和邮箱不能为空！");
+            }
+        }
+
+        private void CSendEmail(string address, string password)
+        {
+            string sendAddress = System.Configuration.ConfigurationManager.AppSettings["EmailAddress"].ToString();
+            string smtps = System.Configuration.ConfigurationManager.AppSettings["EmailServerIP"].ToString();
+            string pwd = System.Configuration.ConfigurationManager.AppSettings["EmailAddressPwd"].ToString();
+
+
+            MailMessage mail = new MailMessage(sendAddress, address);
+            mail.SubjectEncoding = Encoding.UTF8;
+            mail.Subject = Title; //邮件标题
+            mail.IsBodyHtml = true;
+            mail.BodyEncoding = Encoding.UTF8;
+
+            mail.Body = "您的密码是：" + password + ",请及时修改！"; //邮件内容,是HTML标签
+            SmtpClient smtp = new SmtpClient(smtps); //smtp地址
+            smtp.Credentials = new NetworkCredential(sendAddress, pwd); //发送邮箱地址和密码
+            smtp.Send(mail);  //发送邮件
+            mail.Attachments.Dispose(); //释放
+        }
+    }
+}

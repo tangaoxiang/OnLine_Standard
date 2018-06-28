@@ -1,0 +1,95 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.DAL;
+
+namespace DigiPower.Onlinecol.Standard.BLL
+{
+    public class UserOperate
+    {
+        public UserOperate()
+        { }
+
+        public DataSet GetDepartmentList(string SqlWhere)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+            return dal.GetData(SqlWhere);
+        }
+
+        /// <summary>
+        /// 从模版表中拷贝生成归档目录
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="username"></param>
+        /// <param name="SingleProjectID">工程id</param>
+        /// <returns></returns>
+        public bool CopyFileList(int CompanyID, int userid, string username, int SingleProjectID, string ProjectType)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+            return dal.CopyFileList(CompanyID, userid, username, SingleProjectID, ProjectType);
+        }
+
+        /// <summary>
+        /// 从模版表中拷贝生成归档目录
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="username"></param>
+        /// <param name="SingleProjectID">工程id</param>
+        /// <returns></returns>
+        public bool CopyFileList(int CompanyID, int userid, string username, int SingleProjectID, string ProjectType, string CompanyType)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+            return dal.CopyFileList(CompanyID, userid, username, SingleProjectID, ProjectType, CompanyType);
+        }
+
+        /// <summary>
+        /// 取归档目录归档情况
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        /// <returns></returns>
+        public DataSet GetArchiveCount(int SingleProjectID)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+            return dal.GetArchiveCount(SingleProjectID);
+        }
+
+        /// <summary>
+        /// 更新归档目录状态
+        /// </summary>
+        /// <param name="FileListID"></param>
+        /// <param name="status"></param>
+        //public void UpdateArchiveListStatus(int FileListID, int status)
+        //{
+        //    DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+        //    dal.UpdateArchiveListStatus(FileListID, status);
+        //}
+
+        ///<summary>
+        ///
+        ///</summary>
+        public DataSet GetArchiveUser(string strWhere)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+
+            return dal.GetArchiveUser(strWhere);
+        }
+
+        public void UpdateUser(List<string> FileListID, string userid, string username)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+            dal.UpdateUser(FileListID, userid, username);
+        }
+        public void ChangePasswd(string UserID, string NewPasswd)
+        {
+            DigiPower.Onlinecol.Standard.DAL.UserOperate dal = new DigiPower.Onlinecol.Standard.DAL.UserOperate();
+            dal.ChangePasswd(UserID, NewPasswd);
+        }
+    }
+}

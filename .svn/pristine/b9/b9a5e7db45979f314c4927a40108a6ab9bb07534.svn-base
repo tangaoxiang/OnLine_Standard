@@ -1,0 +1,50 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteParent.Master.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SiteParent" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title></title>
+    <script type="text/javascript" language="javascript">
+        var PageState = new Object();
+        PageState.Add = 'add';
+        PageState.Edit = 'edit';
+        PageState.Delete = 'delete';
+        PageState.View = 'view';
+
+        var ResultState = new Object();
+        ResultState.Success = 'success';
+        ResultState.Failure = 'failure';
+    </script>
+    <link href="/Javascript/Layer/css/common.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="/Javascript/Layer/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="/Javascript/Common/Fn.js" type="text/javascript"></script>
+
+    <asp:ContentPlaceHolder ID="Head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <asp:ContentPlaceHolder ID="Main" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $("#more_button_plus").click(function () {
+                if (typeof ($(".moremore")) != "undefined") {
+                    if ($(".moremore").css("display") == 'block') {
+                        $("#more_button_plus").removeClass("button_plus");
+                        $(".moremore").slideUp("fast");
+                    } else {
+                        $("#more_button_plus").addClass("button_plus");
+                        $(".moremore").slideDown("fast");
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="/Javascript/Layer/layer/layer.js" type="text/javascript"></script>
+</body>
+</html>

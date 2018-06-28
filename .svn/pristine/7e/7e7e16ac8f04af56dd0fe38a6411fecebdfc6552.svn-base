@@ -1,0 +1,55 @@
+﻿var tmpcolor, tmpObj;
+function selectOne(obj) {
+    if ($(tmpObj) != 'undefined') {
+        $(tmpObj).parent().parent().css('background-color', tmpcolor);
+    }
+    if ($(obj).attr('checked') == 'checked') {
+        tmpcolor = $(obj).parent().parent().css('background-color');
+        tmpObj = obj;
+        $(':checked').attr('checked', false);
+        $(obj).attr('checked', true);
+        $(obj).parent().parent().css('background-color', '#C1EBFF');
+    } else {
+        $(':checked').attr('checked', false);
+        $(obj).parent().parent().css('background-color', tmpcolor);
+    }
+}
+
+function isCheck() {
+    if ($('[#divgvData input]:checked').length != 1) {
+        alert('请选中一行再进行操作!');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function getKeyList() {
+    var sp = new Array();
+    $('[#divgvData input]:checked').each(function () {
+        sp = ($(this).val() + ',').split(',');
+    });
+    return sp;
+}
+
+var mouseColor;
+$(document).ready(function () {
+    $('#divgvData tr').mouseover(function () {
+        mouseColor = $(this).css('background-color');
+        $(this).css('background-color', '#C1EBFF');
+    });
+    $('#divgvData tr').mouseout(function () {
+        $(this).css('background-color', mouseColor);
+    });
+});
+
+
+function getFileTypeForProjectType(projectType) {
+
+    if (Number(projectType) == 2 || Number(projectType) == 3)
+        return 2;
+    else if (Number(projectType) == 4 || Number(projectType) == 5)
+        return 3;
+    else
+        return 1;
+}

@@ -1,0 +1,129 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlCompanyBaseInfo.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlCompanyBaseInfo" %>
+<%@ Register Src="ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<%@ Register Src="ctrlDropDownArea.ascx" TagName="ctrlDropDownArea" TagPrefix="uc3" %>
+<%@ Register Src="ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo" TagPrefix="uc4" %>
+
+
+<style type="text/css">
+    .promiseLabelExt {
+        width: 140px;
+    }
+
+    .promiseInputWidthExt {
+        width: 200px;
+    }
+
+    .promiseTextAreaExt {
+        height: 50px;
+        width: 99%;
+    }
+</style>
+
+<table id="tbl_company" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td class="left_title_3 promise" colspan="4">单位信息
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">单位类型：
+        </td>
+        <td colspan="3" class="left_title_2">
+            <uc4:ctrlDropDownSystemInfo ID="CompanyType" runat="server" CurrentType="CompanyType" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">单位名称(中文)：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="CompanyName" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="false"
+                width="461px" />
+            <asp:HiddenField ID="companyid" runat="server" />
+            <asp:HiddenField ID="constructionprojectid" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">统一社会信用代码：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="CompanyCode" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true" />(统一社会信用代码为18位，字母和数字的混合体)
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">单位名称(英文)：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc2:ctrlTextBoxEx ID="CompanyNameEn" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true"
+                width="461px" />
+        </td>
+    </tr>
+    <tr>
+        <%--<td class="left_title_1 promiseLabelExt">所属区域：
+        </td>
+        <td class="left_title_2">
+            <uc3:ctrlDropDownArea ID="AREA_CODE" runat="server" Visible="false" />
+        </td>--%>
+        <td class="left_title_1 promiseLabelExt">邮政编码：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc2:ctrlTextBoxEx ID="Zipcode" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true" mode="PostCode" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">单位地址(经营地址)：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc2:ctrlTextBoxEx ID="Addres" CssClass="regedit_input promiseInputWidthExt" runat="server" width="461px" canEmpty="false" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">法人姓名：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="ChargeUserName" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">身份证ID：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="CharegeID" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true"
+                mode="ID" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">联系人：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc2:ctrlTextBoxEx ID="ContactPerson" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="false" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">手机：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="Mobile" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="false" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">电话：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="Tel" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="false" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">EMail：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="EMail" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">传真：
+        </td>
+        <td class="left_title_2">
+            <uc2:ctrlTextBoxEx ID="Fax" CssClass="regedit_input promiseInputWidthExt" runat="server" canEmpty="true" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">单位简介：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc2:ctrlTextBoxEx ID="Description" CssClass="regedit_input promiseTextAreaExt" Rows="5"
+                TextMode="MultiLine" runat="server" canEmpty="true" />
+        </td>
+    </tr>
+</table>

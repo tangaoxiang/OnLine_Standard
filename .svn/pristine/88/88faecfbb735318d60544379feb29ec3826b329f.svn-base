@@ -1,0 +1,129 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class ModuleList : PageBase
+    {
+        T_Module_BLL moduleBLL = new T_Module_BLL();
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 200; //SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ModuleList));
+            if (!IsPostBack)
+            {
+                BindGridView(1);
+            }
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            Model.T_Module_MDL model = new DigiPower.Onlinecol.Standard.Model.T_Module_MDL();
+            this.BindGridView(1);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 删除模块
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool DeleteModule(string ModuleID)
+        {
+            bool result = false;
+            try
+            {
+                moduleBLL.Delete(ConvertEx.ToInt(ModuleID));
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "删除模块失败", ex);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView(int pageIndex)
+        {
+            DataSet ds = new DataSet();
+            ds = moduleBLL.GetList("");
+            if (ds.Tables.Count > 0)
+            {
+                DataTable outDT = ds.Tables[0].Copy();
+                outDT.Clear();
+                Recursion(ds.Tables[0], 0, 0, ref outDT);
+                ds.Tables.Clear();
+                ds.Tables.Add(outDT);
+                if (!String.IsNullOrWhiteSpace(txtModuleName.Text.Trim()))
+                {
+                    if (ds.Tables.Count > 0)
+                    {
+                        DataView dv = ds.Tables[0].Copy().DefaultView;
+                        dv.RowFilter = "ModuleName like '%" + txtModuleName.Text.Trim() + "%'";
+                        if (dv.Count != ds.Tables[0].Rows.Count)
+                        {
+                            ds.Tables[0].Clear();
+                            ds.Tables.RemoveAt(0);
+                            ds.Tables.Add(dv.ToTable());
+                        }
+                    }
+                }
+
+                AspNetPager.AlwaysShow = true;
+                AspNetPager.PageSize = pageSize;
+
+                AspNetPager.RecordCount = ds.Tables[0].Rows.Count;
+
+                rpData.DataSource = ds.Tables[0];
+                rpData.DataBind();
+            }
+        }
+
+        public void Recursion(DataTable dt, int PID, int LevelID, ref DataTable outDT)
+        {
+            DataRow[] dr = dt.Select("parentID='" + PID + "'", "OrderIndex");
+            foreach (DataRow drr in dr)
+            {
+                drr["ModuleName"] = Comm.AddEmpty(drr["ModuleName"].ToString(), LevelID);
+                outDT.Rows.Add(drr.ItemArray);
+
+                int NewLevelID = LevelID + 1;
+                Recursion(dt, Int32.Parse(drr["moduleid"].ToString()), NewLevelID, ref outDT);
+            }
+        }
+    }
+}

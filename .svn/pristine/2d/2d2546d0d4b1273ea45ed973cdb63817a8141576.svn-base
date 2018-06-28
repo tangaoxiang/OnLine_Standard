@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.ArchiveManage
+{
+    public partial class Filen : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                //mj.DataBindEx();
+            }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            T_Archive_BLL T_Archivebll = new T_Archive_BLL();
+            T_Archive_MDL T_Archivemdl = new T_Archive_MDL();
+
+            object obj = Comm.GetValueToObject(T_Archivemdl, tablemain);
+
+            if (obj != null)
+            {
+                T_Archive_MDL newmodel = (T_Archive_MDL)obj;
+                newmodel.area_code = Session["area_code"].ToString();
+                newmodel.qssj = DateTime.Now;
+                newmodel.zzsj = DateTime.Now;
+                newmodel.lrsj = DateTime.Now;
+                newmodel.zlrq = DateTime.Now;
+                newmodel.shsj = DateTime.Now;
+                newmodel.yjsj = DateTime.Now;
+                newmodel.rksh_jssj = DateTime.Now;
+                newmodel.jgrq = DateTime.Now;
+                newmodel.ydghxkzh_fzrq = DateTime.Now;
+                newmodel.ghxkzh_fzrq = DateTime.Now;
+                newmodel.fdcqzh_pzrq = DateTime.Now;
+                newmodel.sgxkzh_pzrq = DateTime.Now;
+                newmodel.xzyjsh_pzrq = DateTime.Now;
+                T_Archivebll.Add(newmodel);
+            }
+        }
+    }
+}

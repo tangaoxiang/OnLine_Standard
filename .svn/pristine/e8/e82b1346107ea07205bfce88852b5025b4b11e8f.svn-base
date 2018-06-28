@@ -1,0 +1,39 @@
+﻿body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size: 12px
+}
+.STYLE1 {font-size: 12px}
+.STYLE3 {font-size: 12px; font-weight: bold; }
+.STYLE4 {
+	color: #03515d;
+	font-size: 12px;
+}
+.STYLE10 {color: #000000; font-size: 12px; }
+.STYLE19 {	color: #344b50;
+	font-size: 12px;
+}
+.BtnStyle{cursor:hand; text-align:center;}
+/*表格鼠标样式*/
+.mouseoveritem
+{
+	background-color: #FFFFFF;
+}
+.mouseclickitem
+{
+	background-color: #FFFF88;
+}
+
+.gv_table_center 
+{
+    background-color: #FFFFFF;
+    text-align: center;
+    border-top: 1px solid #99CCFF;
+    border-right: 1px solid #99CCFF;
+    border-bottom: 1px solid #99CCFF;
+    border-left: 1px solid #99CCFF;
+    line-height: 22px;
+    background:url("/images/bg.gif");
+}

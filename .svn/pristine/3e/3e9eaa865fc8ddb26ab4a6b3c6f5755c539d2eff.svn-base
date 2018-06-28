@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+
+//案卷管理
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class ArchiveList : PageBase
+    {
+        T_Archive_BLL trBll = new T_Archive_BLL();
+
+        public string Store = string.Empty;
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string SingleProjectID = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 50;// SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ArchiveList));
+            Store = DNTRequest.GetQueryString("Store");
+            SingleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            if (!IsPostBack)
+            {
+                MyAddInit();
+                BindGrid(1);
+
+                if (Store.ToLower() == "store")
+                {  //入库档案查询和非档案馆人员，不可能改动档案信息
+                    gvData.Columns[9].Visible = false;
+                    //btnUpdateXH.Visible = false;
+                    //ctrlBtnBack1.Visible = true;
+                }
+                //if (Common.Session.GetSessionBool("IsCompany") == true)
+                //{
+                //    btnUpdateXH.Visible = false;
+                //}
+            }
+        }
+        #region 方法
+
+        public void BindGrid(int pageIndex)
+        {
+            T_Archive_BLL trBll = new T_Archive_BLL();
+            DataSet ds = new DataSet();
+
+            string strWhere = "";
+            //if (Common.Session.GetSession("SuperAdmin").ToLower() == "true" || Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            //{//超级管理员看全部  ,档案馆人员看本区域全部  
+            //    strWhere += " AND D.AREA_CODE LIKE '" + Session["AREA_CODE"].ToString() + "%'";
+            //    if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+            //        strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+            //}
+
+            if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == true)
+            {//管理员管理员获取所有工程
+                strWhere += " AND D.AREA_CODE LIKE '" + Session["AREA_CODE"].ToString() + "%'";
+                if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+                {
+                    strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+                }
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == false && Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//档案馆用户看自己的
+                strWhere += " AND D.AREA_CODE LIKE '" + Session["OLD_AREA_CODE"].ToString() + "%'";
+                if (Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+                {
+                    strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+                }
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("IsCompany")) && Common.ConvertEx.ToBool(Common.Session.GetSession("IsLeader")))
+            {//建设单位只看到自己
+                strWhere += " AND A.SingleProjectID in (select SingleProjectID from T_SingleProject  A,(select distinct ConstructionProjectID from T_Construction_Project ";
+                strWhere += " where CompanyID=" + Common.Session.GetSession("CompanyID") + ") B where A.ConstructionProjectID=B.ConstructionProjectID)";
+            }
+
+            if (txtGCMC.Text != "")
+            {
+                strWhere += " AND D.gcmc LIKE '%" + txtGCMC.Text + "%'";
+            }
+            if (txtGCBH.Text != "")
+            {
+                strWhere += " AND D.gcbm LIKE '%" + txtGCBH.Text + "%'";
+            }
+
+            if (txtShortDH.Text != "")
+            {
+                strWhere += " AND ShortDH LIKE '%" + txtShortDH.Text + "%'";
+            }
+
+            //案卷题名
+            if (txtTitle.Text.Trim().Length > 0)
+            {
+                strWhere += " AND A.ajtm like '%" + txtTitle.Text.Trim() + "%' ";
+            }
+
+            DataTable dt = trBll.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        #endregion
+
+        #region 事件
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 更新案卷序号
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateArchiveXH(string archiveID, string XH)
+        {
+            T_Archive_BLL arBLL = new T_Archive_BLL();
+            T_Archive_MDL arMDL = arBLL.GetModel(ConvertEx.ToInt(archiveID));
+            if (arMDL != null)
+            {
+                arMDL.xh = ConvertEx.ToInt(XH);
+                arBLL.Update(arMDL);
+            }
+        }
+
+        /// <summary>
+        /// 案卷序号上移或下移
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public void ArchiveMove(string ArchiveID, bool UpOrDown)
+        {
+            int SingleProjectID = 0;
+            T_Archive_BLL arBLL = new T_Archive_BLL();
+            T_Archive_MDL arMDL = arBLL.GetModel(ConvertEx.ToInt(ArchiveID));
+            SingleProjectID = arBLL.selectSingleProjectIDByID(ConvertEx.ToInt(ArchiveID));
+            arBLL.UpdateXH(SingleProjectID, arMDL.xh, UpOrDown);
+        }
+        #endregion
+    }
+}

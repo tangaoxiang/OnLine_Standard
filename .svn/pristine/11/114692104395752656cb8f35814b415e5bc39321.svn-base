@@ -1,0 +1,148 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="ModuleList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.ModuleList" Title="模块管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function getNewUrl() {
+            var url = window.location.href;
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+        //新增
+        function btnAdd() {
+            var selKey = Common.getRadioKeyToArray();
+            var url = 'ModuleAdd.aspx?action=' + PageState.Add + '&id=0&rn=' + Math.random();
+            if (selKey.length > 0)
+                url = 'ModuleAdd.aspx?action=' + PageState.Add + '&id=' + selKey[0] + '&rn=' + Math.random();
+
+            layer.open({
+                type: 2,
+                title: '模块信息编辑页面-新增',
+                maxmin: false,
+                resize: false,
+                shadeClose: false, //点击遮罩关闭层
+                area: ['500px', '450px'],
+                content: url,
+                end: function () {
+                    if ($("#hidOpenFlag").val() == "1") {
+                        layer.alert('新增成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                }
+            });
+        }
+        //编辑
+        function btnEdit() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                layer.open({
+                    type: 2,
+                    title: '模块信息编辑页面-修改',
+                    maxmin: false,
+                    resize: false,
+                    shadeClose: false, //点击遮罩关闭层
+                    area: ['500px', '450px'],
+                    content: 'ModuleAdd.aspx?action=' + PageState.Edit + '&id=' + keyList[0] + '&rn=' + Math.random(),
+                    end: function () {
+                        if ($("#hidOpenFlag").val() == "1") {
+                            layer.alert('修改成功!', { btnAlign: 'c' }, function (index) {
+                                window.location.href = getNewUrl();
+                                layer.close(index);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        //删除
+        function btnDel() {
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定要删除选中模块信息?', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    if (ModuleList.DeleteModule(keyList[0]).value) {
+                        layer.alert('删除成功!', { btnAlign: 'c' }, function (index) {
+                            window.location.href = getNewUrl();
+                            layer.close(index);
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">模块名称：</td>
+                    <td class="c2">
+                        <uc1:ctrlTextBoxEx runat="server" ID="txtModuleName" MaxLength="20" />
+                    </td>
+                    <td class="ss" style="text-align: left; width: 170px">
+                        <asp:Button ID="btnSearch" runat="server" Text=" 查询 " OnClick="btnSearch_Click" />
+                        <input type="reset" value="重 置" />
+                    </td>
+                    <td class="c2"></td>
+                    <td class="condition"></td>
+                    <td class="c2"></td>
+                    <td class="ss"></td>
+                </tr>
+            </table>
+            <div class="ss"></div>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl">
+                        <a id="MrcBtnAdd" href="#" title="添加" onclick="btnAdd()">
+                            添加 </a>
+                        <a id="MrcBtnEdit" href="#" title="修改" onclick="btnEdit()">
+                         修改 </a>
+                        <a id="MrcBtnDel" href="#" title="删除" onclick="btnDel()">
+                            删除 </a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="30px"></th>
+                                <th width="250px">模块名称</th>
+                                <th>文件名称</th>
+                                <th width="140px">排序编号</th>
+                                <th width="140px">是否可见</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td>
+                                            <input type="radio" name="radio" value='<%# Eval("ModuleID")%>' />
+                                        </td>
+                                        <td><%#Eval("ModuleName")%></td>
+                                        <td><%#Eval("FileName")%></td>
+                                        <td><%#Eval("OrderIndex")%></td>
+                                        <td><%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(Convert.ToBoolean(Eval("IfVisible")))%></td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

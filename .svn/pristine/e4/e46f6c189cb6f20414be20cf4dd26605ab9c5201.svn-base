@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web.Main
+{
+    public partial class top : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            string rMenu1 = "<div id=\"header\" style=\"display:blcok; height:31px; width:100%; background:url(../images/head_background.gif) repeat-x\">";
+
+            string AppTitle = Common.Session.GetSession("CompanyName");
+            if (Common.Session.GetSessionBool("IsCompany") == true)
+            {
+                AppTitle = Common.Session.GetSession("CompanyName") + "建设工程文件跟踪管理服务系统";
+            }
+            else
+            {
+                AppTitle = ConfigurationManager.AppSettings["AppTitle"] + "建设工程文件跟踪管理服务系统";
+            }
+
+            //芜湖头
+            rMenu1 += "<span style=\"display:block; width:80%; height:29px;padding-top:2px; padding-left:10px;font-weight:bold;color:#ffffff;font-size=18;\">" + AppTitle + "</span>";
+
+            rMenu1 += "<div align=\"right\" style=\"line-height:20px;\">";
+            rMenu1 += "<a class=\"user_info_0922\" style=\"text-align:right;\">用户：" + Session["UserName"].ToString() + "</a>";
+            rMenu1 += "<a class=\"user_info_0922\">单位信息：" + Session["CompanyName"].ToString() + "(" + Session["CompanyTypeName"] + ")" + "</a>";
+            rMenu1 += "<a style=\"cursor:pointer;\" onclick=\"onloadnav()\" class=\"user_info_0922\" target=\"I2\">返回首页</a>";
+            rMenu1 += "<a style=\"cursor:pointer;\" onclick=\"window.parent.location.href='/../Index.aspx?IsCompany=" + Common.Session.GetSessionBool("IsCompany") + "'\" class=\"user_info_0922\">安全退出</a>";
+            rMenu1 += "</div> </div>";
+            Literal1.Text = rMenu1;
+        }
+    }
+}

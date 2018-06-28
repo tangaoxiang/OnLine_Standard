@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net"/>
+  </configSections>
+  <log4net>
+    <root>
+      <level value="ALL"/>
+      <appender-ref ref="rollingFile"/>
+    </root>
+    <appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net">
+      <param name="File" type="" value="log/digPowerOnlinecol.log"/>
+      <param name="AppendToFile" value="true"/>
+      <param name="RollingStyle" value="Composite"/>
+      <maxSizeRollBackups value="100"/>
+      <maximumFileSize value="1MB"/>
+      <param name="DatePattern" value="yyyyMMdd"/>
+      <param name="StaticLogFileName" value="false"/>
+      <layout type="log4net.Layout.PatternLayout,log4net">
+        <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
+      </layout>
+    </appender>
+  </log4net>
+
+  <appSettings>
+    <add key="EFileStartPath" value="d:\\EFileStartPath\"/>
+    <!--电子文件上传路径-->
+    <add key="CellFilePath" value="E:\\SVNClient\\WH\20Src\\20.10Dev\\srcOnline2010\\DigiPower.Onlinecol.Standard.Web"/>
+
+    <!--/********************报建确认,密码找回,邮件发送配置项********************/-->
+    <add key="EmailServerIP" value="smtp.163.com"/>
+    <!--邮箱服务器地址-->
+    <add key="EmailAddress" value="digipower_test@163.com"/>
+    <!--邮箱地址-->
+    <add key="EmailAddressPwd" value="digipower0514"/>
+    <!--邮箱授权码,非邮箱登录密码-->
+    <add key="AcceptSingleSendEmailFlag" value="0"/>
+    <!--工程报建确认是否发邮件通知-->
+
+    <add key="AppUrl" value="http://digidev.xicp.net:9085"/>
+    <!--系统URL访问地址-->
+    <add key="AppTitle" value="建设工程文件跟踪管理服务系统"/>
+    <!--系统Title名称-->
+    <add key="AppArea" value="标版"/>
+    <!--系统使用地址,比如马鞍山, 跟AppTitle配合使用-->
+    <add key="iSignaturePdf" value="1"/>
+    <!--PDF是否签章,签章则用金格插件,不签章则用adobe reader插件,比如一书两证 0:不签章 1:签章 ,如果签章,则默认文件都需要走签章流程,1书2证除外-->
+    <add key="FileListFileExt" value="*.jpg;*.jpeg;*.tif;*.pdf;*.dwg;"/>
+    <!--文件登记上传的文件类型-->
+    <add key="FileSize" value="60"/>
+    <!--单份文件大小M为单位,只能是数字-->
+    <add key="PageSize" value="10"/>
+    <!--数据列表每页默认条目数-->
+    <add key="DefaultPwd" value="abc123"/>
+    <!--用户登录默认密码-->
+    <add key="RKLookPDFFlag" value="1"/>
+    <!--工程入库后能否查看PDF,默认可以-->
+    <add key="RecTimeOutDays" value="7"/>
+    <!--工程受理,工作日超时期限-->
+    <add key="QuickRegTel" value="0755-83995083"/>
+    <!--工程登记注册,提示电话-->
+
+    <!--/********************单位类别字典ID,字典ID必须跟以下保持一致********************/-->
+    <add key="ARCHIVE" value="12"/>
+    <!--档案馆-->
+    <add key="JSCompanyInfo" value="13"/>
+    <!--建设单位-->
+    <add key="JLCompanyInfo" value="23"/>
+    <!--监理单位-->
+    <add key="SGCompanyInfo" value="24"/>
+    <!--施工单位-->
+    <add key="SignatureCompanyInfo" value="383"/>
+    <!--签章单位-->
+    <add key="OutHelpCompanyInfo" value="407"/>
+    <!--外协单位(安监,质监,检测等)-->
+
+    <!--/********************不能删建设,角色类别,字典编号必须跟以下保持一致********************/-->
+    <add key="SignatureRoleType" value="SignatureRoleType"/>
+    <!--签章单位角色类别-->
+    <add key="OutHelpRoleType" value="OutHelpRoleType"/>
+    <!--外协单位角色类别-->
+
+    <!--/********************不能删建设,用户字典中关于菜单和流程权限按钮代码,字典编号必须跟以下保持一致********************/-->
+    <add key="MenuRightChar" value="MenuRightChar"/>
+    <!--菜单权限按钮代码-->
+    <add key="WorkFlowRightChar" value="WorkFlowRightChar"/>
+    <!--流程权限按钮代码-->
+
+    <!--/********************不能删建设,监理,施工等角色模板,角色编号必须跟以下保持一致********************/-->
+    <add key="RoleCode_JSCompany" value="JSCompany"/>
+    <!--建设单位角色编号-->
+    <add key="RoleCode_SGCompany" value="SGCompany"/>
+    <!--施工单位角色编号-->
+    <add key="RoleCode_JLCompany" value="JLCompany"/>
+    <!--监理单位角色编号-->
+    <add key="RoleCode_ChargeUser" value="ChargeUser"/>
+    <!--业务指导人员角色编号-->
+    <add key="DefaultRecvWorkFlowID" value="5"/>
+    <!--业务指导人员默认受理的流程节点ID,(多个,隔开)-->
+
+    <!--/********************案卷著录项相关默认信息********************/-->
+    <add key="DefaultArchive_mj" value="25"/>
+    <!--案卷密级:秘密 字典KEY-->
+    <add key="DefaultArchive_bgqx" value="31"/>
+    <!--案卷保管期限:永久 字典KEY-->
+
+    <!--/********************责任书,认可证,证明书签章完成自动挂到对应的归档目录下*****************/-->
+    <add key="ZrsToFileListTmpRecIDS" value="|3|2002|"/>
+    <!--责任书对应的归档目录ID,责任书签章完成后,自动上传到该份文件下(要考虑不同类型的工程的责任书对应的模板ID不同)-->
+    <add key="RkzToFileListTmpRecIDS" value="|4|2003|"/>
+    <!--认可证对应的归档目录ID,责任书签章完成后,自动上传到该份文件下(要考虑不同类型的工程的认可证对应的模板ID不同)-->
+    <add key="ZmsToFileListTmpRecIDS" value="|5|2004|"/>
+    <!--证明书对应的归档目录ID,责任书签章完成后,自动上传到该份文件下(要考虑不同类型的工程的证明书对应的模板ID不同)-->
+
+  </appSettings>
+  <connectionStrings>
+ 
+    <add name="ConnectionString" connectionString="Data Source=JIANDK-PC\SQL2008;Initial Catalog=ArchiveDB_Standard_HeFei;Persist Security Info=True;User ID=sa;Password=123456" providerName="System.Data.SqlClient"/>
+  </connectionStrings>
+  <system.web>
+    <httpHandlers>
+      <add verb="POST,GET" path="ajax/*.ashx" type="Ajax.PageHandlerFactory, Ajax"/>
+      <add path="/KGHandlerEx" verb="*" type="DigiPower.Onlinecol.Standard.Web.KGHandlerEx"/>
+    </httpHandlers>
+    <!--controlRenderingCompatibilityVersion="4.0" clientIDMode="AutoID"-->
+    <!--<pages theme="Default" clientIDMode="Inherit">-->
+    <pages  clientIDMode="Inherit" validateRequest="false">
+      <controls>
+        <!--<add tagPrefix="asp" namespace="System.Web.UI" assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>-->
+        <add assembly="YYControls" namespace="YYControls" tagPrefix="yyc"/>
+        <add namespace="Wuqi.Webdiyer" tagPrefix="webdiyer" assembly="AspNetPager"/>
+      </controls>
+    </pages>
+    <!--最大文件400MB，和超时-->
+    <!--<httpRuntime maxRequestLength="409600" appRequestQueueLimit="60" executionTimeout="60"/>-->
+    <!-- 允许上传文件的最大大小是100M（1024*100），网页超时时间为300秒 -->
+    <!--<httpRuntime maxRequestLength="102400" executionTimeout="300"/>-->
+    <!--即40MB，1KB=1024-->
+    <httpRuntime maxRequestLength="70960" useFullyQualifiedRedirectUrl="true" executionTimeout="6000" minFreeThreads="8"
+                requestValidationMode="2.0" minLocalRequestFreeThreads="4" appRequestQueueLimit="100" enableVersionHeader="true"/>
+    <!--<httpHandlers>
+            <add verb="POST,GET" path="ajax/*.ashx" type="Ajax.PageHandlerFactory,Ajax"/>
+        </httpHandlers>-->
+    <!-- 
+            设置 compilation debug="true" 可将调试符号插入
+            已编译的页面中。但由于这会 
+            影响性能，因此只在开发过程中将此值 
+            设置为 true。
+        -->
+    <compilation debug="true" targetFramework="4.0">
+      <assemblies>
+        <add assembly="Stimulsoft.Report.Web, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=EBE6666CBA19647A"/>
+        <add assembly="Stimulsoft.Report, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=EBE6666CBA19647A"/>
+        <add assembly="Stimulsoft.Base, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=EBE6666CBA19647A"/>
+        <!--<add assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>-->
+        <add assembly="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089"/>
+        <add assembly="System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A"/>
+      </assemblies>
+    </compilation>
+    <!--
+            通过 <authentication> 节可以配置 ASP.NET 用来 
+            识别进入用户的
+            安全身份验证模式。 
+        -->
+    <!--<authentication mode="Forms">
+      <forms name="auth" path="/" loginUrl="UserLogin.aspx" protection="All" timeout="1440"></forms>
+    </authentication>
+    <authorization>
+      <deny users="?"/>
+    </authorization>-->
+    <!--设置session过期时间-->
+    <sessionState mode="StateServer" timeout="14400"/>
+    <!--
+            如果在执行请求的过程中出现未处理的错误，
+            则通过 <customErrors> 节可以配置相应的处理步骤。具体说来，
+            开发人员通过该节可以配置
+            要显示的 html 错误页
+            以代替错误堆栈跟踪。
+           
+           mode
+            “on”：意思是总是发出定制错误页面；
+            “off”：意思是从不发出定制错误页面（你总是看到原始的错误信息）； 
+            “remoteonly”：意思是只有当远程浏览器点击站点时才发出定制错误页面（而在实际机器上点击站点的开发人员看到的是详细的错误信息）。
+      +<customErrors mode="RemoteOnly" defaultRedirect="NoAccess.htm">
+      <error statusCode="403" redirect="NoAccess.htm"/>
+      <error statusCode="404" redirect="FileNotFound.htm"/>
+    </customErrors>-->
+  </system.web>
+  <!--<location path="ValidCode.aspx">
+    <system.web>
+      <authorization>
+        <allow users="?"/>
+      </authorization>
+    </system.web>
+  </location>
+  <location path="Images">
+    <system.web>
+      <authorization>
+        <allow users="?"/>
+      </authorization>
+    </system.web>
+  </location>
+
+  <location path="CompanyManage">
+    <system.web>
+      <authorization>
+        <allow users="?"/>
+      </authorization>
+    </system.web>
+  </location>
+  <location path="JS">
+    <system.web>
+      <authorization>
+        <allow users="?"/>
+      </authorization>
+    </system.web>
+  </location>
+  <location path="CSS">
+    <system.web>
+      <authorization>
+        <allow users="?"/>
+      </authorization>
+    </system.web>
+  </location>-->
+  <system.webServer>
+    <!--<handlers>
+      -->
+    <!--IIS7.0必须的节点，否则ajax运行不了-->
+    <!--
+      <add name="ajaxpro" verb="POST,GET" path="ajax/*.ashx" type="Ajax.PageHandlerFactory, Ajax"/>
+    </handlers>-->
+    <staticContent>
+      <mimeMap fileExtension=".cll" mimeType="application/octet-stream"/>
+      <mimeMap fileExtension=".dwg" mimeType="application/octet-stream"/>
+    </staticContent>
+
+    <!--设置项目起始页面-->
+    <defaultDocument>
+      <files>
+        <add value="UserLoginGather.aspx"/>
+      </files>
+    </defaultDocument>
+    <!--<validation validateIntegratedModeConfiguration="false"/>-->
+
+    <httpProtocol>
+      <customHeaders>
+        <clear />
+        <add name="X-UA-Compatible" value="IE=10" />
+      </customHeaders>
+    </httpProtocol>
+
+    <!--设置文件上传最大为<60M-->
+    <validation validateIntegratedModeConfiguration="false" />
+    <modules runAllManagedModulesForAllRequests="true" />
+    <security>
+      <requestFiltering>
+        <requestLimits maxAllowedContentLength="2147483647"></requestLimits>
+      </requestFiltering>
+    </security>
+
+  </system.webServer>
+</configuration>

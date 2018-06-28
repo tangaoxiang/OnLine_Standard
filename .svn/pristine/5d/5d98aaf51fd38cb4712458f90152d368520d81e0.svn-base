@@ -1,0 +1,407 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using System.Data;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class MyTaskList : PageBase
+    {
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        /// <summary>
+        /// 流程编号
+        /// </summary>
+        public string workFlowCode = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+        T_WorkFlowDefine_BLL flowDefineBLL = new T_WorkFlowDefine_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(MyTaskList));
+            workFlowID = Common.DNTRequest.GetString("WorkFlowID");
+            if (!IsPostBack)
+            {
+                if (Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcmc")) != "")
+                {
+                    gcmc.Text = Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcmc"));
+                }
+                if (Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcbh")) != "")
+                {
+                    gcbm.Text = Common.ConvertEx.ToString(DNTRequest.GetQueryString("gcbh"));
+                }
+
+                BindGrid(1);
+                EnabledButten();
+            }
+        }
+
+        protected void EnabledButten()
+        {//显示未受理的+我已受理的。建设单位只显示自已的工程
+            //Leo 控制按钮的出现
+            ResetButten(btnList.Controls);
+            BLL.T_WorkFlowBtn_BLL btnBLL = new T_WorkFlowBtn_BLL();
+            DataSet ds1 = btnBLL.GetList("EnabledFlag=1 AND WorkFlowID=" + workFlowID);
+            if (ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr1 in ds1.Tables[0].Rows)
+                {
+                    string BtnCode = dr1["BtnCode"].ToString();
+                    EnabledButten(btnList.Controls, BtnCode);
+                }
+            }
+
+            if (Common.Session.GetSessionBool("IsCompany") == true)
+            {//建设单位不可以受理+不可以退回
+                btnUpdate002.Visible = false;
+                btnApprove001.Visible = false;
+                if (Common.Session.GetSessionBool("IsLeader") == false)
+                {//除建设单位外，施工也不可以提交
+                    btnUpdate001.Visible = false;
+                }
+            }
+            else
+            {//档案馆不可以提交
+                btnUpdate001.Visible = true;
+            }
+
+            //2013-10-23 jdk 
+            if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.WINRECV)
+            {
+                //btn5.Text = "业务审核";
+            }
+            else if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.IMPORT_TO)
+            {
+                btnUpdate001.Visible = false; //最后一环节没有提交按钮
+            }
+            else if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.SINGLEPROJECTRED)
+            {
+                btnApprove001.Visible = false;  //第一环节没有退回按钮
+            }
+            if (ConvertEx.ToInt(workFlowID) != (int)SystemSet.WorkFlowStatus.SINGLEPROJECTRED &&
+                ConvertEx.ToInt(workFlowID) != (int)SystemSet.WorkFlowStatus.ONLINE_CHECK)
+            {
+                btnSoundImage.Visible = true;
+            }
+            else
+            {
+                btnSoundImage.Visible = false;
+            }
+        }
+
+        //Leo 根据设定，启动对应流程的按钮，默认全部不可以用.
+        private void EnabledButten(ControlCollection Ctrls, string BtnCode)
+        {
+            foreach (Control obj in Ctrls)
+            {
+                if (obj.GetType().Name.ToString() == "Button")
+                {
+                    Button btn = (Button)obj;
+                    if (btn.ID == BtnCode)
+                    {
+                        btn.Visible = true;
+                    }
+                }
+                else
+                {
+                    EnabledButten(obj.Controls, BtnCode);
+                }
+            }
+        }
+
+        //重启所有按钮不可见。
+        private void ResetButten(ControlCollection Ctrls)
+        {
+            foreach (Control obj in Ctrls)
+            {
+                if (obj.GetType().Name.ToString() == "Button")
+                {
+                    Button btn = (Button)obj;
+                    btn.Visible = false;
+                }
+                else
+                {
+                    ResetButten(obj.Controls);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 绑定数据
+        /// </summary>
+        /// <param name="WorkFlowID"></param>
+        /// <param name="pageInde"></param>
+        private void BindGrid(int pageIndex)
+        {
+            BLL.T_WorkFlow_BLL wfBLL = new T_WorkFlow_BLL();
+            Model.T_WorkFlow_MDL wfMDL = wfBLL.GetModel(ConvertEx.ToInt(workFlowID));
+            workFlowCode = wfMDL.WorkFlowCode;
+
+            string sqlWhere = string.Empty;
+
+            if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == true)
+            {//管理员管理员获取所有工程
+                sqlWhere = " AND AREA_CODE LIKE '" + Session["AREA_CODE"].ToString() + "%'";//加区域了。
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == false && Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//档案馆用户看自己的
+                sqlWhere = " AND AREA_CODE LIKE '" + Session["OLD_AREA_CODE"].ToString() + "%'";//加区域了。
+            }
+
+            if (!String.IsNullOrEmpty(gcmc.Text))
+            {
+                sqlWhere += " AND gcmc like '%" + gcmc.Text + "%'";
+            }
+            if (!String.IsNullOrEmpty(gcbm.Text))
+            {
+                sqlWhere += " AND gcbm like '%" + gcbm.Text + "%'";
+            }
+
+            string zdwhere = "";//业务指导 在文件登记--窗口接收之间 只能看到自己的工程
+          if (Common.ConvertEx.ToBool(Common.Session.GetSession("SuperAdmin")) == false && 
+              Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {   //档案馆用户看自己的
+                if(ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.FILEREG ||
+                   ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.ONLINE_CHECK || 
+                    ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.ARCHIVEPACK || 
+                    ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.WINRECV)
+                {
+                    zdwhere = " AND ChargeUserID=" + Common.Session.GetSession("UserID");
+                }
+            }
+            DataTable dt = null;
+            if (Common.Session.GetSession("SuperAdmin").ToLower() == "true")
+                dt = flowDefineBLL.GetListPaging(workFlowID, false, "", "", sqlWhere, pageSize, pageIndex, out itemCount);
+            else
+                dt = flowDefineBLL.GetListPaging(workFlowID, Common.Session.GetSessionBool("IsCompany"),
+                    Common.Session.GetSession("RoleID"), Common.Session.GetSession("UserID"), sqlWhere, pageSize, pageIndex, out itemCount, zdwhere);
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 判断工程是否受理超时,在某一流程节点下
+        /// </summary>
+        /// <returns></returns>
+        public string RecTimeOut(DataRowView view)
+        {
+            string recStr = string.Empty;
+            //if (ConvertEx.ToInt(view["SubmitStatus"]) != 2)
+            //{
+            //    T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            //    T_SingleProject_MDL spMDL = spBLL.GetModel(ConvertEx.ToInt(ConvertEx.ToInt(view["SingleProjectID"])));
+            //    if (spMDL != null)
+            //    {
+            //        DateTime timeOne;
+            //        DateTime timeTwo = DateTime.Now;
+            //        if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.SINGLEPROJECTRED)
+            //        {
+            //            timeOne = ConvertEx.ToDate(spMDL.CreateDate);
+            //        }
+            //        else
+            //        {
+            //            timeOne = ConvertEx.ToDate(spMDL.LastUserTime);
+            //        }   
+            //        if (Math.Abs(((TimeSpan)(timeTwo - timeOne)).Days) > SystemSet._RECTIMEOUTDAYS)
+            //        {
+            //            recStr = "<img src=\"ImagesNew/rosette.png\" width=\"14px\" height=\"14px\" alt=\"超出工作日未受理\" />";
+            //        }
+            //    }
+            //}
+            return recStr;
+        }
+
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DataRowView view = e.Row.DataItem as DataRowView;
+
+                e.Row.Cells[3].Text = string.Concat(RecTimeOut(view), ConvertEx.ToString(view["gcbm"]));
+                e.Row.Cells[3].Style.Add("text-align", "center");
+
+                //20140612 jdk
+                if (ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.IMPORT_TO)
+                {
+                    if (ConvertEx.ToInt(view["Status"]) == 3721 || ConvertEx.ToInt(view["Status"]) == 3722)//Status=3721已入库
+                        e.Row.Cells[9].Text = "已入库";
+                    else
+                    {
+                        e.Row.Cells[9].Text = "未入库";
+                        e.Row.Style.Add("background-color", "#C9C");
+                    }
+                }
+            }
+            if (ConvertEx.ToInt(workFlowID) != (int)SystemSet.WorkFlowStatus.IMPORT_TO)
+            {
+                if (e.Row.Cells.Count > 1)
+                    e.Row.Cells[9].Visible = false;
+            }
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 工程提交
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string SubMitProject(string singleProjectID, string workFlowID, string workFlowDefineID, string workFlowCodetmp="")
+        {
+            Model.T_SingleProject_MDL spMDL = (new BLL.T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(singleProjectID));
+            BLL.T_FileList_BLL flBLL = new T_FileList_BLL();
+            DataSet ds2 = flBLL.GetList("SingleProjectID=" + singleProjectID);
+            if (!String.IsNullOrEmpty(spMDL.gcbm) && ds2.Tables.Count > 0 && ds2.Tables[0].Rows.Count > 0)
+            {
+                BLL.T_WorkFlowDefine_BLL wkBLL = new T_WorkFlowDefine_BLL();
+                Model.T_WorkFlowDefine_MDL wkMDL = wkBLL.GetModel(ConvertEx.ToInt(workFlowDefineID));
+
+                //馆长审核意见清空
+                if (workFlowCodetmp.ToUpper() == SystemSet.EumWorkFlowCode.FG_SIGNER.ToString() ||
+                    workFlowCodetmp.ToUpper() == SystemSet.EumWorkFlowCode.SIGNER.ToString())
+                {
+                    T_ReadyCheckBook_BLL rbb = new T_ReadyCheckBook_BLL();
+                    rbb.UpdateQpNote(ConvertEx.ToInt(singleProjectID));
+                }
+
+                if (String.IsNullOrEmpty(wkMDL.SubmitCellPath))
+                {//有些地方不需要填申请单的
+                    WorkFlowManage workflowmanage = new WorkFlowManage();
+                    if (workflowmanage.GoNextProjectWorkFlowSataus(ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(workFlowID)))
+                        return SystemSet._RETURN_SUCCESS_VALUE;
+                    else
+                        return SystemSet._RETURN_FAILURE_VALUE;
+                }
+                else
+                {  //填申请单的未做
+                    return SystemSet._RETURN_SUCCESS_VALUE;
+                }
+
+            }
+            else
+            {
+                return "请选分配任务!";
+            }
+        }
+
+        /// <summary>
+        /// 工程退回
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string ReturnProject(string singleProjectID, string workFlowCodetmp="")
+        {
+            //更新最后一次的工程，下次它排前面，方便操作些
+            T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMDL = spBLL.GetModel(ConvertEx.ToInt(singleProjectID));
+            spMDL.LastUserTime = DateTime.Now;   //提交或退回的时间 jdk 2015.03.14
+            spBLL.Update(spMDL);
+            
+            //馆长审核意见清空
+            if (workFlowCodetmp.ToUpper() == SystemSet.EumWorkFlowCode.FG_SIGNER.ToString() ||
+                workFlowCodetmp.ToUpper() == SystemSet.EumWorkFlowCode.SIGNER.ToString())
+            {
+                T_ReadyCheckBook_BLL rbb = new T_ReadyCheckBook_BLL();
+                rbb.UpdateQpNote(ConvertEx.ToInt(singleProjectID));
+            }
+
+            WorkFlowManage workflowmanage = new WorkFlowManage();
+            if (workflowmanage.RollBackProjectWorkFlowStatus(ConvertEx.ToInt(singleProjectID)))
+                return SystemSet._RETURN_SUCCESS_VALUE;
+            else
+                return SystemSet._RETURN_FAILURE_VALUE;
+        }
+
+        /// <summary>
+        /// 受理
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <param name="workFlowDefineID"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string AcceptProject(string singleProjectID, string workFlowDefineID)
+        {
+            BLL.T_WorkFlowDefine_BLL wkdBLL = new T_WorkFlowDefine_BLL();
+            Model.T_WorkFlowDefine_MDL wkdMDL = wkdBLL.GetModel(ConvertEx.ToInt(workFlowDefineID));
+
+            int strSubmitStatus = wkdMDL.SubmitStatus;
+            if (strSubmitStatus == 0 || strSubmitStatus == 1)
+            {//第一个流程strSubmitStatus=0;
+                wkdMDL.SubmitStatus = 2;//受理完成状态
+                wkdMDL.RecvUserID = ConvertEx.ToInt(Common.Session.GetSession("UserID"));
+                wkdMDL.RecvDateTime = DateTime.Now;
+                wkdBLL.Update(wkdMDL);
+
+                //=====受理时需要加入权限的。否则看不到的。
+                CBLL.SingleProjectRole projectRole = new DigiPower.Onlinecol.Standard.CBLL.SingleProjectRole();
+                projectRole.Update(Common.ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(Session["RoleID"].ToString()),
+                    ConvertEx.ToInt(Session["UserID"].ToString()));
+                //============================
+                return SystemSet._RETURN_SUCCESS_VALUE;
+            }
+            else
+            {
+                return SystemSet._RETURN_FAILURE_VALUE;
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 判断工程是否被受理
+        /// </summary>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool CheckRecvStatus(string singleProjectID, string workFlowID)
+        {
+            if (!Common.Session.GetSessionBool("IsCompany"))
+            {
+                T_WorkFlowDefine_BLL wfDefine = new T_WorkFlowDefine_BLL();
+                DataSet ds = wfDefine.GetList("SingleProjectID=" + singleProjectID + " AND WorkFlowID=" + workFlowID + " AND SubmitStatus<>2");
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0) //未受理
+                    return false;
+                else
+                    return true;
+            }
+            return true;
+        }
+    }
+}

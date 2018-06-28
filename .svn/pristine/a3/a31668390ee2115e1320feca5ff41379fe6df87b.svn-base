@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using LTP.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.BLL
+{
+    public class T_JiaoJieDengJi_BLL
+    {
+        private readonly DigiPower.Onlinecol.Standard.DAL.T_JiaoJieDengJi_DAL dal = new DigiPower.Onlinecol.Standard.DAL.T_JiaoJieDengJi_DAL();
+        public T_JiaoJieDengJi_BLL()
+        { }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL model)
+        {
+            return dal.Add(model);
+        }
+
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL model)
+        {
+            dal.Update(model);
+        }
+
+        /// <summary>
+        /// 根据单位取工程
+        /// </summary>
+        /// <param name="companyid"></param>
+        /// <returns></returns>
+        public System.Data.DataSet GetList(string strWhere)
+        {
+            return dal.GetList(strWhere);
+        }
+
+        public System.Data.DataSet GetList(string strWhere, string orderStr)
+        {
+            return dal.GetList(strWhere, orderStr);
+        }
+
+        public Model.T_JiaoJieDengJi_MDL GetMaxMDL()
+        {
+            return dal.GetMaxMDL();
+        }
+
+        public DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL GetModel(int SID)
+        {
+            return dal.GetModel(SID);
+        }
+    }
+}

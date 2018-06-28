@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class SignaturePdf : PageBase
+    {
+        public string mScriptName;
+        public string mServerName;
+        public string mHttpUrl;
+        public string mServerUrl;
+        string mHostName;
+
+        private string singleProjectID = string.Empty;          //工程ID
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            MyAddInit();
+            singleProjectID = Request.QueryString["SingleProjectID"];
+
+            mHostName = "http://" + Request.Url.Authority;
+            //mScriptName = "SignaturePdf.aspx";
+            //mHttpUrl = "http://" + Request.ServerVariables["HTTP_HOST"] + Request.ServerVariables["SCRIPT_NAME"];
+            //mHttpUrl = mHttpUrl.Substring(0, mHttpUrl.Length - mScriptName.Length);
+            mServerUrl = mHostName + "//PDFServer.aspx?ProNo=" + singleProjectID;
+
+
+        }
+        
+    }
+}

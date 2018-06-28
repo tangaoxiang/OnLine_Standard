@@ -1,0 +1,147 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+
+//报表预览
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportView : System.Web.UI.Page
+    {
+        string ReportID = "";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                if (!String.IsNullOrEmpty(Common.DNTRequest.GetQueryString("ReportCode")))
+                {
+                    Session["ReportCode"] = Common.DNTRequest.GetQueryString("ReportCode");
+                    List<T_Report_MDL> ltReport = new T_Report_BLL().GetModelList("ReportCode='" + Common.DNTRequest.GetQueryString("ReportCode") + "'");
+                    if (ltReport.Count > 0)
+                        ViewState["ReportID"] = Common.ConvertEx.ToString(ltReport[0].ReportID);
+                    else
+                    {
+                        Common.MessageBox.Show(this, "报表编号不存在无法查询!");
+                        btnSeach.Enabled = false;
+                    }
+                }
+                else
+                {
+                    Common.MessageBox.Show(this, "没有报表编号无法查询!");
+                    btnSeach.Enabled = false;
+                }
+            }
+
+        }
+
+        protected void btnSeach_Click(object sender, EventArgs e)
+        {
+            ReportID = Common.ConvertEx.ToString(ViewState["ReportID"]);
+            if (ReportID != "")
+            {
+                T_Report_MDL trMdl = new T_Report_BLL().GetModel(Common.ConvertEx.ToInt(ReportID));
+                T_Report_Type_MDL trtMdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(trMdl.ReportTypeID));
+                if (trMdl == null || trtMdl == null) return;
+
+                string reportPath = Server.MapPath("../Report/ReportFiles/" + trtMdl.ReportTypeName + "/" + trMdl.ReportFilePath);
+                if (System.IO.File.Exists(reportPath))
+                {
+                    StiReport Report = new StiReport();
+                    Report.Load(reportPath);//加载报表
+
+                    ctrl_Search_Para1.Submit();
+                    Hashtable OutSqlList = ctrl_Search_Para1.OutSqlList;
+                    ArrayList OutValue = ctrl_Search_Para1.OutValue;
+
+
+                    string strWhereSql = ctrl_Search_Para1.strWhereSql;
+                    List<T_Report_MainSql_MDL> ltMainSql = new T_Report_MainSql_BLL().GetModelList("ReportID=" + ReportID);
+
+                    if (ltMainSql.Count > 0)
+                    {
+                        DataSet dataSet = new DataSet();
+
+                        foreach (T_Report_MainSql_MDL trmMdl in ltMainSql)
+                        {
+                            string MainSql = trmMdl.MainSql.ToLower();
+                            if (OutSqlList.Count > 0)
+                            {
+                                IEnumerator enm = OutSqlList.Keys.GetEnumerator(); //循环所有的查询表对象 key值
+                                while (enm.MoveNext())
+                                {
+                                    object objKey = enm.Current;
+                                    string pare = "{" + objKey.ToString().ToLower() + "}";
+
+                                    if (objKey != null && MainSql.IndexOf(pare) > -1) //判断是否需要查询条件.需要则替换
+                                    {
+                                        MainSql = MainSql.Replace(pare, "");
+                                        if (MainSql.IndexOf("where") > -1)
+                                            MainSql = MainSql.Replace("where", "where " + Common.ConvertEx.ToString(OutSqlList[objKey]) + " and ");
+
+                                    }
+                                }
+
+                                //Response.Write(MainSql);
+                            }
+
+                            if (MainSql.IndexOf("{") < 0 || MainSql.IndexOf("}") < 0)
+                            {
+                                DataSet ds = new T_Other_BLL().GetDataSet(MainSql);
+                                //DataTable table = new DataTable();
+                                if (ds != null && ds.Tables.Count > 0)
+                                {
+                                    //table = ds.Tables[0].Copy();
+                                    dataSet.Tables.Add(ds.Tables[0].Copy().DefaultView.ToTable());
+                                    dataSet.Tables["ds"].TableName = trmMdl.OtherName + "_" + trmMdl.ReportMainSqlID.ToString();
+
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < 6; i++)
+                        {
+                            string DictionaryValue = "";
+                            if (i < OutValue.Count) DictionaryValue = Common.ConvertEx.ToString(OutValue[i]);
+
+                            Report.Dictionary.Variables.Add(new StiVariable("temp", "TEMP_" + i.ToString(), "TEMP_" + i.ToString(), typeof(String), DictionaryValue, false));
+                        }
+                        Report.Save(reportPath);
+                        Report.Load(reportPath);
+
+
+
+                        Report.RegData("Report", dataSet);
+                        Report.Compile();
+                        Report.Render();
+                        StiWebViewer1.Report = Report;
+                    }
+                    else
+                    {
+                        Common.MessageBox.Show(this, "报表没有数据集,无法显示!");
+                    }
+                }
+            }
+            else
+            {
+                Common.MessageBox.Show(this, "报表编号不存在!");
+            }
+        }
+    }
+}

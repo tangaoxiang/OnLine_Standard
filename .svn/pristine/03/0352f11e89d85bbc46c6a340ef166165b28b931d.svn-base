@@ -1,0 +1,104 @@
+﻿using DigiPower.Onlinecol.Standard.Common;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web.Main
+{
+    public partial class Left : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Common.Session.GetSession("RoleID") == "")
+            {
+                Response.Write("<script>javascript:alert('服务器超时,请重新登录！');window.parent.location.href='../UserLoginGather.aspx';</script>");
+            }
+
+            if (!this.IsPostBack)
+            {
+                HidCompanyType.Value = Common.Session.GetSession("CompanyType");
+                CreateMenu();
+            }
+        }
+
+        public void CreateMenu()
+        {
+            DataTable dt = null;
+            DigiPower.Onlinecol.Standard.BLL.T_Module_BLL s_module_all = new DigiPower.Onlinecol.Standard.BLL.T_Module_BLL();
+            DataSet ds = s_module_all.GetListByRole(" AND IfVisible=1 and RoleID=" + Common.Session.GetSession("RoleID"));
+            if (ds.Tables.Count > 0)
+            {
+                dt = ds.Tables[0];
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<table id=\"tbMain\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" bgcolor=\"#99BBE8\" style=\"font-size:12px;\">");
+
+                string ParentId = string.Empty;
+                bool flag = false;
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow rowList = dt.Rows[i];
+
+                    if (ParentId == string.Empty || ParentId != ConvertEx.ToString(rowList["ParentID"]))
+                    {
+                        if (ParentId != string.Empty)
+                        {
+                            flag = false;
+                            sb.Append("			</table> ");
+                            sb.Append("		</td>");
+                            sb.Append("	</tr>");
+                        }
+
+                        sb.Append("	<tr style=\"cursor:pointer\" onclick=\"trdisplay(" + rowList["ModuleID"] + ")\" >");
+                        sb.Append("    <td bgcolor=\"#D9E7F8\">");
+                        sb.Append("         <table id='ptable' width=\"100%\" height=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"> ");
+                        sb.Append("              <tr style=\"font-size:11px;\">");
+                        sb.Append("                 <td width='20px' align='center'><img src=\"../images/directory.png\"></td>");
+                        sb.Append("                 <td valign=\"baseline\" class='ptb'>&nbsp;" + rowList["ModuleName"] + "</td>");
+                        sb.Append("                 <td width=\"20px\" ><img id=\"trimg" + rowList["ModuleID"] + "\" width=\"15px\" height=\"15px\" src=\"jia.png\" alt=\"\" /></td>");
+                        sb.Append("             </tr>");
+                        sb.Append("         </table>");
+                        sb.Append("	   </td>");
+                        sb.Append("	</tr>");
+                    }
+                    else
+                    {
+                        if (!flag && ParentId == ConvertEx.ToString(rowList["ParentID"]))
+                        {
+                            sb.Append("	<tr style='display:none;line-height:20px;cursor:pointer' width=\"100%\" id=\"subTr" + rowList["ParentID"] + "\">");
+                            sb.Append("		<td align=\"center\" bgcolor=\"#FFFFFF\">");
+                            sb.Append("			<table id=\"tbLeft" + rowList["ParentID"] + "\" width=\"97%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
+                            sb.Append("				<tr width=\"100%\" height=\"23px\" >");
+                            sb.Append("                 <td width='15px' align='right'><img src=\"../images/bullet_arrow_down.png\" id='bullet_arrow_down'></td>");
+                            sb.Append("	                <td valign=\"left\" align=\"left\" style=\"font-size:12px;\" >");
+                            sb.Append("	                 <span style=\"vertical-align: middle\" onclick=\"Navgate('" + rowList["ModuleName"] + "','" +
+                                                         rowList["ModuleID"] + "','Content.aspx?URL=../" + rowList["FileName"] + "')\"><font class='font'>" + rowList["ModuleName"] + "</font></span>");
+                            sb.Append("                 </td>");
+                            sb.Append("             </tr>");
+                            flag = true;
+                        }
+                        else
+                        {
+                            sb.Append("				<tr width=\"100%\" height=\"23px\">");
+                            sb.Append("                 <td width='15px' align='right'><img src=\"../images/bullet_arrow_down.png\" id='bullet_arrow_down'></td>");
+                            sb.Append("	                <td align=\"left\" align=\"left\" style=\"font-size:12px;\">");
+                            sb.Append("	                 <span style=\"vertical-align: middle\" onclick=\"Navgate('" + rowList["ModuleName"] + "','" +
+                                                         rowList["ModuleID"] + "','Content.aspx?URL=../" + rowList["FileName"] + "')\"><font class='font'>" + rowList["ModuleName"] + "</font></span>");
+                            sb.Append("                 </td>");
+                            sb.Append("             </tr>");
+                        }
+                    }
+                    if (ConvertEx.ToString(rowList["ParentID"]) == "0")
+                        ParentId = rowList["ModuleID"].ToString();
+                    else
+                        ParentId = rowList["ParentID"].ToString();
+                }
+                sb.Append("</table>");
+                lblLeftMenu.Text = sb.ToString();
+            }
+        }
+    }
+}

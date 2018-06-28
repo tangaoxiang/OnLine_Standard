@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <Columns isShow="1">
+    <archFileNo title="文件序号"></archFileNo>
+    <fileNo title="文件编号"></fileNo>
+    <responsibility title="责任者"></responsibility>
+    <fileTitle title="文件题名"></fileTitle>
+    <archFileNote title="文件备注"></archFileNote>
+    <createdStart title="形成起始时间"></createdStart>
+    <createdEnd title="形成结束时间"></createdEnd>
+    <fileImageNo title="文图号"></fileImageNo>
+    <pageNo title="页次"></pageNo>
+    <textNums title="文字页数"></textNums>
+    <drawingNums title="图纸页数"></drawingNums>
+    <phoneNums title="照片页数"></phoneNums>
+    <note title="备注"></note>
+    <mediaTypeCode title="载体类型"></mediaTypeCode>
+    <storageTypeCode title="保管期限"></storageTypeCode>
+    <securityLevelCode title="密级"></securityLevelCode>
+    <manuscriptCode title="稿本"></manuscriptCode>
+    <specCode title="规格"></specCode>
+    <storagePeriodCode title="保密期限"></storagePeriodCode>
+    <scanFlag title="是否扫描"></scanFlag>
+    <pdfPath title="是否扫描"></pdfPath>
+    <pdfFilename title="是否扫描"></pdfFilename>
+    <pdfSourcePath title="是否扫描"></pdfSourcePath>
+  </Columns>
+
+  <SearchSql>
+    <![CDATA[
+        select 
+        a.FileListID,
+        a.ArchiveID,
+        a.SingleProjectID,
+        a.RootPath,
+        a.PDFFilePath, 
+        a.OrderIndex,
+        
+        a.OrderIndex as archFileNo,
+        a.BH as fileNo,
+        a.zrr as responsibility,
+        a.Title as fileTitle,
+        a.bz as archFileNote,           
+        (CASE WHEN a.StartTime='' THEN '' ELSE convert(varchar(10),a.StartTime,23) end) as createdStart,
+        '' as createdEnd,
+        a.w_t_h as fileImageNo,
+        '' as pageNo,
+        (case when cast(b.ajlx as int)=183 then a.ManualCount else '' end)as textNums,
+        (case when cast(b.ajlx as int)=184 then a.ManualCount else '' end)as drawingNums,
+        (case when cast(b.ajlx as int)=185 then a.ManualCount else '' end)as phoneNums,
+        '' as note,
+        a.ztlx as mediaTypeCode,
+        '永久' as storageTypeCode,
+        '秘密' as securityLevelCode,
+        a.wjgbdm as manuscriptCode,
+        a.gg as specCode,
+        '30年' as storagePeriodCode,
+        'true' as scanFlag                                                                     
+        from T_FileList a inner join T_Archive b on a.ArchiveID=b.ArchiveID where 1=1 {0}
+        order by a.OrderIndex asc 
+   ]]>
+  </SearchSql>
+</SqlList>

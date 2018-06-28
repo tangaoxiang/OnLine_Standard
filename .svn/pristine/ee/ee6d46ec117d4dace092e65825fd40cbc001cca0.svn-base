@@ -1,0 +1,390 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class MyArchiveList : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ArchiveList));
+            ctrlGridEx1.MyGridView_DataRowBound += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlGridEx.GridView_DataRowBound(ctrlGridEx1_MyGridView_DataRowBound);
+            if (!IsPostBack)
+            {
+                SingleProjectID.DataBindEx(false);
+                SingleProjectID.SelectValue = Common.DNTRequest.GetQueryString("SingleProjectID");
+                MyAddInit();
+
+                if (IsMyTaskList())
+                {
+                    //btnRemoveArc.Visible = false;
+                    btnUp.Visible = false;
+                    btnDown.Visible = false;
+                    btnParticular.Visible = false;
+                    lblSingleProject.Visible = false;
+                    SingleProjectID.Visible = false;
+
+                    if (Common.DNTRequest.GetQueryString("WorkFlowCode") != "")
+                    {//窗口验收和业务审核时， 接收审核信息
+
+                        btnPrint1.Visible = false;
+                        btnPrint2.Visible = false;
+                        btnPrint3.Visible = false;
+
+                        ctrlJSCheckInfo1.SetVisible = true;
+                        ctrlJSCheckInfo1.DataBindEx(Common.DNTRequest.GetQueryString("SingleProjectID"));
+
+                        if (Common.DNTRequest.GetQueryString("WorkFlowCode") == "WINRECV")
+                        { //窗口验收时候，显示 窗口验收回执
+                            btnYanShouHuiZhi.Visible = true;
+                        }
+
+                        if (Common.DNTRequest.GetQueryString("WorkFlowCode") == "CHECK")
+                        { //业务审核时候，显示 发放验收合格意见书和打印合格意见书
+                            btn001.Visible = true;
+                            btnPrint.Visible = true;
+                        }
+
+                        HidProjectID.Value = DNTRequest.GetQueryString("SingleProjectID");
+                        HidWorkFlowCode.Value = DNTRequest.GetQueryString("WorkFlowCode");
+                    }
+                }
+
+                if (DNTRequest.GetQueryString("Store") == "Store")
+                {
+                    //btnRemoveArc.Visible = false;
+                    btnUp.Visible = false;
+                    btnDown.Visible = false;
+                    HidStore.Value = "Store";
+                }
+            }
+            BindGrid();
+
+            //非档案馆人员，不可能改动档案信息
+            if (Common.Session.GetSessionBool("IsCompany") == true)
+            {
+                btnUp.Visible = false;
+                btnDown.Visible = false;
+            }
+        }
+        #region 方法
+
+        protected string GetUserName(int userID)
+        {
+            T_UsersInfo_MDL Mdl = new T_UsersInfo_BLL().GetModel(userID);
+            if (Mdl != null)
+                return Common.ConvertEx.ToString(Mdl.UserName);
+            else
+                return "";
+        }
+
+        /// <summary>
+        /// 判断是 案卷管理页面/我的任务页面
+        /// </summary>
+        /// <returns></returns>
+        public bool IsMyTaskList()
+        {
+            bool flag = false;
+            if (Common.DNTRequest.GetQueryString("MyTaskList") != "")
+                flag = true;
+
+            return flag;
+        }
+
+        public void BindGrid()
+        {
+            T_MyArchive_BLL trBll = new T_MyArchive_BLL();
+            DataSet ds = new DataSet();
+
+            string strWhere = "";
+            if (Common.Session.GetSession("SuperAdmin").ToLower() == "true" || Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//超级管理员和档案馆人员看全部                
+            }
+            else if (Common.ConvertEx.ToBool(Common.Session.GetSession("IsCompany")) && Common.ConvertEx.ToBool(Common.Session.GetSession("IsLeader")))
+            {//建设单位只看到自己
+                strWhere += " AND A.SingleProjectID in (select SingleProjectID from T_SingleProject  A,(select distinct ConstructionProjectID from T_Construction_Project ";
+                strWhere += " where CompanyID=" + Common.Session.GetSession("CompanyID") + ") B where A.ConstructionProjectID=B.ConstructionProjectID)";
+            }
+
+            //工程查询
+            if (SingleProjectID.Enabled && Common.ConvertEx.ToInt(SingleProjectID.SelectValue) > 0)
+            {
+                strWhere += " AND A.SingleProjectID=" + SingleProjectID.SelectValue + " ";
+            }
+            //案卷题名
+            if (txtTitle.Text.Trim().Length > 0)
+            {
+                strWhere += " AND A.ajtm like '%" + txtTitle.Text.Trim() + "%' ";
+            }
+
+            //由MyTaskList.aspx传入
+            //if (Request.QueryString["SingleProjectID"] != null && Common.DNTRequest.GetQueryString("SingleProjectID") != "")
+            //{
+            //    strWhere += " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID") + " ";
+            //}            
+
+            ds = trBll.GetList(strWhere, true);
+            List<string> collist = new List<string>();
+
+            collist.Add("ajtm");
+            collist.Add("bzdw");
+            //collist.Add("bgqx");
+            //collist.Add("mj");
+            collist.Add("lrr");
+            collist.Add("lrsj");
+            collist.Add("xh");
+
+            //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+
+            if (HidStore.Value == "Store")
+            {
+                ctrlGridEx1.InitGrid("ArchiveID", collist, ds, "");
+            }
+            else
+            {
+                if (IsMyTaskList())
+                {
+                    string tModifyURL = "~/WorkFlow/zxyys.aspx?WorkFlowCode=" + Common.DNTRequest.GetQueryString("WorkFlowCode") + "&Action=edit&sqlwhere=" + ViewState["sqlwhere"] + "&PageIndex=" + ctrlGridEx1.PageIndex + "";
+                    tModifyURL += "&ShowFlag=" + Common.DNTRequest.GetQueryString("ShowFlag") + "&SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID") + "";
+                    tModifyURL += "&WorkFlowID=" + Common.DNTRequest.GetQueryString("WorkFlowID") + "";
+                    ctrlGridEx1.InitGrid("ArchiveID", collist, ds, tModifyURL, true, true, "文件明细");
+                }
+                else
+                {
+                    ctrlGridEx1.InitGrid("ArchiveID", collist, ds, "~/WorkFlow/MyArchiveAdd.aspx?Action=edit&sqlwhere=" + ViewState["sqlwhere"] + "&PageIndex=" + ctrlGridEx1.PageIndex + "");
+                }
+            }
+        }
+
+        #endregion
+
+        #region 事件
+
+        //GridView DataRowBound事件
+        protected void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+            }
+        }
+
+        //查询
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            T_MyArchive_MDL model = new T_MyArchive_MDL();
+            Search(this.tblSearch, model);
+            this.BindGrid();
+        }
+
+        //文件明细
+        protected void btnParticular_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                string strURL = "MyArchiveToFileList.aspx?ArchiveID=" + ltKey[0] + "&sqlwhere = " + SqlWhere + "";
+                if (HidStore.Value == "Store")
+                {
+                    strURL += "&Store=Store";
+                }
+
+                Response.Redirect(strURL);
+            }
+        }
+
+        //上移
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.ConvertEx.ToInt(ltIndex[0]);
+                //T_Other_BLL otherBLL = new T_Other_BLL();
+                //otherBLL.UpdateArchiveXH(ArchiveID, 1);
+
+                T_MyArchive_BLL arBLL = new T_MyArchive_BLL();
+                //T_Archive_MDL upMdl = bll.GetModel(Common.ConvertEx.ToInt(ctrlGridEx1.DataKeyValue(ltIndex[0] - 1)));
+                T_MyArchive_MDL arMDL = arBLL.GetModel(ArchiveID);
+                arBLL.UpdateXH(Common.ConvertEx.ToInt(SingleProjectID.SelectValue), Convert.ToInt32(arMDL.xh), true);
+                //ViewState["key"] = ctrlGridEx1.DataKeyValue(ltIndex[0]);
+
+                //int upIndex = Common.ConvertEx.ToInt(upMdl.xh);
+                //int nowIndex = Common.ConvertEx.ToInt(Mdl.xh);
+
+                //upMdl.xh = nowIndex;
+                //Mdl.xh = upIndex - 1;
+
+                //bll.Update(upMdl);
+                //bll.Update(Mdl);
+                BindGrid();
+            }
+        }
+
+        //下移
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_MyArchive_BLL arBLL = new T_MyArchive_BLL();
+                T_MyArchive_MDL arMDL = arBLL.GetModel(ArchiveID);
+                arBLL.UpdateXH(Common.ConvertEx.ToInt(SingleProjectID.SelectValue), Convert.ToInt32(arMDL.xh), false);
+
+                //T_Archive_BLL bll = new T_Archive_BLL();
+                //T_Archive_MDL upMdl = bll.GetModel(Common.ConvertEx.ToInt(ctrlGridEx1.DataKeyValue(ltIndex[0] + 1)));
+                //T_Archive_MDL Mdl = bll.GetModel(Common.ConvertEx.ToInt(ctrlGridEx1.DataKeyValue(ltIndex[0])));
+
+                //int upIndex = Common.ConvertEx.ToInt(upMdl.xh);
+                //int nowIndex = Common.ConvertEx.ToInt(Mdl.xh);
+
+                //upMdl.xh = nowIndex;
+                //Mdl.xh = upIndex + 1;
+
+                //bll.Update(upMdl);
+                //bll.Update(Mdl);
+                BindGrid();
+            }
+        }
+
+        //拆卷
+        protected void btnRemoveArc_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                foreach (string FileListID in ltKey)
+                {
+                    T_FileList_MDL flMDL = flBLL.GetModel(Common.ConvertEx.ToInt(FileListID));
+                    flMDL.MyArchiveID = 0;
+                    flBLL.Update(flMDL);
+                }
+                //这里肯定是删案卷的
+                int ArchiveID = Common.ConvertEx.ToInt(ltKey[0]);
+                T_MyArchive_BLL arBLL = new T_MyArchive_BLL();
+                arBLL.Delete(ArchiveID);
+            }
+            BindGrid();
+        }
+
+        //窗口验收回执
+        protected void btnYanShouHuiZhi_Click(object sender, EventArgs e)
+        {
+            if (Common.DNTRequest.GetQueryString("WorkFlowCode") == "WINRECV")
+            {//窗口验收时候，显示 窗口验收回执
+                string url = "../ViewReport.aspx?strWhere=NoUser&SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID") + "&ReportCode=shengchahuizhi";
+                ClientScript.RegisterStartupScript(Page.GetType(), "open010", "<script type='text/javascript'>openCommonWindowScroll('" + url + "',800,600);</script>");
+            }
+        }
+
+        //发放验收合格意见书
+        protected void btn001_Click(object sender, EventArgs e)
+        {
+            string url = "/WorkFlow/ReadCheckBook.aspx?SingleProjectID=" + HidProjectID.Value + "&WorkFlowCode=" + HidWorkFlowCode.Value;
+            ClientScript.RegisterStartupScript(Page.GetType(), "open011", "<script type='text/javascript'>openCommonWindowScroll('" + url + "',650,300);</script>");
+        }
+
+        //打印验收合格意见书
+        protected void btnPrint_Click(object sender, EventArgs e)
+        {
+            BLL.T_ReadyCheckBook_BLL readyBLL = new T_ReadyCheckBook_BLL();
+            DataSet ds1 = readyBLL.GetList("SingleProjectID=" + HidProjectID.Value + " AND CodeType='3' ");
+            if (ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
+            {
+                string url = "../ViewReport.aspx?strWhere=SingleProjectID=" + HidProjectID.Value + "&ReportCode=yanshou_yjs";
+                ClientScript.RegisterStartupScript(Page.GetType(), "open12", "<script type='text/javascript'>openCommonWindowScroll('" + url + "',800,600);</script>");
+            }
+            else
+            {
+                Common.MessageBox.Show(this, "未发放相关证件！");
+            }
+        }
+
+        #endregion
+
+        private void PrintView(string strWhere, string ReportCode)
+        {
+            string url = "../ViewReport.aspx?strWhere=" + strWhere + "&ReportCode=" + ReportCode + "";
+            ClientScript.RegisterStartupScript(Page.GetType(), "open13", "<script type='text/javascript'>openCommonWindowScroll('" + url + "',800,600);</script>");
+        }
+
+        /// <summary>
+        /// 打印卷内目录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnPrint3_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                string ArchiveID = "";
+                foreach (string Key in ltKey)
+                {
+                    if (ArchiveID == "") ArchiveID = Key;
+                    else ArchiveID += "," + Key;
+                }
+                //PrintView("t_archive.archiveid in (" + ArchiveID + ")", "Archivemulu");
+                PrintView(ArchiveID, "Archivemulu");
+            }
+        }
+
+        /// <summary>
+        /// 打印封皮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnPrint1_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                string ArchiveID = "";
+                foreach (string Key in ltKey)
+                {
+                    if (ArchiveID == "") ArchiveID = Key;
+                    else ArchiveID += "," + Key;
+                }
+                //PrintView("t_archive.archiveid in (" + ArchiveID + ")", "Archivefengpi");
+                PrintView(ArchiveID, "Archivefengpi");
+            }
+        }
+
+        /// <summary>
+        /// 打印卷内备考表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnPrint2_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                string ArchiveID = "";
+                foreach (string Key in ltKey)
+                {
+                    if (ArchiveID == "") ArchiveID = Key;
+                    else ArchiveID += "," + Key;
+                }
+                //PrintView("t2.archiveid in (" + ArchiveID + ")", "juanneibeikao");
+                PrintView(ArchiveID, "juanneibeikao");
+            }
+        }
+    }
+}

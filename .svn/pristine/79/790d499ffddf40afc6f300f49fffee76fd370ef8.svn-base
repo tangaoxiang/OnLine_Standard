@@ -1,0 +1,137 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+
+//工程相关信息
+
+namespace DigiPower.Onlinecol.Standard.Web.CompanyManage
+{
+    public partial class ProjectDoInfo : System.Web.UI.Page
+    {
+        int SingleProjectID = 0;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
+                SingleProjectID = Common.ConvertEx.ToInt(Common.DNTRequest.GetString("SingleProjectID"));
+                T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+                T_SingleProject_MDL spMDL = spBLL.GetModel(SingleProjectID);
+
+                List<T_Company_MDL> ltCompany = new T_Company_BLL().GetModelList("CompanyID=(select CompanyID from T_Construction_Project where ConstructionProjectID=" + Common.ConvertEx.ToString(spMDL.ConstructionProjectID) + ")");
+                Comm.SetValueToPage(spMDL, this.tbl);
+
+                gczt.Text = SetStatus(Common.ConvertEx.ToInt(spMDL.Status));//工程状态
+                if (ltCompany.Count > 0)
+                {
+                    companyName.Text = ltCompany[0].CompanyName;            //单位名称 
+                    ChargeUserName.Text = ltCompany[0].ChargeUserName;      //项目负责人
+                    ContactPerson_Tel.Text = ltCompany[0].ContactPerson + "(" + ltCompany[0].Tel + ")";        //联系人 ,联系电话
+                }
+                GetWorkFlowHtml(SingleProjectID.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 设置工程状态
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        protected string SetStatus(int status)
+        {
+            if (status == 0)
+                return "工程未确认";
+            else if (status == 1)
+                return "工程已确认通过";
+            else if (status == 2)
+                return "工程已确认不通过";
+            else if (status == 3721)
+                return "工程待移交入库";
+            else if (status == 3722)
+                return "工程已入库";
+            else return "工程正常";
+        }
+
+        protected string GetUserName(int userID)
+        {
+            T_UsersInfo_MDL Mdl = new T_UsersInfo_BLL().GetModel(userID);
+            if (Mdl != null)
+                return Common.ConvertEx.ToString(Mdl.UserName);
+            else
+                return "";
+        }
+
+        protected void GetWorkFlowHtml(string SingleprojectId)
+        {
+            System.Text.StringBuilder strBuilder = new System.Text.StringBuilder();
+            DataSet ds = new T_WorkFlowDefine_BLL().GetProjectListByWorkFlowAndUser(SingleprojectId);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                DataTable dt = ds.Tables[0].Copy();
+                dt.Clear();
+                Recursion(ds.Tables[0], 0, ref dt);
+
+                string value = "<input type=\"text\" value=\"{0}\" readonly=\"readonly\" class=\"dd\" style=\"word-break: break-all;\" /> ";
+
+                int index = 1;
+                foreach (DataRow row in dt.Rows)
+                {
+                    strBuilder.Append("<table class=\"zpxxxj\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">");
+                    strBuilder.Append("     <tr>");
+                    strBuilder.Append("         <td style=\"height: 10px\" colspan=\"4\"><strong>" + Convert.ToString(row["WorkFlowName"]) + "</strong></td>");
+                    strBuilder.Append("     </tr>");
+
+                    strBuilder.Append("       <tr>");
+                    strBuilder.Append("           <td class=\"ww\">受理时间：</td>");
+                    strBuilder.Append("           <td>" +
+                        string.Format(value, String.IsNullOrEmpty(Convert.ToString(row["RecvDateTime"])) ? "" :
+                        Convert.ToDateTime(row["RecvDateTime"]).ToString("yyyy-MM-dd HH:mm:ss")));
+                    strBuilder.Append("           </td>");
+                    strBuilder.Append("           <td class=\"ww\">受理人：</td>");
+                    strBuilder.Append("            <td>" + string.Format(value, Convert.ToString(row["RecvUserName"])) + "</td>");
+                    strBuilder.Append("        </tr>");
+
+                    if (index < dt.Rows.Count)
+                    {
+                        strBuilder.Append("     <tr>");
+                        strBuilder.Append("          <td class=\"ww\">提交时间：</td>");
+                        strBuilder.Append("           <td>" +
+                         string.Format(value, String.IsNullOrEmpty(Convert.ToString(row["SubmitDateTime"])) ? "" :
+                         Convert.ToDateTime(row["SubmitDateTime"]).ToString("yyyy-MM-dd HH:mm:ss")));
+                        strBuilder.Append("           </td>");
+                        strBuilder.Append("          <td class=\"ww\">提交人：</td>");
+                        strBuilder.Append("           <td>" + string.Format(value, Convert.ToString(row["SubmitUserName"])) + " ");
+                        strBuilder.Append("          </td>");
+                        strBuilder.Append("       </tr>");
+                    }
+                    strBuilder.Append("    </table>");
+
+                    index++;
+                }
+            }
+            ltWorkFlow.Text = strBuilder.ToString();
+        }
+
+        public void Recursion(DataTable dt, int PID, ref DataTable outDT)
+        {
+            DataRow[] dr = dt.Select("PID='" + PID + "'");
+            foreach (DataRow drr in dr)
+            {
+                outDT.Rows.Add(drr.ItemArray);
+
+                Recursion(dt, Int32.Parse(drr["WorkFlowID"].ToString()), ref outDT);
+            }
+        }
+    }
+}

@@ -1,0 +1,136 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+//角色 新增/编辑
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class RoleAdd : PageBase
+    {
+        T_Role_BLL roleBLL = new T_Role_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(RoleAdd));
+            MyAddInit();
+            CTRL_AREA.MySelectChange += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownArea.SelectChange(CompanySelectChange);
+            if (!this.IsPostBack)
+            {
+                if (PublicModel.isSuperAdmin())
+                    CTRL_AREA.BindDblArea(true, "");
+                else
+                    CTRL_AREA.BindDblArea(true, "AREA_CODE='" + Common.Session.GetSession("AREA_CODE") + "'");
+
+                if ((CommonEnum.PageState)ViewState["ps"] == CommonEnum.PageState.VIEW)
+                    btnSave.Visible = false;
+
+                CompanySelectChange();
+                BindPage(ID);
+            }
+        }
+
+        /// <summary>
+        /// 根据区域选择,对应的公司(档案馆)
+        /// </summary>
+        private void CompanySelectChange()
+        {
+            CompanyID.DataBindEx(CTRL_AREA.SelectValue);
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_Role_MDL model = new T_Role_MDL();
+            if (ViewState["model"] != null)
+                model = (Model.T_Role_MDL)ViewState["model"];
+
+            object obj = Comm.GetValueToObject(model, this.tbl);
+            if (obj != null)
+            {
+                T_Role_MDL Newmodel = (T_Role_MDL)obj;
+                switch ((CommonEnum.PageState)ViewState["ps"])
+                {
+                    case CommonEnum.PageState.ADD:
+
+                        roleBLL.Add(Newmodel);
+                        break;
+                    case CommonEnum.PageState.EDIT:
+                        roleBLL.Update(Newmodel);
+                        break;
+                }
+            }
+            Common.MessageBox.CloseLayerOpenWeb(this.Page);
+        }
+
+        /// <summary>
+        /// 绑定页面
+        /// </summary>
+        /// <param name="ID"></param>
+        private void BindPage(string ID)
+        {
+            T_Role_MDL model = new T_Role_MDL();
+            model = roleBLL.GetModel(Convert.ToInt32(ID));
+            if (model != null)
+            {
+                ViewState["model"] = model;
+                object obj = Comm.SetValueToPage(model, this.tbl);
+
+                BLL.T_Company_BLL compBLL = new T_Company_BLL();
+                T_Company_MDL compMDL = compBLL.GetModel(model.CompanyID);
+                if (compBLL != null)
+                {
+                    CTRL_AREA.SelectValue = compMDL.AREA_CODE;
+                }
+
+                CompanyID.SelectValue = model.CompanyID.ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// 判断角色代号是否存在
+        /// </summary>
+        /// <param name="Action">编辑模式,新增或删除</param>
+        /// <param name="UserID">角色代号</param>
+        /// <param name="LoginName">角色ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool ExistsRoleCode(string Action, string RoleCode, int RoleID)
+        {
+            bool resultCheck = false;
+            try
+            {
+                if (Action == CommonEnum.PageState.ADD.ToString().ToLower())
+                    RoleID = 0;
+
+                if (!string.IsNullOrWhiteSpace(Action))
+                {
+                    if (roleBLL.Exists(RoleID, RoleCode))
+                    {
+                        resultCheck = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "判断角色代号是否存在失败", ex);
+            }
+            return resultCheck;
+        }
+    }
+}

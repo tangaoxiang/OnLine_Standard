@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Text;
+using System.IO;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+using System.Data;
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class JiaoJieDengJiPrint : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnSeach_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            string gcbm = TXT_GCBM.Text.Trim();
+            string gcmc = TXT_GCMC.Text.Trim();
+            if (!string.IsNullOrEmpty(gcbm) && gcbm.Length > 0)
+            {
+                sb.Append(" and gcbh like '%" + gcbm + "%'");
+            }
+            if (!string.IsNullOrEmpty(gcmc) && gcmc.Length > 0)
+            {
+                sb.Append(" and gcmc like '%" + gcmc + "%'");
+            }
+
+            if (!string.IsNullOrEmpty(TXT_ORDER_INDEX_1.Text) && TXT_ORDER_INDEX_1.Text.Length > 0)
+            {
+                sb.Append(" and ORDER_INDEX>=" + TXT_ORDER_INDEX_1.Text);
+            }
+
+            if (!string.IsNullOrEmpty(TXT_ORDER_INDEX_2.Text) && TXT_ORDER_INDEX_2.Text.Length > 0)
+            {
+                sb.Append(" and ORDER_INDEX<=" + TXT_ORDER_INDEX_2.Text);
+            }
+
+            if (!string.IsNullOrEmpty(TXT_MONTH.Text) && TXT_MONTH.Text.Length > 0)
+            {
+                sb.Append(" and MONTH(CREATE_DT)=" + TXT_MONTH.Text);
+            }
+
+            string reportPath = Server.MapPath("/Report/ReportFiles/芜湖城建档案馆整编竣工档案交接登记表.mrt");
+            if (System.IO.File.Exists(reportPath))
+            {
+                StiReport Report = new StiReport();
+                Report.Load(reportPath);//加载报表                
+
+                BLL.T_JiaoJieDengJi_BLL projBLL = new T_JiaoJieDengJi_BLL();
+                DataSet DS = projBLL.GetList(sb.ToString(), "ORDER_INDEX");
+
+                //DataTable dt = DataTableEx.AddDataTableRowNO(DS.Tables[0].Select("", "ORDER_INDEX"));
+                Report.RegData("datatable", DS);
+                Report.Compile();
+                Report.Render();
+                StiWebViewer1.Report = Report;
+            }
+        }
+    }
+}

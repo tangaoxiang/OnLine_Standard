@@ -1,0 +1,102 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site1.Master" AutoEventWireup="true" CodeBehind="ProjectPromiseAdd.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.MySpace.ProjectPromiseAdd" Title="区域管理" %>
+
+<%@ Register src="../CommonCtrl/ctrlTextBoxEx.ascx" tagname="ctrlTextBoxEx" tagprefix="uc3" %>
+<%@ Register src="../CommonCtrl/ctrlDropDownConstructionProject.ascx" tagname="ctrlDropDownConstructionProject" tagprefix="uc1" %>
+<asp:content ID="Content3" ContentPlaceHolderID="head" runat="server">
+  <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+</asp:content>
+<asp:content ID="Content4" ContentPlaceHolderID="ContentPlaceHolder1" 
+    runat="server">
+    
+    <link rel="stylesheet" type="text/css" href="../CSS/default2.css" />
+    
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">						
+						<tr>
+								<td valign="top" class="border_three"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+												<td height="5" background="../images/Regedit_line.gif"></td>
+										</tr>
+										<tr>
+												<td valign="top" style="padding: 3px;">
+												
+												        <table  id="tbl" runat="server" width="100%" border="1" align="center" cellpadding="1" cellspacing="0" bordercolor="c1d4da" style="border-collapse:collapse;">
+                                                            <tr>
+                                                                <td class="tdCSS"><label>项目名称：</label></td>
+                                                                <td>
+                                                                    <uc1:ctrlDropDownConstructionProject ID="ProjectID" 
+                                                                        runat="server" />
+                                                                    <asp:HiddenField ID="hidAction" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="tdCSS"><label>责任书编号：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="PromiseNO" runat="server" canEmpty="false" CssClass="input" MaxLength="20" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="tdCSS"><label>联系人：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="ContactPerson" runat="server" canEmpty="false" CssClass="input" MaxLength="20" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="tdCSS">联系电话<label>：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="Tel" canEmpty="false" CssClass="input" MaxLength="30" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                            
+                                                            <tr>
+                                                                <td class="tdCSS"><label>手机：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="Mobile" runat="server" MaxLength="255" CssClass="input" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="tdCSS"><label>档案馆负责人：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="InContactPerson" canEmpty="false" CssClass="input" MaxLength="30"   runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                             <tr>
+                                                                <td class="tdCSS"><label>负责人联系电话：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="InTel" canEmpty="false" CssClass="input" MaxLength="30"   runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                             <tr>
+                                                                <td class="tdCSS"><label>负责人手机：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="InMobile" canEmpty="false" CssClass="input" MaxLength="30"   runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                             <tr>
+                                                                <td class="tdCSS"><label>责任书有效期：</label></td>
+                                                                <td>
+                                                                    <uc3:ctrlTextBoxEx ID="CreateDate" canEmpty="false" CssClass="input" mode ="Date" runat="server" />
+                                                                </td>
+                                                                </tr><tr>
+                                                                <td>到：</td>
+                                                                 <td>
+                                                                    <uc3:ctrlTextBoxEx ID="ExpireDate" canEmpty="false" CssClass="input"  mode="Date" runat="server" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    																		
+												</td>
+										</tr>
+								</table></td>
+						</tr>
+						
+						<tr>
+				<td height="35" align="center" valign="middle" >
+                                  <asp:button id="btnSave" runat="server" text=" 保存 " class="button_bg hand" 
+                                      onclick="btnSave_Click" />
+                              </td>
+		</tr>
+				</table>
+
+    
+</asp:content>

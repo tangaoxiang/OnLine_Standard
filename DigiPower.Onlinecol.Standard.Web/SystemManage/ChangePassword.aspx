@@ -1,0 +1,147 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteSon.Master" AutoEventWireup="true"
+    CodeBehind="ChangePassword.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.MySpace.ChangePassword"
+    Title="个人资料维护" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrltextboxex" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo" TagPrefix="uc5" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <style type="text/css">
+        select {
+            height: 27px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <table id="tbl" runat="server" class="xzll" cellpadding="0" border="0">
+        <tr>
+            <td colspan="2" style="height: 15px;"></td>
+        </tr>
+        <tr>
+            <td class="mc">所属单位：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="CompanyName" runat="server" CssClass="sour" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">用户名称：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="UserName" labelTitle="用户名称" canEmpty="false" mode="Chinese"
+                    runat="server" MaxLength="5" CssClass="sour" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">传真：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Fax" runat="server" MaxLength="13" CssClass="sour" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">电话：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Tel" runat="server" MaxLength="13" CssClass="sour" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">手机：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Mobile" runat="server" mode="Int" MaxLength="11" CssClass="sour" />
+            </td>
+        </tr>
+        <%--        <tr>
+            <td class="mc">职位：
+            </td>
+            <td class="left_title_2">
+                <uc5:ctrlDropDownSystemInfo ID="Position" CurrentType="PositionType" runat="server" Width="288" />
+            </td>
+        </tr>--%>
+        <tr>
+            <td class="mc">登录账号：
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="LoginName" labelTitle="登录账号" runat="server" readOnly="true" CssClass="sour" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">原密码：
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="oldPasswd" CssClass="sour" TextMode="Password" canEmpty="false"
+                    labelTitle="原密码" runat="server" MaxLength="20" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">新密码：
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="newPasswd1" CssClass="sour" TextMode="Password" canEmpty="false"
+                    labelTitle="新密码" MaxLength="12" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">确认新密码：
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="newPasswd2" CssClass="sour" TextMode="Password" canEmpty="false"
+                    labelTitle="新密码" MaxLength="12" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="ljzc">
+                <asp:Button ID="btnSave" runat="server" Text="  保存  "
+                    OnClientClick="return saveSubmit(this);" clickflag="ok" class="btn2" OnClick="btnSave_Click" />
+            </td>
+        </tr>
+    </table>
+    <script language="javascript" type="text/javascript">
+        function saveSubmit(obj) {
+            var flag = true;
+            $("input[type='text'],input[type='password']").each(function () {
+                flag = Common.Validate($(this).attr("id"));
+                if (!flag)
+                    return false;
+            });
+            if (!flag) {
+                return false;
+            }
+
+            var oldPasswd = $("#<%= oldPasswd.ClientID%>").val();
+            var PasswdValue = $("#<%= newPasswd1.ClientID%>").val();
+            var PasswdValue2 = $("#<%= newPasswd2.ClientID%>").val();
+
+            if (!ChangePassword.CheckOldPassword(oldPasswd).value) {
+                Common.FinishExe($("#<%= oldPasswd.ClientID%>"), true, "原密码不正确!");
+                return false;
+            } else {
+                Common.FinishExe($("#<%= oldPasswd.ClientID%>"), false, null);
+            }
+
+            if (PasswdValue.length < 6 || PasswdValue.length > 12) {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), true, "长度必须介于6-12之间!");
+                return false;
+            } else {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), false, null);
+                Common.FinishExe($("#<%= newPasswd2.ClientID%>"), false, null);
+            }
+            if (!ChangePassword.CheckPassword(PasswdValue).value) {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), true, "必须是数字和字母的组合!");
+                return false;
+            } else {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), false, null);
+            }
+            if (PasswdValue != PasswdValue2) {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), true, "两次输入的不一致!");
+                return false;
+            } else {
+                Common.FinishExe($("#<%= newPasswd1.ClientID%>"), false, null);
+                Common.FinishExe($("#<%= newPasswd2.ClientID%>"), false, null);
+            }
+            return Common.mouseClick(obj)
+        }
+    </script>
+</asp:Content>

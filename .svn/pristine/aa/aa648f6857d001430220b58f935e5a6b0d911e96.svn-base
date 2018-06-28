@@ -1,0 +1,541 @@
+using System;
+namespace DigiPower.Onlinecol.Standard.Model
+{
+    /// <summary>
+    /// 实体类T_SingleProject_MDL 。(属性说明自动提取数据库字段的描述信息)
+    /// </summary>
+    [Serializable]
+    public class T_SingleProject_MDL
+    {
+        public T_SingleProject_MDL()
+        { }
+        #region Model
+        private int _singleprojectid;
+        private int _constructionprojectid;
+        private string _projecttype;
+        private string _gcmc;
+        private string _gcbm;
+        private string _gcdd;
+        private string _kgsj;
+        private string _jgsj;
+        private string _jsdw;
+        private string _lxpzdw;
+        private string _sjdw;
+        private string _kcdw;
+        private string _sgdw;
+        private string _jldw;
+        private string _ghxkzh;
+        private string _sgxkzh;
+        private string _ysbah;
+        private string _jgcldw;
+        private string _ghysh;
+        private string _dxth;
+        private string _ghpzdw;
+        private string _yddw;
+        private string _bzdw;
+        private string _lxpzwh;
+        private string _zdh;
+        private string _ydghxkzh;
+        private string _ydxkzh;
+        private string _bsbh;
+        private string _badw;
+        private string _pzdw;
+        private string _pzrq;
+        private string _pzwh;
+        private string _zjfsyr;
+        private string _ydxmmc;
+        private string _zdwz;
+        private string _zbxmmc;
+        private string _xmdz;
+        private string _zbdw;
+        private string _zongbdw;
+        private string _dljg;
+        private string _sgxkspdw;
+        private int _companyuserid;
+        private int? _chargeuserid;
+        private int? _allotuserid;
+        private DateTime? _allotdate;
+        private int? _status;
+        private DateTime? _createdate;
+        private string _tdsyzpic;
+        private string _ghxkzpic;
+        private string _sgxkzpic;
+        private DateTime? _lastuserTime;
+        private string _fz;
+
+        public decimal? DX1 { get; set; }
+        public decimal? DY1 { get; set; }
+
+        public decimal? DX2 { get; set; }
+        public decimal? DY2 { get; set; }
+
+        public decimal? DX3 { get; set; }
+        public decimal? DY3 { get; set; }
+
+        public decimal? DX4 { get; set; }
+        public decimal? DY4 { get; set; }
+
+        public decimal? FX1 { get; set; }
+        public decimal? FY1 { get; set; }
+
+        public decimal? FX2 { get; set; }
+        public decimal? FY2 { get; set; }
+
+        public decimal? FX3 { get; set; }
+        public decimal? FY3 { get; set; }
+
+        public decimal? FX4 { get; set; }
+        public decimal? FY4 { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// 
+        public int SingleProjectID
+        {
+            set { _singleprojectid = value; }
+            get { return _singleprojectid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ConstructionProjectID
+        {
+            set { _constructionprojectid = value; }
+            get { return _constructionprojectid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProjectType
+        {
+            set { _projecttype = value; }
+            get { return _projecttype; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string gcmc
+        {
+            set { _gcmc = value; }
+            get { return _gcmc; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string gcbm
+        {
+            set { _gcbm = value; }
+            get { return _gcbm; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string gcdd
+        {
+            set { _gcdd = value; }
+            get { return _gcdd; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string kgsj
+        {
+            set { _kgsj = value; }
+            get { return _kgsj; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string jgsj
+        {
+            set { _jgsj = value; }
+            get { return _jgsj; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string jsdw
+        {
+            set { _jsdw = value; }
+            get { return _jsdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string lxpzdw
+        {
+            set { _lxpzdw = value; }
+            get { return _lxpzdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string sjdw
+        {
+            set { _sjdw = value; }
+            get { return _sjdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string kcdw
+        {
+            set { _kcdw = value; }
+            get { return _kcdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string sgdw
+        {
+            set { _sgdw = value; }
+            get { return _sgdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string jldw
+        {
+            set { _jldw = value; }
+            get { return _jldw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ghxkzh
+        {
+            set { _ghxkzh = value; }
+            get { return _ghxkzh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string sgxkzh
+        {
+            set { _sgxkzh = value; }
+            get { return _sgxkzh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ysbah
+        {
+            set { _ysbah = value; }
+            get { return _ysbah; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string jgcldw
+        {
+            set { _jgcldw = value; }
+            get { return _jgcldw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ghysh
+        {
+            set { _ghysh = value; }
+            get { return _ghysh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string dxth
+        {
+            set { _dxth = value; }
+            get { return _dxth; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ghpzdw
+        {
+            set { _ghpzdw = value; }
+            get { return _ghpzdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string yddw
+        {
+            set { _yddw = value; }
+            get { return _yddw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string bzdw
+        {
+            set { _bzdw = value; }
+            get { return _bzdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string lxpzwh
+        {
+            set { _lxpzwh = value; }
+            get { return _lxpzwh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zdh
+        {
+            set { _zdh = value; }
+            get { return _zdh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ydghxkzh
+        {
+            set { _ydghxkzh = value; }
+            get { return _ydghxkzh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ydxkzh
+        {
+            set { _ydxkzh = value; }
+            get { return _ydxkzh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string bsbh
+        {
+            set { _bsbh = value; }
+            get { return _bsbh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Badw
+        {
+            set { _badw = value; }
+            get { return _badw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string pzdw
+        {
+            set { _pzdw = value; }
+            get { return _pzdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string pzrq
+        {
+            set { _pzrq = value; }
+            get { return _pzrq; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string pzwh
+        {
+            set { _pzwh = value; }
+            get { return _pzwh; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zjfsyr
+        {
+            set { _zjfsyr = value; }
+            get { return _zjfsyr; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ydxmmc
+        {
+            set { _ydxmmc = value; }
+            get { return _ydxmmc; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zdwz
+        {
+            set { _zdwz = value; }
+            get { return _zdwz; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zbxmmc
+        {
+            set { _zbxmmc = value; }
+            get { return _zbxmmc; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string xmdz
+        {
+            set { _xmdz = value; }
+            get { return _xmdz; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zbdw
+        {
+            set { _zbdw = value; }
+            get { return _zbdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string zongbdw
+        {
+            set { _zongbdw = value; }
+            get { return _zongbdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string dljg
+        {
+            set { _dljg = value; }
+            get { return _dljg; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string sgxkspdw
+        {
+            set { _sgxkspdw = value; }
+            get { return _sgxkspdw; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CompanyUserID
+        {
+            set { _companyuserid = value; }
+            get { return _companyuserid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? ChargeUserID
+        {
+            set { _chargeuserid = value; }
+            get { return _chargeuserid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? AllotUserID
+        {
+            set { _allotuserid = value; }
+            get { return _allotuserid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? AllotDate
+        {
+            set { _allotdate = value; }
+            get { return _allotdate; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? Status
+        {
+            set { _status = value; }
+            get { return _status; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? CreateDate
+        {
+            set { _createdate = value; }
+            get { return _createdate; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TDSYZPic
+        {
+            set { _tdsyzpic = value; }
+            get { return _tdsyzpic; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string GHXKZPic
+        {
+            set { _ghxkzpic = value; }
+            get { return _ghxkzpic; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SGXKZPic
+        {
+            set { _sgxkzpic = value; }
+            get { return _sgxkzpic; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? LastUserTime
+        {
+            set { _lastuserTime = value; }
+            get { return _lastuserTime; }
+        }
+        
+        /// <summary>
+        /// 附注
+        /// </summary>
+        public string fz
+        {
+            set { _fz = value; }
+            get { return _fz; }
+        }
+        #endregion Model
+
+        public int wzCount
+        {
+            set;
+            get;
+        }
+        public int tzCount
+        {
+            set;
+            get;
+        }
+        public int zpCount
+        {
+            set;
+            get;
+        }
+        public string AREA_CODE
+        {
+            set;
+            get;
+        }
+
+        /// <summary>
+        /// 工程当前所处流程
+        /// </summary>
+        public int WorkFlow_DoStatus
+        {
+            set;
+            get;
+        }
+
+    }
+}
+

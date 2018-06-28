@@ -1,0 +1,126 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlCompanyQucikReg.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlCompanyQucikReg" %>
+<%@ Register Src="ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<%@ Register Src="ctrlDropDownArea.ascx" TagName="ctrlDropDownArea" TagPrefix="uc3" %>
+<%@ Register Src="ctrlArchiveFormType.ascx" TagName="ctrlArchiveFormType" TagPrefix="uc4" %>
+<asp:Panel ID="Panel1" runat="server" Enabled="false">
+    <table id="table_Company" runat="server" width="100%" border="0" align="center" cellpadding="1" cellspacing="1" style="background-color: #c9c7c0;">
+        <tr>
+            <td class="left_title_1">单位名称：</td>
+            <td class="left_title_2" colspan="3">
+                <uc2:ctrlTextBoxEx ID="CompanyName" CssClass="regedit_input" runat="server" canEmpty="false"
+                    width="400px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">所属区域：
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc3:ctrlDropDownArea ID="CTRL_AREA" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">单位地址：
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc2:ctrlTextBoxEx ID="Addres" CssClass="regedit_input" runat="server" canEmpty="true" width="400px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">联系人：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="ContactPerson" CssClass="regedit_input" runat="server" canEmpty="true" />
+            </td>
+            <td class="left_title_1">Email：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="EMail" CssClass="regedit_input" runat="server" canEmpty="true" mode="Email" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">手机：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="Mobile" CssClass="regedit_input" runat="server" canEmpty="true" />
+            </td>
+            <td class="left_title_1">电话：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="Tel" CssClass="regedit_input" runat="server" canEmpty="true" />
+            </td>
+        </tr>
+    </table>
+    <br />
+    <table id="tablemain" runat="server" width="100%" border="0" align="center" cellpadding="1" cellspacing="1" style="background-color: #c9c7c0;">
+        <tr>
+            <td class="left_title_1">工程类别：
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc4:ctrlArchiveFormType ID="ProjectType" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">工程名称：
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc2:ctrlTextBoxEx ID="gcmc" CssClass="regedit_input" runat="server" canEmpty="false" width="400px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">工程地点：
+            </td>
+            <td class="left_title_2" colspan="3">
+                <uc2:ctrlTextBoxEx ID="gcdd" CssClass="regedit_input" runat="server" canEmpty="true" width="400px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">开工时间：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="kgsj" CssClass="regedit_input" runat="server" canEmpty="false" mode="Date" />
+            </td>
+            <td class="left_title_1">竣工时间：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="jgsj" CssClass="regedit_input" runat="server" canEmpty="false" mode="Date" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1">工程规划许可证号：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="ghxkzh" CssClass="regedit_input" width="200" runat="server" canEmpty="true" />
+            </td>
+            <td class="left_title_1">施工许可证号：
+            </td>
+            <td class="left_title_2">
+                <uc2:ctrlTextBoxEx ID="sgxkzh" CssClass="regedit_input" width="200" runat="server" canEmpty="true" />
+            </td>
+        </tr>
+    </table>
+</asp:Panel>
+
+<table id="table1" runat="server" width="100%" border="0" align="center" cellpadding="1" cellspacing="1" style="background-color: #c9c7c0;">
+    <tr>
+        <td class="left_title_1">规划许可证附件：
+        </td>
+        <td class="left_title_2" colspan="3" style="word-break: break-all;">
+            <asp:Literal runat="server" ID="ltghxkz" Text="&nbsp;&nbsp;无"></asp:Literal>
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">施工许可证附件：
+        </td>
+        <td class="left_title_2" colspan="3" style="word-break: break-all;">
+            <asp:Literal runat="server" ID="ltsgxkz" Text="&nbsp;&nbsp;无"></asp:Literal>
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">其它证件附件：
+        </td>
+        <td class="left_title_2" colspan="3" style="word-break: break-all;">
+            <asp:Literal runat="server" ID="ltother" Text="&nbsp;&nbsp;无"></asp:Literal>
+        </td>
+    </tr>
+</table>

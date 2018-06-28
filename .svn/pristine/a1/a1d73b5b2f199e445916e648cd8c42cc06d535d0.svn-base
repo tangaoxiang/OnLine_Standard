@@ -1,0 +1,80 @@
+﻿using DigiPower.Onlinecol.Standard.Common;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class ChangePasswd : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //HttpContext.Current.Session["LoginID"]
+            if (HttpContext.Current.Session["LoginID"] != null)
+            {
+                LB_LOGINNAME.Text = HttpContext.Current.Session["LoginID"].ToString();
+            }
+            else
+            {
+                Response.Redirect("./");
+            }
+        }
+
+        protected void BTN_RELOGIN_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("./");
+        }
+
+        protected void BTN_SUBMIT_Click(object sender, EventArgs e)
+        {
+            if (TXT_OLDPASSWD.Text == "" || TXT_NEWPASSWD1.Text.Trim() == "" || TXT_NEWPASSWD2.Text.Trim() == "")
+            {
+                Common.MessageBox.Show(this, "请输入必填数据！");
+                return;
+            }
+            if (TXT_NEWPASSWD1.Text.Trim() != TXT_NEWPASSWD2.Text.Trim())
+            {
+                Common.MessageBox.Show(this, "新密码输入两次不同，请重新输入！");
+                return;
+            }
+            if (TXT_NEWPASSWD1.Text.Trim().Length < 6 && TXT_NEWPASSWD2.Text.Trim().Length < 6)
+            {
+                Common.MessageBox.Show(this, "新密码太短了,请重新输入！");
+                return;
+            }
+
+            System.Text.RegularExpressions.Regex r1 = new System.Text.RegularExpressions.Regex("[A-Za-z].*[0-9]|[0-9].*[A-Za-z]");
+            if (r1.IsMatch(TXT_NEWPASSWD1.Text) == false)
+            {
+                Common.MessageBox.Show(this, "新密码的复杂性不够，必需同时有数字和字符，如：a3k6js8");
+                return;
+            }
+            if (HttpContext.Current.Session["UserID"] != null)
+            {
+                string UserID = HttpContext.Current.Session["UserID"].ToString();
+                BLL.T_UsersInfo_BLL userBLL = new BLL.T_UsersInfo_BLL();
+                Model.T_UsersInfo_MDL userMDL = userBLL.GetModel(int.Parse(UserID));
+                if (userMDL == null)
+                {
+                    Common.MessageBox.Show(this, "用户信息不存在，无法修改！");
+                    return;
+                }
+                if (userMDL.Passwd != TXT_OLDPASSWD.Text)
+                {
+                    Common.MessageBox.Show(this, "修改失败，原密码不对，请重新输入！");
+                    return;
+                }
+                if (userMDL.LoginName.ToLower() != LB_LOGINNAME.Text.ToLower())
+                {
+                    Common.MessageBox.Show(this, "修改失败，登录名不对，如有任何问题，请联系管理员！");
+                    return;
+                }
+                userMDL.Passwd = DESEncrypt.Encrypt(TXT_NEWPASSWD1.Text);
+                userBLL.Update(userMDL);
+                MessageBox.ShowAndCloseWin(this, "密码修改成功！");
+            }
+        }
+    }
+}

@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <Columns isShow="1">
+    <specType title="工程类型"></specType>
+    <engName title="工程名称"></engName>
+    <engZone title="工程区域"></engZone>
+    <engLocation title="工程地址"></engLocation>
+    <referenceNo title="工程编号"></referenceNo>
+    <startDate title="开工时间"></startDate>
+    <endDate title="竣工时间"></endDate>
+    <developmentsOrgName title="建设单位"></developmentsOrgName>
+    <supervisionOrgSid title="监理单位"></supervisionOrgSid>
+    <constructOrgSid title="施工单位"></constructOrgSid>
+    <reconnaissanceOrgSid title="勘察单位"></reconnaissanceOrgSid>
+    <designOrgSid title="设计单位"></designOrgSid>
+    <initiationApprovalOrgSid title="立项批准单位"></initiationApprovalOrgSid>
+    <initiationApprovalNo title="立项批准文号"></initiationApprovalNo>
+    <landUsePlanningNo title="用地规划许可证号"></landUsePlanningNo>
+    <engPlanningNo title="工程规划许可证号"></engPlanningNo>
+    <constructNo title="施工许可文号"></constructNo>
+    <planCertificateNo title="规划验收合格证号"></planCertificateNo>
+
+    <roadName title="路名"></roadName>
+    <engFormerName title="工程曾用名"></engFormerName>
+    <microNo title="光盘缩微号"></microNo>
+    <oldEngId title="原编档号"></oldEngId>
+    <projManageName title="项目管理单位"></projManageName>
+    <serveyOrgSid title="测绘单位"></serveyOrgSid>
+    <designNo title="设计号"></designNo>
+    <landNo title="土地证号"></landNo>
+    <fireOpinionNo title="建筑消防验收意见书"></fireOpinionNo>
+    <archCount title="总卷数"></archCount>
+    <textCount title="文字卷"></textCount>
+    <drawCount title="图纸卷"></drawCount>
+    <photoCount title="照片卷"></photoCount>
+    <cdCount title="光盘卷（无）"></cdCount>
+    <handoverOrgName title="移交单位"></handoverOrgName>
+    <transferUser title="移交人"></transferUser>
+    <archivingDate title="进馆日期"></archivingDate>
+
+    <totalLength title="总长度"></totalLength>
+    <consTypeCode title="结构类型"></consTypeCode>
+    <projectCost title="工程造价" ></projectCost >
+    <height title="高度"></height>
+    <landUseArea title="总占地面积-房屋"></landUseArea>
+    <constructionArea title="总建筑面积-房屋"></constructionArea>
+    <buildingNums title="栋数"></buildingNums>
+    <underNums title="地下层数"></underNums>
+    <overNums title="地上层数"></overNums>
+    <finishArea title="竣工面积"></finishArea>
+
+    <holenums title="孔数"></holenums>
+    <startX title="起点"></startX>
+    <endX title="止点"></endX>
+    <length title="长度"></length>
+    <width title="宽度"></width>
+    <span title="跨径"></span>
+    <loadCode title="荷载级别"></loadCode>
+    <headroom title="净空"></headroom>
+    <pipeDiameter title="直径"></pipeDiameter>
+    <pipeMaterial title="管材"></pipeMaterial>
+    <basisTypeCode title="地基处理"></basisTypeCode>
+    <underArea title="地下建筑面积"></underArea>
+    <projCount title="单位工程数"></projCount>
+    <singlePointX title="项目工程x"></singlePointX>
+    <singlePointY title="项目工程Y"></singlePointY>
+    <designLevel title="桥梁级别"></designLevel>
+    <specCode title="规格"></specCode>
+
+    <engBudget title="工程预算(万元)"></engBudget>
+    <engCost title="工程决算(万元)"></engCost>
+    <housingArea title="住宅面积"></housingArea>
+    <officeSpaceArea title="办公用房面积"></officeSpaceArea>
+    <commercialSpaceArea title="商业用房面积"></commercialSpaceArea>
+    <plantArea title="厂房面积"></plantArea>
+    <basementArea title="地下室面积"></basementArea>
+    <otherSpaceArea title="其他用房面积"></otherSpaceArea>
+    <airDefenseArea title="人防面积"></airDefenseArea>
+    <fireRating title="防火等级"></fireRating>
+    <seismicLevel title="抗震等级"></seismicLevel>
+    <singleApartmentPloidy title="单身公寓套数"></singleApartmentPloidy>
+    <duplexCopyNumber title="复式套数"></duplexCopyNumber>
+    <totalUnits title="总套数"></totalUnits>
+    <numberOfParkingSpaces title="车位数"></numberOfParkingSpaces>
+
+    <engineeringQuality title="工程质量"></engineeringQuality>
+    <awards title="获奖情况"></awards>
+    <projectDirector title="项目总监"></projectDirector>
+    <siteSupervision title="现场监理"></siteSupervision>
+    <subcontractors title="分包单位"></subcontractors>
+    <projectManager title="项目经理"></projectManager>
+    <supervisionUnitsReviewer title="监理单位审核人"></supervisionUnitsReviewer>
+    <constructionUnitReviewer title="建设单位审核人"></constructionUnitReviewer>
+    <notes title="附注"></notes>
+    <acceptanceRecordNum title="验收备案号"></acceptanceRecordNum>
+
+  </Columns>
+
+  <SearchSql>
+    <![CDATA[  
+   select  
+   f.singleProjectid,
+   f.ProjectType,
+   f.gcbm,
+   f.gcmc,
+   
+   (CASE 
+   when f.ProjectType='1' then 'EngHouseSpec'  
+   when f.ProjectType='2' then 'EngFacilitySpec' 
+   when f.ProjectType='3' then 'EngFacilitySpec' 
+   when f.ProjectType='4' then 'EngFacilitySpec' 
+   ELSE 'EngHouseSpec' end) as specType,
+   f.gcmc as engName,
+   f.Area_Code as engZone,
+   f.gcdd as engLocation,
+   f.gcbm as referenceNo,
+   f.kgsj as startDate,
+   f.jgsj as endDate,      
+   f.jsdw as developmentsOrgName,
+   f.jldw as supervisionOrgSid,    
+   f.sgdw as constructOrgSid,
+   f.kcdw as reconnaissanceOrgSid,
+   f.sjdw as designOrgSid,   
+   f.lxpzdw as initiationApprovalOrgSid,      
+   f.lxpzwh as initiationApprovalNo,
+   f.ydghxkzh as landUsePlanningNo,
+   f.ghxkzh as engPlanningNo,
+   f.sgxkzh as constructNo,
+   f.ghysh as planCertificateNo,
+   f.ysbah as acceptanceRecordNum, 
+   
+    '' as roadName,
+    '' as engFormerName,
+    '' as microNo,
+    '' as oldEngId,
+    '' as projManageName,
+    '' as serveyOrgSid,
+    '' as designNo,
+    '' as landNo,
+    '' as fireOpinionNo,         
+    '' as archCount,  
+    '' as textCount,  
+    '' as drawCount,  
+    '' as photoCount,  
+    '' as cdCount,  
+    '' as handoverOrgName,  
+    '' as transferUser,  
+    '' as archivingDate,
+    
+    (case when a.SingleProjectID>0 and cast(b.cd AS int)>0 then a.cd when b.SingleProjectID>0 and cast(b.zcd AS int)>0 then b.zcd when c.SingleProjectID>0 and cast(c.zcd AS int)>0  then c.zcd else 0 end) as totalLength,
+    (case when a.SingleProjectID>0 and a.jglx is not null then a.jglx when b.SingleProjectID>0 and b.ztjg is not null then b.ztjg else '' end)  as consTypeCode,
+    (case when a.SingleProjectID>0 and a.gcjs>0 THEN a.gcjs when b.SingleProjectID>0 and a.gcjs>0 THEN b.gcjs else 0 end) as projectCost,
+    (case when a.SingleProjectID>0 and a.gd>0 THEN a.gd when b.SingleProjectID>0 and a.gd>0 THEN b.gd else 0 end) as height,
+    (case when a.SingleProjectID>0 AND a.ZZMJ>0 THEN a.ZZMJ else 0 end) as landUseArea,
+    (case when a.SingleProjectID>0 AND a.jzmj>0 THEN a.jzmj else 0 end) as constructionArea,
+    (case when a.SingleProjectID>0 AND a.ds>0 THEN a.ds else 0 end) as buildingNums,
+    (case when a.SingleProjectID>0 AND a.dscs>0 THEN a.dscs else 0 end) as underNums,
+    (case when a.SingleProjectID>0 AND a.dxcs>0 THEN a.dxcs else 0 end) as overNums,
+    (case when a.SingleProjectID>0 AND a.jzmj>0 THEN a.jzmj else 0 end) as finishArea,	 
+    
+    (case when a.SingleProjectID>0 and a.gcys is not null then a.gcys when b.SingleProjectID>0 and b.zys is not null then b.zys when c.SingleProjectID>0 and c.gcys is not null then c.gcys else '' end) as engBudget,
+    (case when a.SingleProjectID>0 and CAST(a.gcjs as varchar) is not null then CAST(a.gcjs as varchar) when b.SingleProjectID>0 and b.zjs is not null then b.zjs when c.SingleProjectID>0 and CAST(c.gcjs as varchar) is not null then CAST(c.gcjs as varchar) else '' end) as engCost,
+    (case when a.SingleProjectID>0 AND a.ZZMJ>0 THEN a.ZZMJ else 0 end) as housingArea,
+    (case when a.SingleProjectID>0 AND a.bgyfmj is not null THEN a.bgyfmj else '' end) as officeSpaceArea,
+    (case when a.SingleProjectID>0 AND a.SYYFMJ>0 THEN a.SYYFMJ else 0 end) as commercialSpaceArea,
+    (case when a.SingleProjectID>0 AND a.CFMJ>0 THEN a.CFMJ else 0 end) as plantArea,
+    (case when a.SingleProjectID>0 AND a.DXSMJ>0 THEN a.DXSMJ else 0 end) as basementArea,
+    (case when a.SingleProjectID>0 AND a.QTYFMJ>0 THEN a.QTYFMJ else 0 end) as otherSpaceArea,
+    (case when a.SingleProjectID>0 AND a.RFMJ>0 THEN a.RFMJ else 0 end) as airDefenseArea,
+    (case when a.SingleProjectID>0 AND a.fhdj is not null THEN a.fhdj else '' end) as fireRating,
+    (case when a.SingleProjectID>0 AND a.kzdj is not null THEN a.kzdj else '' end) as seismicLevel,
+    (case when a.SingleProjectID>0 AND a.DSGYTS>0 THEN a.DSGYTS else 0 end) as singleApartmentPloidy,
+    (case when a.SingleProjectID>0 AND a.fsts is not null THEN a.fsts else '' end) as duplexCopyNumber,
+    (case when a.SingleProjectID>0 AND a.zts>0 THEN a.zts else 0 end) as totalUnits,
+    (case when a.SingleProjectID>0 AND a.cws is not null THEN a.cws else '' end) as numberOfParkingSpaces,  
+    
+    (case when a.SingleProjectID>0 AND a.gczl is not null THEN a.gczl else '' end) as engineeringQuality,
+    (case when a.SingleProjectID>0 AND a.HJQK is not null THEN a.HJQK else '' end) as awards,
+    (case when a.SingleProjectID>0 AND a.xmzj is not null THEN a.xmzj else '' end) as projectDirector,
+    (case when a.SingleProjectID>0 AND a.xcjl is not null THEN a.xcjl else '' end) as siteSupervision,
+    (case when a.SingleProjectID>0 AND a.FBDW is not null THEN a.FBDW else '' end) as subcontractors,
+    (case when a.SingleProjectID>0 AND a.xmjl is not null THEN a.xmjl else '' end) as projectManager,
+    (case when a.SingleProjectID>0 AND a.jldwshr is not null THEN a.jldwshr else '' end) as supervisionUnitsReviewer,
+    (case when a.SingleProjectID>0 AND a.jsdwshr is not null THEN a.jsdwshr else '' end) as constructionUnitReviewer,
+    (case when a.SingleProjectID>0 AND a.fz is not null THEN a.fz else '' end) as notes,     
+        
+    ISNULL(b.ks,0) as holenums,
+    (case when b.SingleProjectID>0 and b.kj>0 then cast(b.kj AS varchar) when c.SingleProjectID>0 and c.qd is not null then c.qd else '0' end) as startX,
+    (case when b.SingleProjectID>0 and b.jk>0 then cast(b.jk AS varchar) when c.SingleProjectID>0 and c.zd is not null then c.zd else '0' end) as endX,
+    (case when b.SingleProjectID>0 and cast(b.qlcd AS float)>0 then b.qlcd when c.SingleProjectID>0 and c.cd>0 then c.cd else 0 end) as length,
+    (case when b.SingleProjectID>0 THEN b.kd+cast(b.qlkd AS float) else 0 end) as width,
+    (case when b.SingleProjectID>0 and b.qlkd2 is not null THEN b.qlkd2 else '' end) as span,
+    (case when b.SingleProjectID>0 and b.hzbz is not null then b.hzbz when c.SingleProjectID>0 and c.hz is not null then c.hz else 0 end) as loadCode,
+    (case when b.SingleProjectID>0 and b.qljk is not null THEN b.qljk else '' end) as headroom,
+    (case when b.SingleProjectID>0 and b.xj is not null THEN b.xj else '' end) as pipeDiameter,
+    (case when b.SingleProjectID>0 and b.qljb is not null THEN b.qljb else '' end)  as designLevel,	    
+    (case when c.SingleProjectID>0 and c.cz is not null THEN c.cz else '' end)  as pipeMaterial,
+    (case when c.SingleProjectID>0 and c.gg is not null THEN c.gg else '' end)  as specCode,
+    ''as basisTypeCode,
+    0 as underArea,
+    1 as projCount,
+    FX1 as singlePointX,
+    FY1 as singlePointY 	
+    from T_SingleProject f
+    left JOIN a_single_project a on f.SingleProjectID=a.SingleProjectID
+    left JOIN b_single_project b on f.SingleProjectID=b.SingleProjectID
+    left JOIN c_single_project c on f.SingleProjectID=c.SingleProjectID
+    where
+          f.singleprojectid=87
+
+      ]]>      <!--f.Status=3721-->
+  </SearchSql>
+</SqlList>

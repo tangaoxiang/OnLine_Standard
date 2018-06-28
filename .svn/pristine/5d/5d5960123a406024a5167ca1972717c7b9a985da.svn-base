@@ -1,0 +1,25 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteSon.Master.cs" Inherits="DigiPower.Onlinecol.Standard.Web.SiteSon" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>阜阳市"互联网+"建设工程文件跟踪管理服务系统</title>
+    <link href="/Javascript/Layer/css/common.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="/Javascript/Layer/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="/Javascript/Common/Fn.js" type="text/javascript"></script>
+    <script src="/Javascript/Layer/layer/layer.js" type="text/javascript"></script>
+    <script type="text/javascript" language="javascript">
+        var ResultState = new Object();
+        ResultState.Success = 'success';
+        ResultState.Failure = 'failure';
+    </script>
+    <asp:ContentPlaceHolder ID="Head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body onload="self.focus()">
+    <form id="form1" runat="server">
+        <asp:ContentPlaceHolder ID="Main" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>

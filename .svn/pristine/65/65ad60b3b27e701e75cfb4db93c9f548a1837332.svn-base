@@ -1,0 +1,179 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Text;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using System.IO;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class QuestionInfo : PageBase
+    {
+        string savePath = "/upload/QuestionAttach/";
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ID = DNTRequest.GetQueryString("ID");
+            if (!IsPostBack)
+            {
+                GetQuestion();
+            }
+            GetAnswer();
+
+            string Action = DNTRequest.GetQueryString("Action");
+            if (Action == "View")
+            {
+                T_Question_BLL bll = new T_Question_BLL();
+                T_Question_MDL mdl = bll.GetModel(Common.ConvertEx.ToInt(ID));
+                if (mdl.ReadFlag == false)
+                {
+                    mdl.ReadFlag = true;
+                    new T_Question_BLL().Update(mdl);
+                }
+            }
+        }
+
+        //取问题信息
+        void GetQuestion()
+        {
+            T_Question_MDL qtMDL = (new T_Question_BLL()).GetModel(Common.ConvertEx.ToInt(ID));
+
+            if (qtMDL != null)
+            {
+                ViewState["model"] = qtMDL;
+
+                BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+                Model.T_SingleProject_MDL spMDL = spBLL.GetModel(qtMDL.SingleProjectID);
+                gcmc.Text = spMDL.gcmc;
+
+                if (qtMDL.FileListID > 0)
+                {
+                    BLL.T_FileList_BLL flBLL = new T_FileList_BLL();
+                    Model.T_FileList_MDL flMDL = flBLL.GetModel(qtMDL.FileListID);
+                    FileListName.Text = flMDL.Title;
+                }
+                Title.Text = qtMDL.Title;
+                txt_Description.Text = qtMDL.Description;
+
+                if (!String.IsNullOrEmpty(qtMDL.AttachPath))
+                {
+                    AttachName.Text = "<a href='" + qtMDL.AttachPath + "' target=_blank>" + qtMDL.AttachName + "</a>";
+                }
+            }
+        }
+
+        //取回复
+        private void GetAnswer()
+        {
+            string strWhere = "QuestionID=" + ID + " order by ANSWERID desc ";
+            DataTable dt = (new T_QuestionAnswer_BLL()).GetList(strWhere).Tables[0];
+
+            StringBuilder strBuilder = new StringBuilder();
+            int index = 0;
+            foreach (DataRow dr in dt.Rows)
+            {
+                index++;
+                string username = ConvertEx.ToString(dr["AnswerUserName"]);//回复人
+                string description = ConvertEx.ToString(dr["Description"]);//内容
+                string answertime = ConvertEx.ToString(dr["AnswerTime"]);  //回复时间
+
+                string strAttachName = "";
+                if (dr["AttachPath"] != null && dr["AttachPath"].ToString() != "")
+                {
+                    strAttachName = "<a href='" + dr["AttachPath"].ToString() + "' target=_blank>" + dr["AttachName"].ToString() + "</a>";
+                }
+
+                strBuilder.Append("<table width=\"99%\" class=\"tableMarginTop\" border=\"0\" align=\"center\" cellpadding=\"3\" cellspacing=\"1\">");
+
+                strBuilder.Append("     <tr>");
+                strBuilder.Append("         <td class=\"left_title_3 promise\" colspan=\"4\">序号:" + index.ToString() + "</td>");
+                strBuilder.Append("     </tr>");
+
+                strBuilder.Append("       <tr>");
+                strBuilder.Append("           <td class=\"left_title_1\">回复人：</td>");
+                strBuilder.Append("           <td class=\"left_title_2\" style=\"width:280px;\">" + username + "</td>");
+                strBuilder.Append("           <td class=\"left_title_1\">回复时间：</td>");
+                strBuilder.Append("           <td class=\"left_title_2\">" + answertime + "</td>");
+                strBuilder.Append("        </tr>");
+
+                strBuilder.Append("       <tr>");
+                strBuilder.Append("           <td class=\"left_title_1\">附件：</td>");
+                strBuilder.Append("           <td class=\"left_title_2\" Style=\"word-break: break-all;\">" + strAttachName + "</td>");
+                strBuilder.Append("           <td class=\"left_title_1\">回复内容：</td>");
+                strBuilder.Append("           <td class=\"left_title_2\" Style=\"word-break: break-all;\">" + description + "</td>");
+                strBuilder.Append("        </tr>");
+                strBuilder.Append("</table>");
+                ltAnswerHTML.Text = strBuilder.ToString();
+            }
+        }
+
+        protected void btnsubmit_Click(object sender, EventArgs e)
+        {
+            string atachFileName = "";
+            string trueFileName = "";
+            HttpFileCollection uploadFiles = Request.Files;
+            HttpPostedFile userPostFile = null;
+            if (uploadFiles.Count > 0)
+            {
+                userPostFile = uploadFiles[0];
+                if (!String.IsNullOrEmpty(userPostFile.FileName))
+                {
+                    if (userPostFile.FileName.ToLower().EndsWith(".exe") || userPostFile.FileName.ToLower().EndsWith(".bat"))
+                    {
+                        MessageBox.Show(this, "只能上传文档或图片附件。");
+                        return;
+                    }
+                    atachFileName = Common.Common.SaveFile(Server.MapPath(savePath), userPostFile, "Answer_");
+                    if (atachFileName != "")
+                    {
+                        trueFileName = userPostFile.FileName.Substring(userPostFile.FileName.LastIndexOf("\\") + 1);
+                    }
+                }
+            }
+
+            //新增问题回复
+            T_QuestionAnswer_MDL qtAsModel = new T_QuestionAnswer_MDL();
+            qtAsModel = (T_QuestionAnswer_MDL)Comm.GetValueToObject(qtAsModel, form1);
+            if (qtAsModel != null)
+            {
+                qtAsModel.QuestionID = Common.ConvertEx.ToInt(ID);
+                qtAsModel.Description = Description.Text;
+                qtAsModel.AnswerTime = DateTime.Now;
+                qtAsModel.AnswerUserID = ConvertEx.ToInt(Common.Session.GetSession("userid"));
+                qtAsModel.AnswerUserName = Common.Session.GetSession("UserName");
+                if (atachFileName != "")
+                {
+                    qtAsModel.AttachName = trueFileName;
+                    qtAsModel.AttachPath = savePath + atachFileName;
+                }
+
+                (new T_QuestionAnswer_BLL()).Add(qtAsModel);
+            }
+
+            //更新问题 
+            if (ViewState["model"] != null)
+            {
+                T_Question_MDL tqMdl = ViewState["model"] as T_Question_MDL;
+                tqMdl.ReadFlag = true;
+                tqMdl.AnswerCount = ConvertEx.ToInt(tqMdl.AnswerCount) + 1;
+                new T_Question_BLL().Update(tqMdl);
+            }
+
+
+            ClientScript.RegisterStartupScript(Page.GetType(), "close", "<script type='text/javascript'>alert('提交成功！');window.close();</script>");
+
+            GetAnswer();
+            Description.Text = "";
+        }
+    }
+}

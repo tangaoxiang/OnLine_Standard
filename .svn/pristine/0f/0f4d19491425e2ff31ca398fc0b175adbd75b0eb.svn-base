@@ -1,0 +1,111 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlDropDownWorkFlow : System.Web.UI.UserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+        }
+
+        public string SelectValue
+        {
+            set
+            {
+                ddlWorkFlow.SelectedIndex = ddlWorkFlow.Items.IndexOf(ddlWorkFlow.Items.FindByValue(value));
+            }
+            get
+            {
+                return ddlWorkFlow.SelectedValue;
+            }
+        }
+
+        public string Width
+        {
+            set { ddlWorkFlow.Width = new Unit(value); }
+        }
+
+        public void DataBindEx()
+        {
+            DataBindEx(false);
+        }
+
+        /// <summary>
+        /// 默认 无父级
+        /// </summary>
+        /// <param name="noParent"></param>
+        public void DataBindEx(bool bParent)
+        {
+            List<T_WorkFlow_MDL> arealist = new List<T_WorkFlow_MDL>();
+            arealist = (new T_WorkFlow_BLL()).GetModelList("");
+            if (bParent == false)
+            {
+                T_WorkFlow_MDL init = new T_WorkFlow_MDL();
+                init.WorkFlowID = 0;
+                init.WorkFlowName = "无父级";
+                arealist.Insert(0, init);
+            }
+            ddlWorkFlow.DataTextField = "WorkFlowName";
+            ddlWorkFlow.DataValueField = "WorkFlowID";
+            ddlWorkFlow.DataSource = arealist;
+            ddlWorkFlow.DataBind();
+        }
+
+        /// <summary>
+        /// 默认 无父级
+        /// </summary>
+        /// <param name="noParent"></param>
+        public void DataBindEx(int CompanyID, bool bParent)
+        {
+            List<T_WorkFlow_MDL> arealist = new List<T_WorkFlow_MDL>();
+            arealist = (new T_WorkFlow_BLL()).GetModelList("CompanyID=" + CompanyID);
+            if (bParent == false)
+            {
+                T_WorkFlow_MDL init = new T_WorkFlow_MDL();
+                init.WorkFlowID = 0;
+                init.WorkFlowName = "无父级";
+                arealist.Insert(0, init);
+            }
+            ddlWorkFlow.DataTextField = "WorkFlowName";
+            ddlWorkFlow.DataValueField = "WorkFlowID";
+            ddlWorkFlow.DataSource = arealist;
+            ddlWorkFlow.DataBind();
+        }
+
+        /// <summary>
+        /// 默认 无父级
+        /// </summary>
+        /// <param name="noParent"></param>
+        public void DataBindEx(string AreaCode, bool bParent)
+        {
+            List<T_WorkFlow_MDL> arealist = new List<T_WorkFlow_MDL>();
+            string strWhere = "SELECT TOP 1 CompanyID from T_Company t where LOWER(Area_Code)='" + AreaCode.ToLower() + "' ";
+            strWhere += "and CompanyType=" + SystemSet._ARCHIVE;
+
+            arealist = (new T_WorkFlow_BLL()).GetModelList("CompanyID=(" + strWhere + ")");
+            if (bParent == false)
+            {
+                T_WorkFlow_MDL init = new T_WorkFlow_MDL();
+                init.WorkFlowID = 0;
+                init.WorkFlowName = "无父级";
+                arealist.Insert(0, init);
+            }
+            ddlWorkFlow.DataTextField = "WorkFlowName";
+            ddlWorkFlow.DataValueField = "WorkFlowID";
+            ddlWorkFlow.DataSource = arealist;
+            ddlWorkFlow.DataBind();
+        }
+    }
+}

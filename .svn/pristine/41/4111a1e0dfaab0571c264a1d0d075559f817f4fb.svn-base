@@ -1,0 +1,174 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Left.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main.Left" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style type="text/css">
+        a {
+            text-decoration: none;
+            font-size: 12px !important;
+            font-family: Tahoma,Verdana,微软雅黑,新宋体 !important;
+        }
+
+        #ptable {
+            border: 0px;
+            border-bottom: solid 1px #99BBE8;
+            font-size: 13px;
+        }
+
+        .ptb {
+            font-size: 13px;
+            height: 26px;
+            color: #15428b;
+            line-height: 26px;
+        }
+
+        .font {
+            font-size: 13px;
+            height: 26px;
+            color: #15428b;
+        }
+
+        #bullet_arrow_down {
+            margin-top: 0px;
+        }
+
+        .nav {
+            line-height: 24px;
+            background-color: red;
+            background: url(bf-left.png);
+            height: 24px;
+            width: 100%;
+            text-align: right;
+            border-bottom: 1px solid #99BBE8;
+        }
+
+        a:link {
+            color: #000;
+        }
+
+        a:visited {
+            color: #000;
+        }
+
+        a:hover {
+            COLOR: #000;
+        }
+
+        a:active {
+            color: #000;
+        }
+    </style>
+    <script language="javascript" type="text/javascript" src="link_frame.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        function trdisplay(id) {
+            var headTr = document.getElementById("hidTr").value;
+            var headTb = document.getElementById("subTr" + headTr);
+            if (headTr != id && headTb != null && headTb.style.display == '') {
+                headTb.style.display = 'none';
+                document.getElementById("trimg" + headTr).src = "jia.png";
+                setTabHeight(id, true);
+            }
+
+            var trobj = document.getElementById("subTr" + id);
+            if (trobj != null) {
+                if (trobj.style.display == 'none') {
+                    trobj.style.display = '';
+                    document.getElementById("hidTr").value = id;
+                    document.getElementById("trimg" + id).src = "jian.png";
+                    setTabHeight(id, false);
+                }
+                else {
+                    trobj.style.display = 'none';
+                    document.getElementById("trimg" + id).src = "jia.png";
+                    setTabHeight(id, true);
+                }
+            }
+        }
+
+        function setTabHeight(id, flag) {
+            if (flag) {
+                var oldTb = document.getElementById('tbLeft' + document.getElementById("hidTr").value);
+                var objTD = document.getElementById('objTD');
+                if (oldTb != null && oldTb != 'undefined' && objTD != null && objTD != 'undefined') {
+                    //oldTb.deleteRow(document.getElementById(oldTb.deleteRow(oldTb.rows.length - 1)).rowIndex);
+                    oldTb.childNodes[0].lastChild.removeNode(true);  //删除新增的高度行
+                }
+            } else {
+                var tbMain_height = document.getElementById('tbMain').offsetHeight;  //获取table高度
+                var tdHeight = document.documentElement.clientHeight - 24 - tbMain_height - 2;
+
+                if (tdHeight > -1) {
+                    tdHeight = tdHeight + "px";
+                    var td = document.getElementById('tbLeft' + id).insertRow().insertCell();
+                    td.id = 'objTD';
+                    td.innerText = '';
+                    td.height = tdHeight;
+                }
+            }
+        }
+
+        function oa_tool() {
+            var imgLeft = document.getElementById('imgLeft');
+            var spLeft = document.getElementById('spLeft');
+            var lblLeftMenu = document.getElementById('lblLeftMenu');
+
+            if (window.parent.oa_frame.cols == "20,4,*") {
+                imgLeft.src = "zz.png";
+                spLeft.style.display = '';
+                lblLeftMenu.style.display = '';
+
+                window.parent.oa_frame.cols = "179,4,*";
+            } else {
+                imgLeft.src = "yy.png";
+                spLeft.style.display = 'none';
+                lblLeftMenu.style.display = 'none';
+                window.parent.oa_frame.cols = "20,4,*";
+            }
+        }
+
+        function Navgate(title, id, url) {
+            window.top.Content.CreateTitle(title, id, url);
+        }
+
+        function onloadnav() {
+            trdisplay(175);
+
+            var CompanyTyp=Number(document.getElementById("HidCompanyType").value);
+            if ((CompanyTyp== (<%= DigiPower.Onlinecol.Standard.Web.SystemSet._JSCOMPANYINFO%>))||
+                (CompanyTyp== (<%= DigiPower.Onlinecol.Standard.Web.SystemSet._JLCOMPANYINFO%>))||
+                (CompanyTyp== (<%= DigiPower.Onlinecol.Standard.Web.SystemSet._SGCOMPANY%>))    ||
+                (CompanyTyp== (<%= DigiPower.Onlinecol.Standard.Web.SystemSet._ARCHIVE%>))){
+                window.setTimeout("Navgate('我的任务',181,'../DefaultMyTaskList.aspx')", 1000);
+            }else { 
+                window.setTimeout("Navgate('工程文件管理',359,'../CompanyManage/SingleProjectAndFileList.aspx')", 1000);
+            }
+        }
+
+    </script>
+</head>
+<body onload="onloadnav()" style="margin: 0px; background-color: #DFE8F6">
+    <form id="form1" runat="server">
+        <asp:HiddenField runat="server" ID="HidCompanyType" />
+        <input type="hidden" id="hidTr" value="175" />
+        <div style="margin-left: 3px; border: solid 1px #99BBE8; height: 600px;" id="divLeft">
+            <div class="nav">
+                <span id="spLeft" style="font-size: 11px; padding-left: 6px; color: #15428B; float: left; text-align: left; width: 100px; line-height: 24px;"><strong>导航栏</strong></span>
+                <img src="zz.png" id="imgLeft" style="margin-top: 4px; margin-right: 6px; cursor: pointer;" onclick="oa_tool()" />
+            </div>
+            <asp:Label ID="lblLeftMenu" runat="server" Text=""></asp:Label>
+        </div>
+    </form>
+
+
+    <script language="javascript" type="text/javascript">
+        var divLeft = document.getElementById('divLeft');
+
+        divLeft.style.height = document.documentElement.clientHeight - 2 + "px";
+    </script>
+</body>
+</html>

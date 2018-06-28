@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DigiPower.Onlinecol.Standard.Web.Main
+{
+    public partial class Content : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (Common.DNTRequest.GetQueryString("URL") != "")
+            {
+                string href = "'" + "menuprocess.aspx?URL=" + Common.DNTRequest.GetQueryString("URL") + "'";
+                RegisterStartupScript("Nav", "<script>window.location.href= " + href + ";</script>");
+            }
+        }
+    }
+}

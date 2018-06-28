@@ -1,0 +1,3053 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CD4810C9-5722-419A-A96A-1FD88E842EDC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DigiPower.Onlinecol.Standard.Web</RootNamespace>
+    <AssemblyName>DigiPower.Onlinecol.Standard.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>true</IISExpressUseClassicPipelineMode>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ajax, Version=5.7.22.2, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Ajax.dll</HintPath>
+    </Reference>
+    <Reference Include="AspNetPager, Version=7.0.2.0, Culture=neutral, PublicKeyToken=fb0a0fe055d40fd4, processorArchitecture=MSIL">
+      <HintPath>..\Lib\AspNetPager.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2">
+      <HintPath>..\Lib\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="iMsgServer2000">
+      <HintPath>..\Lib\iMsgServer2000.dll</HintPath>
+    </Reference>
+    <Reference Include="iSignature_PDF_API, Version=5.0.0.36, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\iSignature_PDF_API.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\Lib\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\Lib\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\Lib\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\Lib\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Base, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
+      <HintPath>..\Lib\Stimulsoft.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
+      <HintPath>..\Lib\Stimulsoft.Report.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.Web, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
+      <HintPath>..\Lib\Stimulsoft.Report.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Stimulsoft.Report.WebDesign, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a, processorArchitecture=MSIL">
+      <HintPath>..\Lib\Stimulsoft.Report.WebDesign.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="YYControls">
+      <HintPath>..\Lib\YYControls.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing">
+      <HintPath>..\Lib\zxing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CommonCtrl\ctrlBtnWindowClose.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownExportType.ascx" />
+    <Content Include="CommonCtrl\ctrlCheckBoxList.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownFileTmpSignatureUserRole.ascx" />
+    <Content Include="CommonCtrl\ctrlWorkFlowList_HTML.ascx" />
+    <Content Include="CompanyManage\ChangeChargeUser.aspx" />
+    <Content Include="CompanyManage\CompanyReg3_3Edit.aspx" />
+    <Content Include="CompanyManage\CompanyReg3_2Edit.aspx" />
+    <Content Include="CompanyManage\CompanyReg3_1Edit.aspx" />
+    <Content Include="CompanyManage\ProjectRelevanceOutHelpUser.aspx" />
+    <Content Include="CompanyManage\ProjectRelevanceSignatureUser.aspx" />
+    <Content Include="CompanyManage\ProjectRelevanceUser.aspx" />
+    <Content Include="CompanyManage\SingleProjectAndOutHelpCompanyList.aspx" />
+    <Content Include="CompanyManage\SingleProjectAndSignatureCompanyList.aspx" />
+    <Content Include="CompanyManage\SingleProjectAndFileList.aspx" />
+    <Content Include="CompanyManage\SingleProjectAndCompanyList.aspx" />
+    <Content Include="CompanyManage\ExportSingleProjectToJson.aspx" />
+    <Content Include="CompanyManage\SingleProjectPointAdd.aspx" />
+    <Content Include="CompanyManage\SingleProjectFileAttachAdd.aspx" />
+    <Content Include="DefaultMyTaskList.aspx" />
+    <Content Include="File\BatChUpload\JS\xzwj.png" />
+    <Content Include="FindPassword.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\body_bg.png" />
+    <Content Include="Images\body_bgr.png" />
+    <Content Include="Images\digipower1.ico" />
+    <Content Include="Images\file_up.png" />
+    <Content Include="Images\hfbody.png" />
+    <Content Include="Images\mm.png" />
+    <Content Include="Images\title.png" />
+    <Content Include="Images\tmbj.png" />
+    <Content Include="Images\user.png" />
+    <Content Include="Images\yhm.png" />
+    <Content Include="iSignature\BatchSignaturePdf.aspx" />
+    <Content Include="iSignature\JS\hashMap.js" />
+    <Content Include="iSignature\JS\jquery-1.11.2.min.js" />
+    <Content Include="iSignature\JS\jquery.json-2.5.1.min.js" />
+    <Content Include="iSignature\JS\json2-min.js" />
+    <Content Include="iSignature\JS\signature.js" />
+    <Content Include="iSignature\LHSignatureFilesList.aspx" />
+    <Content Include="iSignature\LHSignatureFilesLog.aspx" />
+    <Content Include="iSignature\LHSignatureFileTmp.aspx" />
+    <Content Include="iSignature\LHSignatureProjectList.aspx" />
+    <Content Include="iSignature\SignaturePdf.aspx" />
+    <Content Include="iSignature\SignatureReportPdf.aspx" />
+    <Content Include="Javascript\Common\custom.modernizr.js" />
+    <Content Include="File\BatChUpload\BatchUploadFile.aspx" />
+    <Content Include="File\BatChUpload\CSS\Style.css" />
+    <Content Include="File\BatChUpload\CSS\uploadify.css" />
+    <Content Include="File\BatChUpload\JS\cancel.png" />
+    <Content Include="File\BatChUpload\JS\jquery-1.3.2.min.js" />
+    <Content Include="File\BatChUpload\JS\jquery.uploadify.v2.1.0.js" />
+    <Content Include="File\BatChUpload\JS\jquery.uploadify.v2.1.0.min.js" />
+    <Content Include="File\BatChUpload\JS\swfobject.js" />
+    <Content Include="File\BatChUpload\JS\uploadify.swf" />
+    <Content Include="File\ImageFileInfoList.aspx" />
+    <Content Include="File\PreviewImage.aspx" />
+    <Content Include="File\PreviewImage\css\list.css" />
+    <Content Include="File\PreviewImage\images\bgArt.png" />
+    <Content Include="File\PreviewImage\js\jquery-1.6.2.min.js" />
+    <Content Include="File\PreviewImage\js\list.js" />
+    <Content Include="Images3\bg-form-field.gif" />
+    <Content Include="Images3\bullet_arrow_down.png" />
+    <Content Include="Images3\directory.png" />
+    <Content Include="Images3\dlan.png" />
+    <Content Include="Images3\dlk.png" />
+    <Content Include="Images3\hmbj.png" />
+    <Content Include="Images3\indicator-bg.gif" />
+    <Content Include="Images3\input_text_bg.gif" />
+    <Content Include="Images3\next1.png" />
+    <Content Include="Images3\tit.png" />
+    <Content Include="Images3\up11.png" />
+    <Content Include="Images3\zcan.png" />
+    <Content Include="ImagesNew\BackGround.jpg" />
+    <Content Include="ImagesNew\blank.gif" />
+    <Content Include="ImagesNew\bullet_cross.png" />
+    <Content Include="ImagesNew\calendar.png" />
+    <Content Include="ImagesNew\conduct1.jpg" />
+    <Content Include="ImagesNew\conduct2.jpg" />
+    <Content Include="ImagesNew\content_back.gif" />
+    <Content Include="ImagesNew\Content_background.jpg" />
+    <Content Include="ImagesNew\Content_head.jpg" />
+    <Content Include="ImagesNew\content_inner_head.gif" />
+    <Content Include="ImagesNew\content_inner_head_logo1.png" />
+    <Content Include="ImagesNew\content_inner_head_logo2.png" />
+    <Content Include="ImagesNew\email.png" />
+    <Content Include="ImagesNew\head.gif" />
+    <Content Include="ImagesNew\head_logo.gif" />
+    <Content Include="ImagesNew\history.png" />
+    <Content Include="ImagesNew\home.png" />
+    <Content Include="ImagesNew\link.png" />
+    <Content Include="ImagesNew\music.png" />
+    <Content Include="ImagesNew\nav_background.gif" />
+    <Content Include="ImagesNew\nav_background2.gif" />
+    <Content Include="ImagesNew\na_bg.png" />
+    <Content Include="ImagesNew\portfolio.png" />
+    <Content Include="ImagesNew\rosette.png" />
+    <Content Include="ImagesNew\rss.png" />
+    <Content Include="ImagesNew\rss2.png" />
+    <Content Include="ImagesNew\tabMiddle.gif" />
+    <Content Include="ImagesNew\tick.png" />
+    <Content Include="ImagesNew\video.png" />
+    <Content Include="Images\01.jpg" />
+    <Content Include="Images\01.png" />
+    <Content Include="Images\1.gif" />
+    <Content Include="Images\11.gif" />
+    <Content Include="Images\1_active.gif" />
+    <Content Include="Images\2.gif" />
+    <Content Include="Images\2.png" />
+    <Content Include="Images\22.gif" />
+    <Content Include="Images\2_active.gif" />
+    <Content Include="Images\3.png" />
+    <Content Include="Images\33.gif" />
+    <Content Include="Images\add.gif" />
+    <Content Include="Images\ase.jpg" />
+    <Content Include="Images\back.gif" />
+    <Content Include="Images\bg-button.gif" />
+    <Content Include="Images\bg-form-field.gif" />
+    <Content Include="Images\bg.gif" />
+    <Content Include="Images\blue_back.gif" />
+    <Content Include="Images\blue_back1.gif" />
+    <Content Include="Images\blue_back3.gif" />
+    <Content Include="Images\Bottom18.gif" />
+    <Content Include="Images\Bottom19.gif" />
+    <Content Include="Images\Bottom20.gif" />
+    <Content Include="Images\bullet_arrow_down.png" />
+    <Content Include="Images\button_area_back.gif" />
+    <Content Include="Images\button_area_back2.gif" />
+    <Content Include="Images\button_area_icon.png" />
+    <Content Include="Images\button_bg.gif" />
+    <Content Include="Images\cal.gif" />
+    <Content Include="Images\check.png" />
+    <Content Include="Images\checkcode.png" />
+    <Content Include="Images\del.gif" />
+    <Content Include="Images\Delete.gif" />
+    <Content Include="Images\del_icon.gif" />
+    <Content Include="Images\directory.png" />
+    <Content Include="Images\dlan.png" />
+    <Content Include="Images\dlk.png" />
+    <Content Include="Images\edit.gif" />
+    <Content Include="Images\edit_icon.gif" />
+    <Content Include="Images\edt.gif" />
+    <Content Include="Images\first.gif" />
+    <Content Include="Images\go.gif" />
+    <Content Include="Images\GridViewHeadImage.bmp" />
+    <Content Include="Images\head_background.gif" />
+    <Content Include="Images\head_background2.gif" />
+    <Content Include="Images\head_logo.gif" />
+    <Content Include="Images\head_logo2.gif" />
+    <Content Include="Images\help.gif" />
+    <Content Include="Images\hmbj.png" />
+    <Content Include="Images\icon.png" />
+    <Content Include="Images\iconQuestion.gif" />
+    <Content Include="Images\indicator-bg.gif" />
+    <Content Include="Images\input_bg.gif" />
+    <Content Include="Images\input_bg2.gif" />
+    <Content Include="Images\input_text_bg.gif" />
+    <Content Include="Images\jt.gif" />
+    <Content Include="Images\jt.png" />
+    <Content Include="Images\jt2.png" />
+    <Content Include="Images\jt3.png" />
+    <Content Include="Images\last.gif" />
+    <Content Include="Images\lc.gif" />
+    <Content Include="Images\lc_btn_bg.gif" />
+    <Content Include="Images\lc_btn_bg2.gif" />
+    <Content Include="Images\left_bg.jpg" />
+    <Content Include="Images\left_menubg.jpg" />
+    <Content Include="Images\left_menubg2.gif" />
+    <Content Include="Images\light-hd.gif" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Images\Login\LoginBtn.png" />
+    <Content Include="Images\Login\login_bgcolor.png" />
+    <Content Include="Images\Login\main - 副本.png" />
+    <Content Include="Images\Login\main.png" />
+    <Content Include="Images\Login\title.png" />
+    <Content Include="Images\login_01.jpg" />
+    <Content Include="Images\login_02.jpg" />
+    <Content Include="Images\login_03.gif" />
+    <Content Include="Images\login_03.jpg" />
+    <Content Include="Images\login_04.jpg" />
+    <Content Include="Images\login_06.gif" />
+    <Content Include="Images\login_07.gif" />
+    <Content Include="Images\login_07.jpg" />
+    <Content Include="Images\login_08.gif" />
+    <Content Include="Images\login_08.jpg" />
+    <Content Include="Images\login_09.gif" />
+    <Content Include="Images\login_09.jpg" />
+    <Content Include="Images\login_10.gif" />
+    <Content Include="Images\login_11.gif" />
+    <Content Include="Images\login_11.jpg" />
+    <Content Include="Images\login_btn.jpg" />
+    <Content Include="Images\L_edit.gif" />
+    <Content Include="Images\main_01.jpg" />
+    <Content Include="Images\main_02.jpg" />
+    <Content Include="Images\main_03.gif" />
+    <Content Include="Images\main_05.gif" />
+    <Content Include="Images\main_06.gif" />
+    <Content Include="Images\main_07.gif" />
+    <Content Include="Images\main_10.gif" />
+    <Content Include="Images\main_11.gif" />
+    <Content Include="Images\main_13.gif" />
+    <Content Include="Images\main_15.gif" />
+    <Content Include="Images\main_17.gif" />
+    <Content Include="Images\main_19.gif" />
+    <Content Include="Images\main_21.gif" />
+    <Content Include="Images\main_27.gif" />
+    <Content Include="Images\main_28.gif" />
+    <Content Include="Images\main_29.gif" />
+    <Content Include="Images\main_30.gif" />
+    <Content Include="Images\main_30_1.gif" />
+    <Content Include="Images\main_31.gif" />
+    <Content Include="Images\main_32.gif" />
+    <Content Include="Images\main_34.gif" />
+    <Content Include="Images\main_35.gif" />
+    <Content Include="Images\main_43.gif" />
+    <Content Include="Images\main_54.gif" />
+    <Content Include="Images\main_56.gif" />
+    <Content Include="Images\main_58.gif" />
+    <Content Include="Images\main_60.gif" />
+    <Content Include="Images\main_62.gif" />
+    <Content Include="Images\main_69.gif" />
+    <Content Include="Images\main_71.gif" />
+    <Content Include="Images\main_72.gif" />
+    <Content Include="Images\main_74.gif" />
+    <Content Include="Images\main_jg.jpg" />
+    <Content Include="Images\map2.gif" />
+    <Content Include="Images\map_bg.gif" />
+    <Content Include="Images\next.gif" />
+    <Content Include="Images\next1.png" />
+    <Content Include="Images\OnLineCoach\content_back.png" />
+    <Content Include="Images\OnLineCoach\content_back_foot.png" />
+    <Content Include="Images\OnLineCoach\head_back.png" />
+    <Content Include="Images\OnLineCoach\head_logo.gif" />
+    <Content Include="Images\OnLineCoach\link_right.png" />
+    <Content Include="Images\OnLineCoach\login.gif" />
+    <Content Include="Images\OnLineCoach\login_back.gif" />
+    <Content Include="Images\OnLineCoach\login_back.png" />
+    <Content Include="Images\OnLineCoach\login_hover.gif" />
+    <Content Include="Images\OnLineCoach\复件 head_logo.gif" />
+    <Content Include="Images\OnLineGather\BackGround.jpg" />
+    <Content Include="Images\OnLineGather\content_back.png" />
+    <Content Include="Images\OnLineGather\content_back_foot.png" />
+    <Content Include="Images\OnLineGather\head_back.png" />
+    <Content Include="Images\OnLineGather\head_logo.gif" />
+    <Content Include="Images\OnLineGather\link_right.png" />
+    <Content Include="Images\OnLineGather\login.gif" />
+    <Content Include="Images\OnLineGather\login_back.png" />
+    <Content Include="Images\OnLineGather\login_hover.gif" />
+    <Content Include="Images\OnLineGather\复件 head_logo.gif" />
+    <Content Include="Images\page_bg.gif" />
+    <Content Include="Images\pass.gif" />
+    <Content Include="Images\passlogo.gif" />
+    <Content Include="Images\process.gif" />
+    <Content Include="Images\quit.gif" />
+    <Content Include="Images\Regedit_03.jpg" />
+    <Content Include="Images\Regedit_04.jpg" />
+    <Content Include="Images\Regedit_06.jpg" />
+    <Content Include="Images\regedit_btn.jpg" />
+    <Content Include="Images\Regedit_downline.jpg" />
+    <Content Include="Images\Regedit_Dq.jpg" />
+    <Content Include="Images\Regedit_icon.gif" />
+    <Content Include="Images\Regedit_icon2.gif" />
+    <Content Include="Images\Regedit_line.gif" />
+    <Content Include="Images\Regedit_next.jpg" />
+    <Content Include="Images\Regedit_user.jpg" />
+    <Content Include="Images\se.gif" />
+    <Content Include="Images\se.jpg" />
+    <Content Include="Images\se2.gif" />
+    <Content Include="Images\se3.jpg" />
+    <Content Include="Images\sel.gif" />
+    <Content Include="Images\sj.gif" />
+    <Content Include="Images\SwfUpload\error.gif" />
+    <Content Include="Images\SwfUpload\page_white_add.png" />
+    <Content Include="Images\SwfUpload\toobig.gif" />
+    <Content Include="Images\SwfUpload\uploadlimit.gif" />
+    <Content Include="Images\SwfUpload\XPButtonNoText_160x22.png" />
+    <Content Include="Images\SwfUpload\zerobyte.gif" />
+    <Content Include="Images\tab_03.gif" />
+    <Content Include="Images\tab_05.gif" />
+    <Content Include="Images\tab_07.gif" />
+    <Content Include="Images\tab_12.gif" />
+    <Content Include="Images\tab_15.gif" />
+    <Content Include="Images\tab_17.gif" />
+    <Content Include="Images\tab_18.gif" />
+    <Content Include="Images\tab_19.gif" />
+    <Content Include="Images\tab_20.gif" />
+    <Content Include="Images\tab_bg.gif" />
+    <Content Include="Images\tb.gif" />
+    <Content Include="Images\tit.png" />
+    <Content Include="Images\tool-sprites.gif" />
+    <Content Include="Images\top_bg.jpg" />
+    <Content Include="Images\top_logo.jpg" />
+    <Content Include="Images\up11.png" />
+    <Content Include="Images\user.gif" />
+    <Content Include="Images\userlogo.gif" />
+    <Content Include="Images\white-top-bottom.gif" />
+    <Content Include="Images\zcan.png" />
+    <Content Include="Javascript\Common\Fn.js" />
+    <Content Include="Javascript\Common\jquery.maskedinput.min.js" />
+    <Content Include="Javascript\Common\scrollTop.js" />
+    <Content Include="Javascript\Common\Validate.js" />
+    <Content Include="Javascript\Common\WebCalendar.js" />
+    <Content Include="Javascript\jedate\jedate.js" />
+    <Content Include="Javascript\jedate\jedate.min.js" />
+    <Content Include="Javascript\jedate\skin\gray.css" />
+    <Content Include="Javascript\jedate\skin\green.css" />
+    <Content Include="Javascript\jedate\skin\jedate.css" />
+    <Content Include="Javascript\jedate\skin\red.css" />
+    <Content Include="Javascript\Layer\css\login.css" />
+    <Content Include="Javascript\Layer\css\common.css" />
+    <Content Include="Javascript\Layer\css\sccl.css" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\demo.css" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\demo.html" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\iconfont.css" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\iconfont.svg" />
+    <Content Include="Javascript\Layer\image\an.png" />
+    <Content Include="Javascript\Layer\image\b.png" />
+    <Content Include="Javascript\Layer\image\backg.png" />
+    <Content Include="Javascript\Layer\image\bc.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\bjybj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\bottom_sjbj.png" />
+    <Content Include="Javascript\Layer\image\cross.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\dd01.png" />
+    <Content Include="Javascript\Layer\image\dd02.png" />
+    <Content Include="Javascript\Layer\image\dd03.png" />
+    <Content Include="Javascript\Layer\image\dd04.png" />
+    <Content Include="Javascript\Layer\image\dd05.png" />
+    <Content Include="Javascript\Layer\image\dd06.png" />
+    <Content Include="Javascript\Layer\image\dd07.png" />
+    <Content Include="Javascript\Layer\image\dd08.png" />
+    <Content Include="Javascript\Layer\image\dhbj.png" />
+    <Content Include="Javascript\Layer\image\gslogo.png" />
+    <Content Include="Javascript\Layer\image\jpg.png" />
+    <Content Include="Javascript\Layer\image\jpg_1.png" />
+    <Content Include="Javascript\Layer\image\EFILE.png" />
+    <Content Include="Javascript\Layer\image\EFILE_1.png" />
+    <Content Include="Javascript\Layer\image\fx.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\grzx.png" />
+    <Content Include="Javascript\Layer\image\hc001.png" />
+    <Content Include="Javascript\Layer\image\hc002.png" />
+    <Content Include="Javascript\Layer\image\hc003.png" />
+    <Content Include="Javascript\Layer\image\hc004.png" />
+    <Content Include="Javascript\Layer\image\hc005.png" />
+    <Content Include="Javascript\Layer\image\hc006.png" />
+    <Content Include="Javascript\Layer\image\hc007.png" />
+    <Content Include="Javascript\Layer\image\hc008.png" />
+    <Content Include="Javascript\Layer\image\icon-arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\icon_arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\jt3.png" />
+    <Content Include="Javascript\Layer\image\lanren_top.jpg" />
+    <Content Include="Javascript\Layer\image\lc001.png" />
+    <Content Include="Javascript\Layer\image\lc002.png" />
+    <Content Include="Javascript\Layer\image\lc003.png" />
+    <Content Include="Javascript\Layer\image\lc004.png" />
+    <Content Include="Javascript\Layer\image\lc005.png" />
+    <Content Include="Javascript\Layer\image\lc006.png" />
+    <Content Include="Javascript\Layer\image\lc007.png" />
+    <Content Include="Javascript\Layer\image\lc008.png" />
+    <Content Include="Javascript\Layer\image\lcbz-hs.png" />
+    <Content Include="Javascript\Layer\image\left-btbj.png" />
+    <Content Include="Javascript\Layer\image\loading-b.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\loading-s.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\loading.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-10.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-4.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-5.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-7.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-8.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\login-bg-9.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\logo.png" />
+    <Content Include="Javascript\Layer\image\logobj.png" />
+    <Content Include="Javascript\Layer\image\msg.gif" />
+    <Content Include="Javascript\Layer\image\msg01.gif" />
+    <Content Include="Javascript\Layer\image\pencil.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\qhzh.png" />
+    <Content Include="Javascript\Layer\image\qx.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\right-btbj.png" />
+    <Content Include="Javascript\Layer\image\sh.png" />
+    <Content Include="Javascript\Layer\image\side_bj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\ss.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\sub_head_more.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\sub_head_more_click.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\sy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\syy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\t.png" />
+    <Content Include="Javascript\Layer\image\tbody_bj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\tcan.png" />
+    <Content Include="Javascript\Layer\image\th.png" />
+    <Content Include="Javascript\Layer\image\tj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\top-rightbj.png" />
+    <Content Include="Javascript\Layer\image\topimgbj.png" />
+    <Content Include="Javascript\Layer\image\top_bj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\top_sjbj.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\wy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\xgan.png" />
+    <Content Include="Javascript\Layer\image\xnz.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\xxxz.png" />
+    <Content Include="Javascript\Layer\image\xyy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Javascript\Layer\image\zxan.png" />
+    <Content Include="Javascript\Layer\js\jquery-1.4.2.min.js" />
+    <Content Include="Javascript\Layer\js\jquery-1.7.2.min.js" />
+    <Content Include="Javascript\Layer\js\jquery-1.9.1.min.js" />
+    <Content Include="Javascript\Layer\js\jquery.configuration.js" />
+    <Content Include="Javascript\Layer\js\sccl-util.js" />
+    <Content Include="Javascript\Layer\js\sccl.js" />
+    <Content Include="Javascript\Layer\layer\layer.js" />
+    <Content Include="Javascript\Layer\layer\mobile\layer.js" />
+    <Content Include="Javascript\Layer\layer\mobile\need\layer.css" />
+    <Content Include="Javascript\Layer\layer\skin\default\icon-ext.png" />
+    <Content Include="Javascript\Layer\layer\skin\default\icon.png" />
+    <Content Include="Javascript\Layer\layer\skin\default\layer.css" />
+    <Content Include="Javascript\Layer\layer\skin\default\loading-0.gif" />
+    <Content Include="Javascript\Layer\layer\skin\default\loading-1.gif" />
+    <Content Include="Javascript\Layer\layer\skin\default\loading-2.gif" />
+    <Content Include="Javascript\Layer\layui\css\layui.css" />
+    <Content Include="Javascript\Layer\layui\css\layui.mobile.css" />
+    <Content Include="Javascript\Layer\layui\css\mobile.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\code.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\laydate\icon.png" />
+    <Content Include="Javascript\Layer\layui\css\modules\laydate\laydate.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\icon-ext.png" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\icon.png" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\layer.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\loading-0.gif" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\loading-1.gif" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\default\loading-2.gif" />
+    <Content Include="Javascript\Layer\layui\css\modules\layer\layer.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\html\chatlog.html" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\html\find.html" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\html\msgbox.html" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\layim.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\mobile\layim.css" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\1.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\2.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\3.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\4.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\5.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\skin\logo.jpg" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\voice\default.mp3" />
+    <Content Include="Javascript\Layer\layui\font\iconfont.svg" />
+    <Content Include="Javascript\Layer\layui\images\face\0.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\1.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\10.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\11.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\12.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\13.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\14.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\15.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\16.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\17.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\18.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\19.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\2.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\20.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\21.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\22.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\23.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\24.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\25.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\26.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\27.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\28.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\29.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\3.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\30.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\31.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\32.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\33.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\34.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\35.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\36.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\37.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\38.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\39.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\4.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\40.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\41.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\42.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\43.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\44.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\45.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\46.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\47.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\48.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\49.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\5.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\50.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\51.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\52.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\53.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\54.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\55.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\56.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\57.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\58.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\59.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\6.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\60.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\61.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\62.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\63.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\64.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\65.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\66.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\67.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\68.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\69.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\7.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\70.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\71.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\8.gif" />
+    <Content Include="Javascript\Layer\layui\images\face\9.gif" />
+    <Content Include="Javascript\Layer\layui\layui.js" />
+    <Content Include="Javascript\Layer\layui\lay\all.js" />
+    <Content Include="Javascript\Layer\layui\lay\dest\layui.all.js" />
+    <Content Include="Javascript\Layer\layui\lay\lib\jquery.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\code.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\element.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\flow.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\form.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\jquery.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\laydate.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\layedit.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\layer.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\layim.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\laypage.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\laytpl.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\mobile.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\tree.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\upload.js" />
+    <Content Include="Javascript\Layer\layui\lay\modules\util.js" />
+    <Content Include="Javascript\Layer\lib\html5.js" />
+    <Content Include="Javascript\Layer\lib\jquery-1.9.0.min.js" />
+    <Content Include="Javascript\Layer\lib\pace.min.js" />
+    <Content Include="Javascript\Layer\lib\respond.min.js" />
+    <Content Include="Javascript\Layer\skin\blue\skin.css" />
+    <Content Include="Javascript\Layer\skin\molv\skin.css" />
+    <Content Include="Javascript\Layer\skin\qingxin\skin.css" />
+    <Content Include="Javascript\Rsa\Barrett.js" />
+    <Content Include="Javascript\Rsa\BigInt.js" />
+    <Content Include="Javascript\Rsa\jQuery.md5.js" />
+    <Content Include="Javascript\Rsa\RSA.js" />
+    <Content Include="Javascript\Rsa\st.js" />
+    <Content Include="Javascript\TimeAxis\css\history.css" />
+    <Content Include="Javascript\TimeAxis\images\arrow.png" />
+    <Content Include="Javascript\TimeAxis\images\icon06.gif" />
+    <Content Include="Javascript\TimeAxis\images\icon07.gif" />
+    <Content Include="Javascript\TimeAxis\images\icon08.gif" />
+    <Content Include="Javascript\TimeAxis\images\icon09.gif" />
+    <Content Include="Javascript\TimeAxis\images\line04.gif" />
+    <Content Include="Javascript\TimeAxis\js\jquery.js" />
+    <Content Include="Javascript\TimeAxis\js\main.js" />
+    <Content Include="JS\jquery-1.4.4.min.js" />
+    <Content Include="JS\jquery.maskedinput.js" />
+    <Content Include="Main.aspx" />
+    <Content Include="MyTaskList.aspx" />
+    <Content Include="PDFServer.aspx" />
+    <Content Include="QuickReg.aspx" />
+    <Content Include="QuickTermsContent.html" />
+    <Content Include="ReportPDFDown.aspx" />
+    <Content Include="ReportPDFServer.aspx" />
+    <Content Include="Report\ExcelTemplate.xml" />
+    <Content Include="Report\ZmsCertificateList.aspx" />
+    <Content Include="Report\RkzCertificateList.aspx" />
+    <Content Include="Report\ZrsCertificateList.aspx" />
+    <Content Include="RsaKey\getRsaPrivateKey.aspx" />
+    <Content Include="RsaKey\PrivateKey.xml" />
+    <Content Include="SuppleMent\SmArchiveList.aspx" />
+    <Content Include="File\CellWeb5.3.9.14.cab" />
+    <Content Include="File\CellWeb5.cab" />
+    <Content Include="File\ViewPic.aspx" />
+    <Content Include="Images3\01.png" />
+    <Content Include="Images3\help.gif" />
+    <Content Include="Images3\Login\LoginBtn.png" />
+    <Content Include="Images3\Login\login_bgcolor.png" />
+    <Content Include="Images3\Login\main.png" />
+    <Content Include="Images3\Login\title.png" />
+    <Content Include="Images3\L_edit.gif" />
+    <Content Include="JS\index.js" />
+    <Content Include="NoAccess.htm" />
+    <Content Include="SiteSon.Master" />
+    <Content Include="SuppleMent\SmArchiveToFileList.aspx" />
+    <Content Include="SuppleMent\SmZJList.aspx" />
+    <Content Include="SuppleMent\SmUpLoadEFileList.aspx" />
+    <Content Include="SystemManage\OutHelpCompanyFileTmpAdd.aspx" />
+    <Content Include="SystemManage\OutHelpCompanyAdd.aspx" />
+    <Content Include="SystemManage\SignatureCompanyAdd.aspx" />
+    <Content Include="SystemManage\OperationLogList.aspx" />
+    <Content Include="SystemManage\EfileConvertLogList.aspx" />
+    <Content Include="SystemManage\EfileConvertLogView.aspx" />
+    <Content Include="SystemManage\OperationLogView.aspx" />
+    <Content Include="SystemManage\HookUpSignature.aspx" />
+    <Content Include="SystemManage\OutHelpCompanyList.aspx" />
+    <Content Include="SystemManage\SignatureCompanyList.aspx" />
+    <Content Include="Upload\SubmitCell\p1.gif" />
+    <Content Include="Upload\TempReport\bf26809e-3fa4-43c6-a2f3-f1052ac1e35d.txt" />
+    <Content Include="Upload\TempXML\p1.gif" />
+    <Content Include="ValidateCode.aspx" />
+    <Content Include="WebServices\ImportDataWebService.asmx" />
+    <Content Include="WorkFlow\FileSignatureSet.aspx" />
+    <Content Include="WorkFlow\WjdjOther.aspx" />
+    <Content Include="WorkFlow\ZxyysCheck.aspx" />
+    <Content Include="WorkFlow\BatChUpload\CSS\uploadify.css" />
+    <Content Include="WorkFlow\BatChUpload\JS\cancel.png" />
+    <Content Include="WorkFlow\BatChUpload\JS\jquery-1.3.2.min.js" />
+    <Content Include="WorkFlow\BatChUpload\JS\jquery.uploadify.v2.1.0.js" />
+    <Content Include="WorkFlow\BatChUpload\JS\jquery.uploadify.v2.1.0.min.js" />
+    <Content Include="WorkFlow\BatChUpload\JS\swfobject.js" />
+    <Content Include="WorkFlow\BatChUpload\JS\uploadify.swf" />
+    <Content Include="WorkFlow\BatChUpload\JS\xzwj.png" />
+    <Content Include="WorkFlow\QuestionAdd.aspx" />
+    <Content Include="WorkFlow\ArchiveCheck.aspx" />
+    <Content Include="SystemManage\UserByProjectList.aspx" />
+    <Content Include="SystemManage\CompanyUserList.aspx" />
+    <Content Include="SystemManage\CompanyUserAdd.aspx" />
+    <Content Include="Upload\CompanySignet\p1.gif" />
+    <Content Include="Upload\Pic\p1.gif" />
+    <Content Include="Upload\QuestionAttach\p1.gif" />
+    <Content Include="Upload\SXImage\p1.gif" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommonCtrl\ctrlBtnWindowClose.ascx.cs">
+      <DependentUpon>ctrlBtnWindowClose.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlBtnWindowClose.ascx.designer.cs">
+      <DependentUpon>ctrlBtnWindowClose.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCellTmp.ascx.cs">
+      <DependentUpon>ctrlDropDownCellTmp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCellTmp.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownCellTmp.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveCheckBoxUserList.ascx.cs">
+      <DependentUpon>ctrlArchiveCheckBoxUserList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveCheckBoxUserList.ascx.designer.cs">
+      <DependentUpon>ctrlArchiveCheckBoxUserList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCheckBoxUserList.ascx.cs">
+      <DependentUpon>ctrlCheckBoxUserList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCheckBoxUserList.ascx.designer.cs">
+      <DependentUpon>ctrlCheckBoxUserList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyQucikReg.ascx.cs">
+      <DependentUpon>ctrlCompanyQucikReg.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyQucikReg.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyQucikReg.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownExportType.ascx.cs">
+      <DependentUpon>ctrlDropDownExportType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownExportType.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownExportType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileTmpSignatureUserRole.ascx.cs">
+      <DependentUpon>ctrlDropDownFileTmpSignatureUserRole.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileTmpSignatureUserRole.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownFileTmpSignatureUserRole.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownReportType.ascx.cs">
+      <DependentUpon>ctrlDropDownReportType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownReportType.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownReportType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCheckBoxList.ascx.cs">
+      <DependentUpon>ctrlCheckBoxList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCheckBoxList.ascx.designer.cs">
+      <DependentUpon>ctrlCheckBoxList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSystemInfo.ascx.cs">
+      <DependentUpon>ctrlDropDownSystemInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSystemInfo.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownSystemInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownTrainPlan.ascx.cs">
+      <DependentUpon>ctrlDropDownTrainPlan.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownTrainPlan.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownTrainPlan.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownUserType.ascx.cs">
+      <DependentUpon>ctrlDropDownUserType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownUserType.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownUserType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlJSCheckInfo.ascx.cs">
+      <DependentUpon>ctrlJSCheckInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlJSCheckInfo.ascx.designer.cs">
+      <DependentUpon>ctrlJSCheckInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlWorkFlowList_HTML.ascx.cs">
+      <DependentUpon>ctrlWorkFlowList_HTML.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlWorkFlowList_HTML.ascx.designer.cs">
+      <DependentUpon>ctrlWorkFlowList_HTML.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrl_Search_Para.ascx.cs">
+      <DependentUpon>ctrl_Search_Para.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrl_Search_Para.ascx.designer.cs">
+      <DependentUpon>ctrl_Search_Para.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\MyItemTemplate.cs" />
+    <Compile Include="CommonCtrl\ctrlDropDownQuestionType.ascx.cs">
+      <DependentUpon>ctrlDropDownQuestionType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownQuestionType.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownQuestionType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveTypeDetail.ascx.cs">
+      <DependentUpon>ctrlArchiveTypeDetail.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveTypeDetail.ascx.designer.cs">
+      <DependentUpon>ctrlArchiveTypeDetail.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CSendEmail.cs" />
+    <Compile Include="Common\DataTableEx.cs" />
+    <Compile Include="Common\DataToExcel.cs" />
+    <Compile Include="Common\DESEncrypt.cs" />
+    <Compile Include="Common\EXIFMetaData.cs" />
+    <Compile Include="Common\ReportPDF.cs" />
+    <Compile Include="Common\SystemSet.cs" />
+    <Compile Include="Common\ZipFile.cs" />
+    <Compile Include="CompanyManage\AdvSearch.aspx.cs">
+      <DependentUpon>AdvSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\AdvSearch.aspx.designer.cs">
+      <DependentUpon>AdvSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveListPro.aspx.cs">
+      <DependentUpon>ArchiveListPro.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveListPro.aspx.designer.cs">
+      <DependentUpon>ArchiveListPro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveListProView.aspx.cs">
+      <DependentUpon>ArchiveListProView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveListProView.aspx.designer.cs">
+      <DependentUpon>ArchiveListProView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ChangeChargeUser.aspx.cs">
+      <DependentUpon>ChangeChargeUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ChangeChargeUser.aspx.designer.cs">
+      <DependentUpon>ChangeChargeUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_3Edit.aspx.cs">
+      <DependentUpon>CompanyReg3_3Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_3Edit.aspx.designer.cs">
+      <DependentUpon>CompanyReg3_3Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_2Edit.aspx.cs">
+      <DependentUpon>CompanyReg3_2Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_2Edit.aspx.designer.cs">
+      <DependentUpon>CompanyReg3_2Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_1Edit.aspx.cs">
+      <DependentUpon>CompanyReg3_1Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg3_1Edit.aspx.designer.cs">
+      <DependentUpon>CompanyReg3_1Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ConstructionList.aspx.cs">
+      <DependentUpon>ConstructionList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ConstructionList.aspx.designer.cs">
+      <DependentUpon>ConstructionList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveToUser.aspx.cs">
+      <DependentUpon>ArchiveToUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveToUser.aspx.designer.cs">
+      <DependentUpon>ArchiveToUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveToUserMod.aspx.cs">
+      <DependentUpon>ArchiveToUserMod.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveToUserMod.aspx.designer.cs">
+      <DependentUpon>ArchiveToUserMod.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectDoInfo.aspx.cs">
+      <DependentUpon>ProjectDoInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectDoInfo.aspx.designer.cs">
+      <DependentUpon>ProjectDoInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceOutHelpUser.aspx.cs">
+      <DependentUpon>ProjectRelevanceOutHelpUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceOutHelpUser.aspx.designer.cs">
+      <DependentUpon>ProjectRelevanceOutHelpUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceSignatureUser.aspx.cs">
+      <DependentUpon>ProjectRelevanceSignatureUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceSignatureUser.aspx.designer.cs">
+      <DependentUpon>ProjectRelevanceSignatureUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceUser.aspx.cs">
+      <DependentUpon>ProjectRelevanceUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ProjectRelevanceUser.aspx.designer.cs">
+      <DependentUpon>ProjectRelevanceUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndOutHelpCompanyList.aspx.cs">
+      <DependentUpon>SingleProjectAndOutHelpCompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndOutHelpCompanyList.aspx.designer.cs">
+      <DependentUpon>SingleProjectAndOutHelpCompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndSignatureCompanyList.aspx.cs">
+      <DependentUpon>SingleProjectAndSignatureCompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndSignatureCompanyList.aspx.designer.cs">
+      <DependentUpon>SingleProjectAndSignatureCompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndFileList.aspx.cs">
+      <DependentUpon>SingleProjectAndFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndFileList.aspx.designer.cs">
+      <DependentUpon>SingleProjectAndFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndCompanyList.aspx.cs">
+      <DependentUpon>SingleProjectAndCompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectAndCompanyList.aspx.designer.cs">
+      <DependentUpon>SingleProjectAndCompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ExportSingleProjectToJson.aspx.cs">
+      <DependentUpon>ExportSingleProjectToJson.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ExportSingleProjectToJson.aspx.designer.cs">
+      <DependentUpon>ExportSingleProjectToJson.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectPointAdd.aspx.cs">
+      <DependentUpon>SingleProjectPointAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectPointAdd.aspx.designer.cs">
+      <DependentUpon>SingleProjectPointAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectFileAttachAdd.aspx.cs">
+      <DependentUpon>SingleProjectFileAttachAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectFileAttachAdd.aspx.designer.cs">
+      <DependentUpon>SingleProjectFileAttachAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectList.aspx.cs">
+      <DependentUpon>SingleProjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\SingleProjectList.aspx.designer.cs">
+      <DependentUpon>SingleProjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlHead.ascx.cs">
+      <DependentUpon>ctrlHead.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlHead.ascx.designer.cs">
+      <DependentUpon>ctrlHead.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlOptStatus.ascx.cs">
+      <DependentUpon>ctrlOptStatus.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlOptStatus.ascx.designer.cs">
+      <DependentUpon>ctrlOptStatus.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveTraceList.aspx.cs">
+      <DependentUpon>ArchiveTraceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\ArchiveTraceList.aspx.designer.cs">
+      <DependentUpon>ArchiveTraceList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveFormType.ascx.cs">
+      <DependentUpon>ctrlArchiveFormType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlArchiveFormType.ascx.designer.cs">
+      <DependentUpon>ctrlArchiveFormType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCell.ascx.cs">
+      <DependentUpon>ctrlCell.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCell.ascx.designer.cs">
+      <DependentUpon>ctrlCell.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileList.ascx.cs">
+      <DependentUpon>ctrlDropDownFileList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileList.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownFileList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownArea.ascx.cs">
+      <DependentUpon>ctrlDropDownArea.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownArea.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownArea.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCanDefineType.ascx.cs">
+      <DependentUpon>ctrlDropDownCanDefineType.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCanDefineType.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownCanDefineType.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownConstructionProject.ascx.cs">
+      <DependentUpon>ctrlDropDownConstructionProject.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownConstructionProject.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownConstructionProject.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCutLeng.ascx.cs">
+      <DependentUpon>ctrlDropDownCutLeng.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCutLeng.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownCutLeng.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownRole.ascx.cs">
+      <DependentUpon>ctrlDropDownRole.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownRole.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownRole.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSingleProject.ascx.cs">
+      <DependentUpon>ctrlDropDownSingleProject.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSingleProject.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownSingleProject.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSingleProjectUsers.ascx.cs">
+      <DependentUpon>ctrlDropDownSingleProjectUsers.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSingleProjectUsers.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownSingleProjectUsers.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSplit.ascx.cs">
+      <DependentUpon>ctrlDropDownSplit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSplit.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownSplit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSystem.ascx.cs">
+      <DependentUpon>ctrlDropDownSystem.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownSystem.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownSystem.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownUser.ascx.cs">
+      <DependentUpon>ctrlDropDownUser.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownUser.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownUser.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlFoot.ascx.cs">
+      <DependentUpon>ctrlFoot.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlFoot.ascx.designer.cs">
+      <DependentUpon>ctrlFoot.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlGridEx.ascx.cs">
+      <DependentUpon>ctrlGridEx.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlGridEx.ascx.designer.cs">
+      <DependentUpon>ctrlGridEx.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlProjectBaseInfo.ascx.cs">
+      <DependentUpon>ctrlProjectBaseInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlProjectBaseInfo.ascx.designer.cs">
+      <DependentUpon>ctrlProjectBaseInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlSwfUpload.ascx.cs">
+      <DependentUpon>ctrlSwfUpload.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlSwfUpload.ascx.designer.cs">
+      <DependentUpon>ctrlSwfUpload.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlTextBoxEx.ascx.cs">
+      <DependentUpon>ctrlTextBoxEx.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlTextBoxEx.ascx.designer.cs">
+      <DependentUpon>ctrlTextBoxEx.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlWorkFlowList.ascx.cs">
+      <DependentUpon>ctrlWorkFlowList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlWorkFlowList.ascx.designer.cs">
+      <DependentUpon>ctrlWorkFlowList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCompanyInfo.ascx.cs">
+      <DependentUpon>ctrlDropDownCompanyInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownCompanyInfo.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownCompanyInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownModule.ascx.cs">
+      <DependentUpon>ctrlDropDownModule.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownModule.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownModule.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownWorkFlow.ascx.cs">
+      <DependentUpon>ctrlDropDownWorkFlow.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownWorkFlow.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownWorkFlow.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileListTmp.ascx.cs">
+      <DependentUpon>ctrlDropDownFileListTmp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlDropDownFileListTmp.ascx.designer.cs">
+      <DependentUpon>ctrlDropDownFileListTmp.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlMyWorkFlowList.ascx.cs">
+      <DependentUpon>ctrlMyWorkFlowList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlMyWorkFlowList.ascx.designer.cs">
+      <DependentUpon>ctrlMyWorkFlowList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlBtnBack.ascx.cs">
+      <DependentUpon>ctrlBtnBack.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlBtnBack.ascx.designer.cs">
+      <DependentUpon>ctrlBtnBack.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ColumnTemplate.cs" />
+    <Compile Include="Common\Comm.cs" />
+    <Compile Include="Common\CommonEnum.cs" />
+    <Compile Include="Common\PrevURLList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\UnZipFile.cs" />
+    <Compile Include="CompanyManage\CompanyReg2Edit.aspx.cs">
+      <DependentUpon>CompanyReg2Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg2Edit.aspx.designer.cs">
+      <DependentUpon>CompanyReg2Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg1Edit.aspx.cs">
+      <DependentUpon>CompanyReg1Edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CompanyManage\CompanyReg1Edit.aspx.designer.cs">
+      <DependentUpon>CompanyReg1Edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyBaseInfo.ascx.cs">
+      <DependentUpon>ctrlCompanyBaseInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyBaseInfo.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyBaseInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_1.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_1.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1Ext.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_1Ext.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1Ext.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_1Ext.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_2.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_2.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2Ext.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_2Ext.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2Ext.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_2Ext.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_3.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_3.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3Ext.ascx.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_3Ext.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3Ext.ascx.designer.cs">
+      <DependentUpon>ctrlCompanyRegBaseInfo3_3Ext.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlConstructionBaseInfo.ascx.cs">
+      <DependentUpon>ctrlConstructionBaseInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlConstructionBaseInfo.ascx.designer.cs">
+      <DependentUpon>ctrlConstructionBaseInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlConstructionExtInfo.ascx.cs">
+      <DependentUpon>ctrlConstructionExtInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommonCtrl\ctrlConstructionExtInfo.ascx.designer.cs">
+      <DependentUpon>ctrlConstructionExtInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonCtrl\GridPara.cs" />
+    <Compile Include="DefaultMyTaskList.aspx.cs">
+      <DependentUpon>DefaultMyTaskList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DefaultMyTaskList.aspx.designer.cs">
+      <DependentUpon>DefaultMyTaskList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\BatChUpload\BatchUploadFile.aspx.cs">
+      <DependentUpon>BatchUploadFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\BatChUpload\BatchUploadFile.aspx.designer.cs">
+      <DependentUpon>BatchUploadFile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\BatChUpload\UploadHandlerFile.ashx.cs">
+      <DependentUpon>UploadHandlerFile.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="File\ImageFileInfoList.aspx.cs">
+      <DependentUpon>ImageFileInfoList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\ImageFileInfoList.aspx.designer.cs">
+      <DependentUpon>ImageFileInfoList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\PreviewImage.aspx.cs">
+      <DependentUpon>PreviewImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\PreviewImage.aspx.designer.cs">
+      <DependentUpon>PreviewImage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FindPassword.aspx.cs">
+      <DependentUpon>FindPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FindPassword.aspx.designer.cs">
+      <DependentUpon>FindPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\BatchSignaturePdf.aspx.cs">
+      <DependentUpon>BatchSignaturePdf.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\BatchSignaturePdf.aspx.designer.cs">
+      <DependentUpon>BatchSignaturePdf.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFilesList.aspx.cs">
+      <DependentUpon>LHSignatureFilesList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFilesList.aspx.designer.cs">
+      <DependentUpon>LHSignatureFilesList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFilesLog.aspx.cs">
+      <DependentUpon>LHSignatureFilesLog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFilesLog.aspx.designer.cs">
+      <DependentUpon>LHSignatureFilesLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFileTmp.aspx.cs">
+      <DependentUpon>LHSignatureFileTmp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureFileTmp.aspx.designer.cs">
+      <DependentUpon>LHSignatureFileTmp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureProjectList.aspx.cs">
+      <DependentUpon>LHSignatureProjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\LHSignatureProjectList.aspx.designer.cs">
+      <DependentUpon>LHSignatureProjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\SignaturePdf.aspx.cs">
+      <DependentUpon>SignaturePdf.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\SignaturePdf.aspx.designer.cs">
+      <DependentUpon>SignaturePdf.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="iSignature\SignatureReportPdf.aspx.cs">
+      <DependentUpon>SignatureReportPdf.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iSignature\SignatureReportPdf.aspx.designer.cs">
+      <DependentUpon>SignatureReportPdf.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="KGHandlerEx.ashx.cs">
+      <DependentUpon>KGHandlerEx.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Main.aspx.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Main.aspx.designer.cs">
+      <DependentUpon>Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyTaskList.aspx.cs">
+      <DependentUpon>MyTaskList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyTaskList.aspx.designer.cs">
+      <DependentUpon>MyTaskList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PDFServer.aspx.cs">
+      <DependentUpon>PDFServer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PDFServer.aspx.designer.cs">
+      <DependentUpon>PDFServer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PublicModel.cs" />
+    <Compile Include="QuickReg.aspx.cs">
+      <DependentUpon>QuickReg.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuickReg.aspx.designer.cs">
+      <DependentUpon>QuickReg.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportPDFDown.aspx.cs">
+      <DependentUpon>ReportPDFDown.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportPDFDown.aspx.designer.cs">
+      <DependentUpon>ReportPDFDown.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportPDFServer.aspx.cs">
+      <DependentUpon>ReportPDFServer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportPDFServer.aspx.designer.cs">
+      <DependentUpon>ReportPDFServer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ZmsCertificateList.aspx.cs">
+      <DependentUpon>ZmsCertificateList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\ZmsCertificateList.aspx.designer.cs">
+      <DependentUpon>ZmsCertificateList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RkzCertificateList.aspx.cs">
+      <DependentUpon>RkzCertificateList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\RkzCertificateList.aspx.designer.cs">
+      <DependentUpon>RkzCertificateList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ZrsCertificateList.aspx.cs">
+      <DependentUpon>ZrsCertificateList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report\ZrsCertificateList.aspx.designer.cs">
+      <DependentUpon>ZrsCertificateList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RsaKey\getRsaPrivateKey.aspx.cs">
+      <DependentUpon>getRsaPrivateKey.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RsaKey\getRsaPrivateKey.aspx.designer.cs">
+      <DependentUpon>getRsaPrivateKey.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SiteWjdj.Master.cs">
+      <DependentUpon>SiteWjdj.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SiteWjdj.Master.designer.cs">
+      <DependentUpon>SiteWjdj.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SuppleMent\SmArchiveList.aspx.cs">
+      <DependentUpon>SmArchiveList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuppleMent\SmArchiveList.aspx.designer.cs">
+      <DependentUpon>SmArchiveList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\EditFileTitle.aspx.cs">
+      <DependentUpon>EditFileTitle.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\EditFileTitle.aspx.designer.cs">
+      <DependentUpon>EditFileTitle.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\LookCell.aspx.cs">
+      <DependentUpon>LookCell.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\LookCell.aspx.designer.cs">
+      <DependentUpon>LookCell.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\UpLoadEFile.aspx.cs">
+      <DependentUpon>UpLoadEFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\UpLoadEFile.aspx.designer.cs">
+      <DependentUpon>UpLoadEFile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\UpLoadFileAdd.aspx.cs">
+      <DependentUpon>UpLoadFileAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\UpLoadFileAdd.aspx.designer.cs">
+      <DependentUpon>UpLoadFileAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\FileInfoList.aspx.cs">
+      <DependentUpon>FileInfoList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\FileInfoList.aspx.designer.cs">
+      <DependentUpon>FileInfoList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\FileCellList.aspx.cs">
+      <DependentUpon>FileCellList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\FileCellList.aspx.designer.cs">
+      <DependentUpon>FileCellList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\UpLoadEFileList.aspx.cs">
+      <DependentUpon>UpLoadEFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\UpLoadEFileList.aspx.designer.cs">
+      <DependentUpon>UpLoadEFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\Base64.cs" />
+    <Compile Include="File\DocumentEdit.aspx.cs">
+      <DependentUpon>DocumentEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\DocumentEdit.aspx.designer.cs">
+      <DependentUpon>DocumentEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\ViewPic.aspx.cs">
+      <DependentUpon>ViewPic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\ViewPic.aspx.designer.cs">
+      <DependentUpon>ViewPic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SiteSon.Master.cs">
+      <DependentUpon>SiteSon.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SiteSon.Master.designer.cs">
+      <DependentUpon>SiteSon.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SuppleMent\SmArchiveToFileList.aspx.cs">
+      <DependentUpon>SmArchiveToFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuppleMent\SmArchiveToFileList.aspx.designer.cs">
+      <DependentUpon>SmArchiveToFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuppleMent\SmZJList.aspx.cs">
+      <DependentUpon>SmZJList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuppleMent\SmZJList.aspx.designer.cs">
+      <DependentUpon>SmZJList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuppleMent\SmUpLoadEFileList.aspx.cs">
+      <DependentUpon>SmUpLoadEFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuppleMent\SmUpLoadEFileList.aspx.designer.cs">
+      <DependentUpon>SmUpLoadEFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyFileTmpAdd.aspx.cs">
+      <DependentUpon>OutHelpCompanyFileTmpAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyFileTmpAdd.aspx.designer.cs">
+      <DependentUpon>OutHelpCompanyFileTmpAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyAdd.aspx.cs">
+      <DependentUpon>OutHelpCompanyAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyAdd.aspx.designer.cs">
+      <DependentUpon>OutHelpCompanyAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\SignatureCompanyAdd.aspx.cs">
+      <DependentUpon>SignatureCompanyAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\SignatureCompanyAdd.aspx.designer.cs">
+      <DependentUpon>SignatureCompanyAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\OperationLogList.aspx.cs">
+      <DependentUpon>OperationLogList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\OperationLogList.aspx.designer.cs">
+      <DependentUpon>OperationLogList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\EfileConvertLogList.aspx.cs">
+      <DependentUpon>EfileConvertLogList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\EfileConvertLogList.aspx.designer.cs">
+      <DependentUpon>EfileConvertLogList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\EfileConvertLogView.aspx.cs">
+      <DependentUpon>EfileConvertLogView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\EfileConvertLogView.aspx.designer.cs">
+      <DependentUpon>EfileConvertLogView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\OperationLogView.aspx.cs">
+      <DependentUpon>OperationLogView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\OperationLogView.aspx.designer.cs">
+      <DependentUpon>OperationLogView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\HookUpSignature.aspx.cs">
+      <DependentUpon>HookUpSignature.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\HookUpSignature.aspx.designer.cs">
+      <DependentUpon>HookUpSignature.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyList.aspx.cs">
+      <DependentUpon>OutHelpCompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\OutHelpCompanyList.aspx.designer.cs">
+      <DependentUpon>OutHelpCompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\SignatureCompanyList.aspx.cs">
+      <DependentUpon>SignatureCompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\SignatureCompanyList.aspx.designer.cs">
+      <DependentUpon>SignatureCompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateCode.aspx.cs">
+      <DependentUpon>ValidateCode.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ValidateCode.aspx.designer.cs">
+      <DependentUpon>ValidateCode.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\FileSignatureSet.aspx.cs">
+      <DependentUpon>FileSignatureSet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\FileSignatureSet.aspx.designer.cs">
+      <DependentUpon>FileSignatureSet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\WjdjOther.aspx.cs">
+      <DependentUpon>WjdjOther.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\WjdjOther.aspx.designer.cs">
+      <DependentUpon>WjdjOther.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ZxyysCheck.aspx.cs">
+      <DependentUpon>ZxyysCheck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ZxyysCheck.aspx.designer.cs">
+      <DependentUpon>ZxyysCheck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionAdd.aspx.cs">
+      <DependentUpon>QuestionAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionAdd.aspx.designer.cs">
+      <DependentUpon>QuestionAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveCheck.aspx.cs">
+      <DependentUpon>ArchiveCheck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveCheck.aspx.designer.cs">
+      <DependentUpon>ArchiveCheck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestHandler.ashx.cs">
+      <DependentUpon>RequestHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="SiteParent.Master.cs">
+      <DependentUpon>SiteParent.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SiteParent.Master.designer.cs">
+      <DependentUpon>SiteParent.Master</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\AreaAdd.aspx.cs">
+      <DependentUpon>AreaAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\AreaAdd.aspx.designer.cs">
+      <DependentUpon>AreaAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\AreaList.aspx.cs">
+      <DependentUpon>AreaList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\AreaList.aspx.designer.cs">
+      <DependentUpon>AreaList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\UserByProjectList.aspx.cs">
+      <DependentUpon>UserByProjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\UserByProjectList.aspx.designer.cs">
+      <DependentUpon>UserByProjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\ModuleAdd.aspx.cs">
+      <DependentUpon>ModuleAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\ModuleAdd.aspx.designer.cs">
+      <DependentUpon>ModuleAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\ModuleList.aspx.cs">
+      <DependentUpon>ModuleList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\ModuleList.aspx.designer.cs">
+      <DependentUpon>ModuleList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\RoleAdd.aspx.cs">
+      <DependentUpon>RoleAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\RoleAdd.aspx.designer.cs">
+      <DependentUpon>RoleAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\RoleList.aspx.cs">
+      <DependentUpon>RoleList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\RoleList.aspx.designer.cs">
+      <DependentUpon>RoleList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\SystemAdd.aspx.cs">
+      <DependentUpon>SystemAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\SystemAdd.aspx.designer.cs">
+      <DependentUpon>SystemAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\SystemList.aspx.cs">
+      <DependentUpon>SystemList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\SystemList.aspx.designer.cs">
+      <DependentUpon>SystemList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\CompanyList.aspx.cs">
+      <DependentUpon>CompanyList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\CompanyList.aspx.designer.cs">
+      <DependentUpon>CompanyList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\RightManage.aspx.cs">
+      <DependentUpon>RightManage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\RightManage.aspx.designer.cs">
+      <DependentUpon>RightManage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\TrainPlanList.aspx.cs">
+      <DependentUpon>TrainPlanList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\TrainPlanList.aspx.designer.cs">
+      <DependentUpon>TrainPlanList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\TrainPlanAdd.aspx.cs">
+      <DependentUpon>TrainPlanAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\TrainPlanAdd.aspx.designer.cs">
+      <DependentUpon>TrainPlanAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\TrainRecAdd.aspx.cs">
+      <DependentUpon>TrainRecAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\TrainRecAdd.aspx.designer.cs">
+      <DependentUpon>TrainRecAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\TrainRecList.aspx.cs">
+      <DependentUpon>TrainRecList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\TrainRecList.aspx.designer.cs">
+      <DependentUpon>TrainRecList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\CompanyUserAdd.aspx.cs">
+      <DependentUpon>CompanyUserAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\CompanyUserAdd.aspx.designer.cs">
+      <DependentUpon>CompanyUserAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\UserAdd.aspx.cs">
+      <DependentUpon>UserAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\UserAdd.aspx.designer.cs">
+      <DependentUpon>UserAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\CompanyUserList.aspx.cs">
+      <DependentUpon>CompanyUserList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\CompanyUserList.aspx.designer.cs">
+      <DependentUpon>CompanyUserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\UserList.aspx.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\UserList.aspx.designer.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\WorkFlowAdd.aspx.cs">
+      <DependentUpon>WorkFlowAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\WorkFlowAdd.aspx.designer.cs">
+      <DependentUpon>WorkFlowAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\WorkFlowList.aspx.cs">
+      <DependentUpon>WorkFlowList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\WorkFlowList.aspx.designer.cs">
+      <DependentUpon>WorkFlowList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\FileListTmpList.aspx.cs">
+      <DependentUpon>FileListTmpList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\FileListTmpList.aspx.designer.cs">
+      <DependentUpon>FileListTmpList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\FileListTmpAdd.aspx.cs">
+      <DependentUpon>FileListTmpAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\FileListTmpAdd.aspx.designer.cs">
+      <DependentUpon>FileListTmpAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SystemManage\CompanySignetList.aspx.cs">
+      <DependentUpon>CompanySignetList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SystemManage\CompanySignetList.aspx.designer.cs">
+      <DependentUpon>CompanySignetList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserLoginGather.aspx.cs">
+      <DependentUpon>UserLoginGather.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserLoginGather.aspx.designer.cs">
+      <DependentUpon>UserLoginGather.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReportPdfView.aspx.cs">
+      <DependentUpon>ReportPdfView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReportPdfView.aspx.designer.cs">
+      <DependentUpon>ReportPdfView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveAdd.aspx.cs">
+      <DependentUpon>ArchiveAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveAdd.aspx.designer.cs">
+      <DependentUpon>ArchiveAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveCheckList.aspx.cs">
+      <DependentUpon>ArchiveCheckList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveCheckList.aspx.designer.cs">
+      <DependentUpon>ArchiveCheckList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\HookUpCompany.aspx.cs">
+      <DependentUpon>HookUpCompany.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\HookUpCompany.aspx.designer.cs">
+      <DependentUpon>HookUpCompany.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionView.aspx.cs">
+      <DependentUpon>QuestionView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionView.aspx.designer.cs">
+      <DependentUpon>QuestionView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\QuickWjdj.aspx.cs">
+      <DependentUpon>QuickWjdj.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\QuickWjdj.aspx.designer.cs">
+      <DependentUpon>QuickWjdj.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\InsideRemove.aspx.cs">
+      <DependentUpon>InsideRemove.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\InsideRemove.aspx.designer.cs">
+      <DependentUpon>InsideRemove.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\WFArchiveList.aspx.cs">
+      <DependentUpon>WFArchiveList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\WFArchiveList.aspx.designer.cs">
+      <DependentUpon>WFArchiveList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchivePrint.aspx.cs">
+      <DependentUpon>ArchivePrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchivePrint.aspx.designer.cs">
+      <DependentUpon>ArchivePrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveToFileList.aspx.cs">
+      <DependentUpon>ArchiveToFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveToFileList.aspx.designer.cs">
+      <DependentUpon>ArchiveToFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\SubmittedInfo.aspx.cs">
+      <DependentUpon>SubmittedInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\SubmittedInfo.aspx.designer.cs">
+      <DependentUpon>SubmittedInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\BatChUpload\BatchUpload.aspx.cs">
+      <DependentUpon>BatchUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\BatChUpload\BatchUpload.aspx.designer.cs">
+      <DependentUpon>BatchUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\BatChUpload\UploadHandler.ashx.cs">
+      <DependentUpon>UploadHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ImageWjdj.aspx.cs">
+      <DependentUpon>ImageWjdj.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ImageWjdj.aspx.designer.cs">
+      <DependentUpon>ImageWjdj.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveAdd.aspx.cs">
+      <DependentUpon>MyArchiveAdd.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveAdd.aspx.designer.cs">
+      <DependentUpon>MyArchiveAdd.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveList.aspx.cs">
+      <DependentUpon>MyArchiveList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveList.aspx.designer.cs">
+      <DependentUpon>MyArchiveList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveToFileList.aspx.cs">
+      <DependentUpon>MyArchiveToFileList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\MyArchiveToFileList.aspx.designer.cs">
+      <DependentUpon>MyArchiveToFileList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\MyProjectList.aspx.cs">
+      <DependentUpon>MyProjectList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\MyProjectList.aspx.designer.cs">
+      <DependentUpon>MyProjectList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\SelectFileListTpl.aspx.cs">
+      <DependentUpon>SelectFileListTpl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\SelectFileListTpl.aspx.designer.cs">
+      <DependentUpon>SelectFileListTpl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\SubmitToReadyCheck.aspx.cs">
+      <DependentUpon>SubmitToReadyCheck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\SubmitToReadyCheck.aspx.designer.cs">
+      <DependentUpon>SubmitToReadyCheck.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionList.aspx.cs">
+      <DependentUpon>QuestionList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\QuestionList.aspx.designer.cs">
+      <DependentUpon>QuestionList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\Rwfp.aspx.cs">
+      <DependentUpon>Rwfp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\Rwfp.aspx.designer.cs">
+      <DependentUpon>Rwfp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="File\CellEdit.aspx.cs">
+      <DependentUpon>CellEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="File\CellEdit.aspx.designer.cs">
+      <DependentUpon>CellEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\Wjdj.aspx.cs">
+      <DependentUpon>Wjdj.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\Wjdj.aspx.designer.cs">
+      <DependentUpon>Wjdj.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ZJList.aspx.cs">
+      <DependentUpon>ZJList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ZJList.aspx.designer.cs">
+      <DependentUpon>ZJList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\Zxyys.aspx.cs">
+      <DependentUpon>Zxyys.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\Zxyys.aspx.designer.cs">
+      <DependentUpon>Zxyys.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveList.aspx.cs">
+      <DependentUpon>ArchiveList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\ArchiveList.aspx.designer.cs">
+      <DependentUpon>ArchiveList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkFlow\MyZJList.aspx.cs">
+      <DependentUpon>MyZJList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkFlow\MyZJList.aspx.designer.cs">
+      <DependentUpon>MyZJList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebServices\ImportDataWebService.asmx.cs">
+      <DependentUpon>ImportDataWebService.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JS\default.js" />
+    <Content Include="JS\common.js" />
+    <Content Include="SystemManage\AreaAdd.aspx" />
+    <Content Include="SystemManage\AreaList.aspx" />
+    <Content Include="SystemManage\CompanyList.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CommonCtrl\ctrlDropDownArea.ascx" />
+    <Content Include="CommonCtrl\ctrlFoot.ascx" />
+    <Content Include="CommonCtrl\ctrlGridEx.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownCompanyInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlTextBoxEx.ascx" />
+    <Content Include="JS\Validate.js" />
+    <Content Include="JS\WebCalendar.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CompanyManage\ConstructionList.aspx" />
+    <Content Include="CompanyManage\ArchiveToUser.aspx" />
+    <Content Include="CompanyManage\ArchiveToUserMod.aspx" />
+    <Content Include="CompanyManage\SingleProjectList.aspx" />
+    <Content Include="CompanyManage\ArchiveTraceList.aspx" />
+    <Content Include="CommonCtrl\ctrlArchiveFormType.ascx" />
+    <Content Include="CommonCtrl\ctrlCell.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownFileList.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownCanDefineType.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownConstructionProject.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownCutLeng.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownRole.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownSingleProject.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownSingleProjectUsers.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownSplit.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownSystem.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownUser.ascx" />
+    <Content Include="CommonCtrl\ctrlProjectBaseInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlSwfUpload.ascx" />
+    <Content Include="CommonCtrl\ctrlWorkFlowList.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownModule.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownWorkFlow.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownFileListTmp.ascx" />
+    <Content Include="CommonCtrl\ctrlMyWorkFlowList.ascx" />
+    <Content Include="CommonCtrl\ctrlBtnBack.ascx" />
+    <Content Include="CompanyManage\CompanyReg2Edit.aspx" />
+    <Content Include="CompanyManage\CompanyReg1Edit.aspx" />
+    <Content Include="CommonCtrl\ctrlCompanyBaseInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_1Ext.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_2Ext.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyRegBaseInfo3_3Ext.ascx" />
+    <Content Include="CommonCtrl\ctrlConstructionBaseInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlConstructionExtInfo.ascx" />
+    <Content Include="File\EditFileTitle.aspx" />
+    <Content Include="File\UpLoadFileAdd.aspx" />
+    <Content Include="File\FileInfoList.aspx" />
+    <Content Include="File\FileCellList.aspx" />
+    <Content Include="File\UpLoadEFileList.aspx" />
+    <Content Include="Images3\1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\11.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\1_active.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\22.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\2_active.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\33.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\add.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\ase.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\back.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\bg-button.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\blue_back.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\blue_back1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Bottom18.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Bottom19.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Bottom20.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\button_area_back.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\button_area_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\button_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\check.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\checkcode.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\del.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\del_icon.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\edit.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\edit_icon.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\edt.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\first.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\go.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\GridViewHeadImage.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\head_background.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\head_background2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\head_logo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\head_logo2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\iconQuestion.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\input_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\input_bg2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\jt.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\jt.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\jt2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\jt3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\last.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\lc.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\lc_btn_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\lc_btn_bg2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\left_bg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\left_menubg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\left_menubg2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\light-hd.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_01.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_02.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_03.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_03.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_04.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_06.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_07.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_07.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_08.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_08.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_09.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_09.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_10.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_11.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_11.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\login_btn.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_01.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_02.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_03.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_05.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_06.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_07.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_10.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_11.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_13.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_15.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_17.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_19.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_21.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_27.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_28.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_29.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_30.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_30_1.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_31.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_32.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_34.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_35.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_43.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_54.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_56.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_58.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_60.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_62.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_69.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_71.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_72.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_74.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\main_jg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\map2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\map_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\next.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\page_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\pass.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\passlogo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\quit.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_03.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_04.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_06.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\regedit_btn.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_downline.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_Dq.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_icon.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_icon2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_line.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_next.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\Regedit_user.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\se.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\se.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\se2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\se3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\sel.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\sj.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\error.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\page_white_add.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\toobig.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\uploadlimit.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\XPButtonNoText_160x22.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\SwfUpload\zerobyte.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_03.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_05.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_07.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_12.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_15.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_17.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_18.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_19.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_20.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tab_bg.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tb.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\tool-sprites.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\top_bg.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\top_logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\user.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\userlogo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\white-top-bottom.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\复件 main_34.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="File\DocumentEdit.aspx" />
+    <Content Include="File\iWebPDF.cab" />
+    <Content Include="File\iWebPDF.js" />
+    <Content Include="JS\chili-1.7.pack.js" />
+    <Content Include="JS\DD_belatedPNG_0.0.8a.js" />
+    <Content Include="JS\examples.js" />
+    <Content Include="JS\ext-all.js" />
+    <Content Include="JS\ext-base.js" />
+    <Content Include="JS\jquery.accordion.js" />
+    <Content Include="JS\jquery.dimensions.js" />
+    <Content Include="JS\jquery.easing.js" />
+    <Content Include="JS\jquery.js" />
+    <Content Include="JS\js.js" />
+    <Content Include="JS\SwfUpload\handlers.js" />
+    <Content Include="JS\SwfUpload\swfupload.js" />
+    <Content Include="JS\SwfUpload\swfupload.swf" />
+    <Content Include="JS\SwfUpload\swfuploadbutton.swf" />
+    <Content Include="JS\tablecloth.js" />
+    <Content Include="SystemManage\ChangePassword.aspx" />
+    <Content Include="SystemManage\ModuleAdd.aspx" />
+    <Content Include="SystemManage\ModuleList.aspx" />
+    <Content Include="SystemManage\RoleAdd.aspx" />
+    <Content Include="SystemManage\RoleList.aspx" />
+    <Content Include="SystemManage\SystemAdd.aspx" />
+    <Content Include="SystemManage\SystemList.aspx" />
+    <Content Include="SystemManage\RightManage.aspx" />
+    <Content Include="SystemManage\UserAdd.aspx" />
+    <Content Include="SystemManage\UserList.aspx" />
+    <Content Include="SystemManage\WorkFlowAdd.aspx" />
+    <Content Include="SystemManage\WorkFlowList.aspx" />
+    <Content Include="SystemManage\FileListTmpList.aspx" />
+    <Content Include="SystemManage\FileListTmpAdd.aspx" />
+    <Content Include="WorkFlow\ArchiveCheckList.aspx" />
+    <Content Include="WorkFlow\HookUpCompany.aspx" />
+    <Content Include="WorkFlow\QuestionView.aspx" />
+    <Content Include="WorkFlow\QuickWjdj.aspx" />
+    <Content Include="WorkFlow\InsideRemove.aspx" />
+    <Content Include="WorkFlow\WFArchiveList.aspx" />
+    <Content Include="WorkFlow\ArchivePrint.aspx" />
+    <Content Include="WorkFlow\SubmittedInfo.aspx" />
+    <Content Include="WorkFlow\BatChUpload\BatchUpload.aspx" />
+    <Content Include="WorkFlow\BatChUpload\CSS\Style.css" />
+    <Content Include="WorkFlow\ImageWjdj.aspx" />
+    <Content Include="WorkFlow\QuestionList.aspx" />
+    <Content Include="WorkFlow\Rwfp.aspx" />
+    <Content Include="File\CellEdit.aspx" />
+    <Content Include="WorkFlow\Wjdj.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CommonCtrl\ctrlDropDownCellTmp.ascx" />
+    <Content Include="CommonCtrl\ctrlArchiveCheckBoxUserList.ascx" />
+    <Content Include="CommonCtrl\ctrlCheckBoxUserList.ascx" />
+    <Content Include="CommonCtrl\ctrlCompanyQucikReg.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownReportType.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownSystemInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownTrainPlan.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownUserType.ascx" />
+    <Content Include="CommonCtrl\ctrlHead.ascx" />
+    <Content Include="CommonCtrl\ctrlJSCheckInfo.ascx" />
+    <Content Include="CommonCtrl\ctrlOptStatus.ascx" />
+    <Content Include="CommonCtrl\ctrlDropDownQuestionType.ascx" />
+    <Content Include="CommonCtrl\ctrl_Search_Para.ascx" />
+    <Content Include="CommonCtrl\ctrlArchiveTypeDetail.ascx" />
+    <Content Include="CompanyManage\AdvSearch.aspx" />
+    <Content Include="CompanyManage\ArchiveListPro.aspx" />
+    <Content Include="CompanyManage\ArchiveListProView.aspx" />
+    <Content Include="CompanyManage\ProjectDoInfo.aspx" />
+    <Content Include="File\LookCell.aspx" />
+    <Content Include="File\UpLoadEFile.aspx" />
+    <Content Include="Images3\2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\loading.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\content_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\content_back_foot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\head_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\head_logo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\link_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\login.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\login_back.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\login_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineCoach\login_hover.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\BackGround.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\content_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\content_back_foot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\head_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\head_logo.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\link_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\login.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\login_back.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\OnLineGather\login_hover.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\process.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\Localization\zh-CHS.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequestHandler.ashx" />
+    <Content Include="Images3\button_area_back2.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SiteParent.Master" />
+    <Content Include="Images3\01.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images3\blue_back3.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SystemManage\CompanySignetList.aspx" />
+    <Content Include="SystemManage\TrainPlanList.aspx" />
+    <Content Include="SystemManage\TrainPlanAdd.aspx" />
+    <Content Include="SystemManage\TrainRecAdd.aspx" />
+    <Content Include="SystemManage\TrainRecList.aspx" />
+    <Content Include="UserLoginGather.aspx" />
+    <Content Include="ReportPdfView.aspx" />
+    <Content Include="WorkFlow\ArchiveAdd.aspx" />
+    <Content Include="WorkFlow\ArchiveToFileList.aspx" />
+    <Content Include="WorkFlow\MyArchiveAdd.aspx" />
+    <Content Include="WorkFlow\MyArchiveList.aspx" />
+    <Content Include="WorkFlow\MyArchiveToFileList.aspx" />
+    <Content Include="WorkFlow\MyProjectList.aspx" />
+    <Content Include="WorkFlow\SelectFileListTpl.aspx" />
+    <Content Include="WorkFlow\SubmitToReadyCheck.aspx" />
+    <Content Include="WorkFlow\ZJList.aspx" />
+    <Content Include="WorkFlow\Zxyys.aspx" />
+    <Content Include="WorkFlow\ArchiveList.aspx" />
+    <Content Include="WorkFlow\MyZJList.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="ADODB">
+      <Guid>{B691E011-1797-432E-907A-4D8C69339129}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="CDO">
+      <Guid>{CD000000-8B95-11D1-82DB-00C04FB1625D}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="File\BatChUpload\JS\uploadify.fla" />
+    <Content Include="File\BatChUpload\UploadHandlerFile.ashx" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\iconfont.eot" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\iconfont.ttf" />
+    <Content Include="Javascript\Layer\iconfont\1.0.1\iconfont.woff" />
+    <Content Include="Javascript\Layer\layui\font\iconfont.eot" />
+    <Content Include="Javascript\Layer\layui\font\iconfont.ttf" />
+    <Content Include="Javascript\Layer\layui\font\iconfont.woff" />
+    <Content Include="ImagesNew\Thumbs.db" />
+    <Content Include="ImagesNew\vssver2.scc" />
+    <Content Include="Images\Login\main.png_" />
+    <Content Include="Images\OnLineCoach\Thumbs.db" />
+    <Content Include="Images\OnLineCoach\vssver2.scc" />
+    <Content Include="Images\OnLineGather\Thumbs.db" />
+    <Content Include="Images\OnLineGather\vssver2.scc" />
+    <Content Include="Images\SwfUpload\Thumbs.db" />
+    <Content Include="Images\SwfUpload\vssver2.scc" />
+    <Content Include="Javascript\Layer\layui\css\modules\layim\html\getmsg.json" />
+    <Content Include="KGHandlerEx.ashx" />
+    <EmbeddedResource Include="iSignature_PDF_API.lic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Upload\TempReport\p1.gif" />
+    <None Include="Properties\PublishProfiles\55.pubxml" />
+    <None Include="Properties\PublishProfiles\配置文件1.pubxml" />
+    <None Include="Report\ReportFiles\城建档案案卷分类目录.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Report\ReportFiles\城建档案案卷总目录.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Report\ReportFiles\城建档案（项目）级分类目录.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Report\ReportFiles\工程报表\Archive_hegeyjianshu.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\printArchive.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\proj_application.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\proj_certificate.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\shengchahuizhi.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\yanshou_yjs.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\yuyanshou_yjs.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\yuyanshou_sqd.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\yys_yjs1.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\yys_yjs2.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\案卷报表\Archivefengpi.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\案卷报表\Archivemulu.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\案卷报表\juanneibeikao.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\RKZ.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\ZMS.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Report\ReportFiles\工程报表\ZRS.mrt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Report\ReportFiles\芜湖城建档案馆整编竣工档案交接登记表.mrt">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="WorkFlow\BatChUpload\UploadHandler.ashx" />
+    <Content Include="SiteWjdj.Master" />
+    <Content Include="Upload\TempReport\25,32,33,34,35,37-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\25,32,33-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\25,32-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\25,33-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\25-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\25-juanneibeikao.pdf" />
+    <Content Include="Upload\TempReport\31,35-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\35,37,29-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\35-archivemulu.pdf" />
+    <Content Include="Upload\TempReport\92d9729e-2a38-4ef6-820c-fd00811101ae.xls" />
+    <Content Include="Upload\TempReport\bcf35180-ef1e-4bdd-afbb-8a741e329b25.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ajax\" />
+    <Folder Include="Report\ExportExcel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.BLL\DigiPower.Onlinecol.Standard.BLL.csproj">
+      <Project>{4275650d-1b3a-4d94-a4b2-b3eec4ae2c7b}</Project>
+      <Name>DigiPower.Onlinecol.Standard.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.CBLL\DigiPower.Onlinecol.Standard.CBLL.csproj">
+      <Project>{d9880f34-5cd4-48e9-8fc3-190ce47c5109}</Project>
+      <Name>DigiPower.Onlinecol.Standard.CBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.Common\DigiPower.Onlinecol.Standard.Common.csproj">
+      <Project>{7bca3804-897d-495a-83eb-094fd6e49d3b}</Project>
+      <Name>DigiPower.Onlinecol.Standard.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.DAL\DigiPower.Onlinecol.Standard.DAL.csproj">
+      <Project>{ba1a2833-1963-4d8c-b8fe-617376d39333}</Project>
+      <Name>DigiPower.Onlinecol.Standard.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.Model\DigiPower.Onlinecol.Standard.Model.csproj">
+      <Project>{800e194a-0b70-44e3-b463-e433d905fe1d}</Project>
+      <Name>DigiPower.Onlinecol.Standard.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>23323</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:23321/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

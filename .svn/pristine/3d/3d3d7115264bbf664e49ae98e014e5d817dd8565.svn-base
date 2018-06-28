@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+//案卷管理
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class ArchiveAdd : PageBase
+    {
+        #region 属性及构造函数
+        /// <summary>
+        /// 案卷补录管理页面过来
+        /// </summary>
+        string SuppleMentFlag = string.Empty;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            MyAddInit();
+            if (!this.IsPostBack)
+            {
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["ps"] = CommonEnum.PageState.EDIT;
+                    }
+
+                    if (Action.ToLower().Equals("view"))
+                    {
+                        btnSave.Visible = false;
+                    }
+                }
+
+                BindData();
+            }
+
+            ////非档案馆人员，不可能改动档案信息
+            //if (Common.Session.GetSessionBool("IsCompany") == true)
+            //{
+            //    btnSave.Visible = false;
+            //}
+
+
+            //案卷补录管理
+            if (DNTRequest.GetQueryString("SuppleMent") == "SuppleMent")
+            {
+                SuppleMentFlag = DNTRequest.GetQueryString("SuppleMent");
+                BtnBack.Visible = false;
+            }
+        }
+        #endregion
+
+        #region 方法
+        protected void BindData()
+        {
+            boxType.DataBindEx();
+            bgqx.DataBindEx();
+            mj.DataBindEx();
+            ajlx.DataBindEx();
+
+            if (!String.IsNullOrEmpty(ID))
+            {
+                T_Archive_MDL Mdl = new T_Archive_BLL().GetModel(Common.ConvertEx.ToInt(ID));
+                if (Mdl != null)
+                {
+                    ViewState["model"] = Mdl;
+                    Comm.SetValueToPage(Mdl, this.tbl);
+                }
+            }
+        }
+        #endregion
+
+        #region 事件
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            if (((CommonEnum.PageState)ViewState["ps"]) == CommonEnum.PageState.EDIT)
+            {
+                T_Archive_MDL Mdl = new T_Archive_MDL();
+                if (ViewState["model"] != null)
+                {
+                    Mdl = ViewState["model"] as T_Archive_MDL;
+                    object obj = Comm.GetValueToObject(Mdl, this.tbl);
+                    T_Archive_MDL newMdl = obj as T_Archive_MDL;
+                    string newDH = newMdl.dh;
+                    int iPos = newDH.LastIndexOf("-");
+                    if (iPos > 0)
+                    {
+                        newDH = newDH.Substring(0, iPos);
+                        newDH = newDH + "-" + newMdl.xh;
+                        newMdl.dh = newDH;
+                    }
+                    new T_Archive_BLL().Update(newMdl);
+                }
+            }
+
+            if (SuppleMentFlag == "SuppleMent")
+            {
+                MessageBox.ShowAndCloseWin(this.Page, "保存成功!");
+            }
+            else
+            {
+                Response.Redirect("ArchiveList.aspx?sqlwhere=" + SqlWhere + "&PageIndex=" + pPageIndex + "");
+            }
+        }
+
+        protected void BtnBack_Click(object sender, EventArgs e)
+        {
+            if (SuppleMentFlag == "SuppleMent")
+            {
+                MessageBox.ShowAndCloseWin(this.Page, "保存成功!");
+            }
+            else
+            {
+                Response.Redirect("ArchiveList.aspx?sqlwhere=" + SqlWhere + "&PageIndex=" + pPageIndex + "");
+            }
+        }
+
+        #endregion
+    }
+}

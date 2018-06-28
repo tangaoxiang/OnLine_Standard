@@ -1,0 +1,227 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+using DigiPower.Onlinecol.Standard.CBLL;
+
+//案卷管理      
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class WFArchiveList : PageBase
+    {
+        T_Archive_BLL trBll = new T_Archive_BLL();
+        T_WorkFlowDoResult_BLL doResultBLL = new T_WorkFlowDoResult_BLL();
+
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        /// <summary>
+        /// 流程编号
+        /// </summary>
+        public string workFlowCode = string.Empty;
+        /// <summary>
+        /// 是否禁用审核意见
+        /// </summary>
+        public bool IsFlag = true;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e) {
+            Ajax.Utility.RegisterTypeForAjax(typeof(WFArchiveList));
+            workFlowCode = DNTRequest.GetQueryString("WorkFlowCode").ToUpper();
+            workFlowID = DNTRequest.GetQueryString("WorkFlowID");
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            MyAddInit();
+
+            if (!this.IsPostBack) {
+                ctrlProjectBaseInfo1.DataBindEx(singleProjectID);                     //工程信息       
+                ctrlJSCheckInfo1.SetVisible = true;                                   //接收审核信息
+                ctrlJSCheckInfo1.DataBindEx(singleProjectID, workFlowCode);
+
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("ddlChkStatus")))
+                    ddlChkStatus.SelectedValue = Server.UrlDecode(DNTRequest.GetQueryString("ddlChkStatus"));
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("txtXH")))
+                    txtXH.Text = Server.UrlDecode(DNTRequest.GetQueryString("txtXH"));
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("txtTitle")))
+                    txtTitle.Text = Server.UrlDecode(DNTRequest.GetQueryString("txtTitle"));
+
+                BindGrid(AspNetPager.CurrentPageIndex);
+            }
+        }
+
+        /// <summary>
+        /// 绑定数据
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        public void BindGrid(int pageIndex) {
+            //从窗口接收开始,都是馆里人员操作,不用考虑建设单位等身份
+            string strWhere = " AND A.SingleProjectID=" + Common.DNTRequest.GetQueryString("SingleProjectID");
+
+            if (PublicModel.isSuperAdmin()) {//管理员管理员获取所有工程
+                strWhere += " AND D.AREA_CODE LIKE '" + Common.Session.GetSession("AREA_CODE") + "%'";
+            }
+            else if (PublicModel.isArchiveUser()) {//档案馆用户看自己的
+                strWhere += " AND D.AREA_CODE LIKE '" + Common.Session.GetSession("OLD_AREA_CODE") + "%'";
+            }
+
+            Hashtable ht = new Hashtable();
+            if (ddlChkStatus.SelectedValue != "")     //关于审核状态,都是查询最后一次的审核信息
+            {
+                ht.Add("CheckStatus", ddlChkStatus.SelectedValue);
+                ht.Add("SingleProjectID", singleProjectID);
+                ht.Add("WorkFlowID", workFlowID);
+            }
+            if (txtXH.Text != "")
+                strWhere += " AND XH=" + ConvertEx.ToInt(txtXH.Text.Trim()) + "";
+            if (txtTitle.Text.Trim().Length > 0)
+                strWhere += " AND A.ajtm like '%" + txtTitle.Text.Trim() + "%' ";
+
+            if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0) {
+                pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                ViewState["CurrentPageIndex"] = pageIndex;
+            }
+            else {
+                pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+            }
+
+            DataTable dt = trBll.GetListPaging(strWhere, pageSize, pageIndex, out itemCount, ht); ;
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+            AspNetPager.CurrentPageIndex = pageIndex;
+
+            rpData.DataSource = dt;
+            rpData.DataBind();
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e) {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e) {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        protected void rpData_ItemDataBound(object sender, RepeaterItemEventArgs e) {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem) {
+                DataRowView view = e.Item.DataItem as DataRowView;
+                Literal ltCheckStatus = e.Item.FindControl("ltCheckStatus") as Literal;
+                Literal ltRemark = e.Item.FindControl("ltRemark") as Literal;
+
+                Hashtable ht = new Hashtable();
+                ht.Add("SingleProjectID", singleProjectID);
+                ht.Add("WorkFlowID", workFlowID);
+                ht.Add("ArchiveID", view["ArchiveID"].ToString());
+
+                List<T_WorkFlowDoResult_MDL> list = doResultBLL.GetArchiveLastChecResultList(ht);   //获取的是最后一次的审核信息,根据流程ID
+                if (list.Count > 0) {
+                    string remark = list[0].DoRemark.ToString();
+                    bool blDoResult = ConvertEx.ToBool(list[0].DoResult);
+
+                    ltCheckStatus.Text = PublicModel.GetImageforStatus(blDoResult);
+                    ltRemark.Text = "<a style=\"color: black;cursor:pointer;\"  onclick=\"Common.fnLayerTips('" + remark + "',this)\"> ";
+                    ltRemark.Text += ((remark.Length > 3) ? remark.Substring(0, 3) + "..." : remark) + "</a>";
+
+                    HtmlTableRow col = (HtmlTableRow)e.Item.FindControl("r1");
+                    if (blDoResult)
+                        col.BgColor = "green";
+                    else
+                        col.BgColor = "red";
+                }
+            }
+        }
+
+        /// <summary>
+        /// 判断某个工程的下的报表PDF是否存在
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <param name="reportCode"></param>
+        /// <param name="delOldReportPDF"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool CheckExistsReportPDF(string singleProjectID, string reportCode) {
+            return ReportPDF.CheckExistsReportPDF(singleProjectID, reportCode);
+        }
+
+        /// <summary>
+        /// 根据工程ID 将报表导出PDF,注意:报表必须预先在T_Report做出记录
+        /// </summary>
+        /// <param name="SingleProjectID">工程ID</param>
+        /// <param name="ReportCode">报表类型</param>
+        /// <param name="DelOldReportPDF">是否删除已生成的PDF</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string ReportExportPDF(string singleProjectID, string reportCode, bool delOldReportPDF) {
+            return ReportPDF.ReportExportPDF(singleProjectID, reportCode, delOldReportPDF);
+        }
+
+        /// <summary>
+        /// 工程入库
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool SingleProjectRK(string singleProjectID) {
+            T_SingleProject_BLL spBll = new T_SingleProject_BLL();
+            T_SingleProject_MDL spMdl = spBll.GetModel(ConvertEx.ToInt(singleProjectID));
+            if (spMdl != null) {
+                spMdl.Status = 3721;
+                spBll.Update(spMdl);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 领导签字=工程提交
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool SingleProjectSubmit(string singleProjectID, string workFlowID) {
+            WorkFlowManage workflowmanage = new WorkFlowManage();
+            if (workflowmanage.GoNextProjectWorkFlowSataus(ConvertEx.ToInt(singleProjectID), ConvertEx.ToInt(workFlowID))) {
+                return true;
+            }
+            return false;
+        }
+
+    }
+}

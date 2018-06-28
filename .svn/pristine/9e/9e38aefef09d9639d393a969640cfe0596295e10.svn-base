@@ -1,0 +1,60 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true"
+    CodeBehind="JiaoJieDengJiAdd.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Report.JiaoJieDengJiAdd" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlDengJiBaseInfo.ascx" TagName="ctrlDengJiBaseInfo"
+    TagPrefix="uc4" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            width: 35%;
+        }
+    </style>
+    <script type="text/javascript" src="../JS/Validate.js"></script>
+    <script type="text/javascript" src="../JS/WebCalendar.js"></script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <h3 align="center">
+        <br />
+        芜湖城建档案馆整编竣工档案交接登记表</h3>
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif">
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: White;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-top: none;
+                    padding: 10px; background-color: #edf2f5;">
+                    <tr>
+                        <td valign="top" style="padding: 3px;">
+                            <asp:HiddenField ID="H_SID" runat="server" Value="0" />
+                            <uc4:ctrlDengJiBaseInfo ID="ctrlDengJiBaseInfo1" runat="server" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White; text-align: center">
+                <asp:Button ID="btnSave" runat="server" Text=" 保存 " Width="52px" class="SelectButton"
+                    OnClick="btnSave_Click" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function DisplayContent() {
+            var obj = document.getElementById("tkContent");
+            var status = obj.style.display;
+            if (status == "none") {
+                obj.style.display = "block";
+            }
+            else {
+                obj.style.display = "none";
+            }
+            return false;
+        }
+    </script>
+</asp:Content>

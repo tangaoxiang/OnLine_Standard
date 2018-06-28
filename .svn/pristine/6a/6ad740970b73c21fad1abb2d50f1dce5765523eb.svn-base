@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class MyArchiveToFileList : System.Web.UI.Page
+    {
+        #region 属性及构造方法
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            BindGridView();
+            if (!this.IsPostBack)
+            {
+                //if (Common.DNTRequest.GetQueryString("Store") == "Store")
+                //{
+                //    btnDelete.Visible = false;
+                //}
+            }
+
+            ////非档案馆人员，不可能改动档案信息
+            //if (Common.Session.GetSessionBool("IsCompany") == true)
+            //{
+            //    btnUp.Visible = false;
+            //    btnDown.Visible = false;
+            //}
+        }
+        #endregion
+
+        #region 事件
+        /// <summary>
+        /// 拆卷，删除选中文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            List<string> ltKey = ctrlGridEx1.GetSelects();
+            if (ltKey.Count > 0)
+            {
+                //T_Other_BLL bll = new T_Other_BLL();
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                foreach (string FileListID in ltKey)
+                {
+                    T_FileList_MDL flMDL = flBLL.GetModel(Common.ConvertEx.ToInt(FileListID));
+                    flMDL.MyArchiveID = 0;
+                    //bll.DeleteFileToArchive("FileListID=" + Key + " AND ArchiveID=" + Common.DNTRequest.GetQueryString("ArchiveID"));
+                    flBLL.Update(flMDL);
+                }
+                BindGridView();
+            }
+        }
+        #endregion
+
+        #region 方法
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView()
+        {
+            T_FileList_BLL bll = new T_FileList_BLL();
+            DataSet ds = new DataSet();
+            ds = bll.GetList(" MyArchiveID=" + Common.DNTRequest.GetQueryString("ArchiveID"));
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                List<string> l1 = new List<string>();
+                l1.Add("bh");
+                l1.Add("Title");
+                l1.Add("w_t_h");
+                l1.Add("ManualCount");
+                l1.Add("pagescount");
+                l1.Add("Remark");
+                l1.Add("OrderIndex");
+                //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+                //ctrlGridEx1.InitGrid("FileListID", l1, ds, "");
+                ctrlGridEx1.InitGrid("FileListID", l1, ds, "../File/DocumentEdit.aspx?SingleProjectID=0", false, true, "查看");
+            }
+        }
+        #endregion
+
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+                int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+                flBLL.MyUpdateXH(ArchiveID, flMDL.OrderIndex, true);
+                BindGridView();
+            }
+        }
+
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+                int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+                flBLL.MyUpdateXH(ArchiveID, flMDL.OrderIndex, false);
+                BindGridView();
+            }
+        }
+    }
+}

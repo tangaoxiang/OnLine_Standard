@@ -1,0 +1,212 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.MobileControls;
+using System.Collections.Generic;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public class PageBase : System.Web.UI.Page
+    {
+        /// <summary>
+        /// 查询条件
+        /// </summary>
+        public string SqlWhere = "";
+
+        /// <summary>
+        /// 回传查询实体
+        /// </summary>
+        public object pObjReturn = null;
+
+        ///// <summary>
+        ///// 查询实体
+        ///// </summary>
+        //public object pObjSearch = null;
+
+        /// <summary>
+        /// 当前页索引
+        /// </summary>
+        public string pPageIndex = "0";
+        //public int pPageCount = 0;
+
+        ///// <summary>
+        ///// 主键
+        ///// </summary>
+        //public string ID = null;
+
+        /// <summary>
+        /// 页面编辑状态，全部转小写
+        /// </summary>
+        public string Action = null;
+
+        /// <summary>
+        /// 模块ID
+        /// </summary>
+        public string ModuleID = null;
+        protected override void OnLoad(EventArgs e)
+        {//1           
+            if (Common.Session.GetSession("RoleID") == "")
+            {
+                //Response.Write("window.parent.location.href='../UserLoginGather.aspx';</script>");
+            }
+            base.OnLoad(e);
+        }
+        protected override void OnLoadComplete(EventArgs e)
+        {//3
+            ////return;
+            //try
+            //{
+            //    if (Request.Url.ToString() != Request.ServerVariables["HTTP_REFERER"].ToString())
+            //    {//记录轨迹
+            //        Uri strURL2 = new Uri(Request.ServerVariables["HTTP_REFERER"].ToString());
+
+            //        PrevURLList.AddCurrentURL(Request.ServerVariables["HTTP_REFERER"].ToString(), strURL2.LocalPath);
+            //    }
+            //}
+            //catch { }
+
+            //try
+            //{
+            //    ModuleID = Request.QueryString["ModuleID"];
+            //    if (ModuleID == null)
+            //    {
+            //        BLL.T_Module_BLL mBLL = new DigiPower.Onlinecol.Standard.BLL.T_Module_BLL();
+            //        ModuleID = mBLL.GetModelIDByURL(Request.Url.ToString());
+            //    }
+            //    if (!String.IsNullOrEmpty(ModuleID))
+            //    {
+            //        ValidateRight(Page.Controls);
+            //    }
+            //}
+            //catch { }
+
+            ////记下当前的页次，页数
+            //if (pPageIndex == "0")
+            //{
+            //    pPageIndex = Common.DNTRequest.GetQueryString("PageIndex");
+            //}
+            ////if (pPageCount == 0)
+            ////{
+            ////    pPageCount = Common.DNTRequest.GetQueryInt("PageCount", Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount")));
+            ////}
+
+            //base.OnLoadComplete(e);
+        }
+
+        //校验用户权限
+        private void ValidateRight(ControlCollection tControls)
+        {
+            //foreach (Control ctrl1 in tControls)
+            //{
+            //    if (ctrl1 != null)
+            //    {
+            //        if (ctrl1.ID != null && ctrl1.ID.ToLower().Contains("btn"))
+            //        {
+            //            string RightName = ctrl1.ID.Substring(3, ctrl1.ID.Length - 3).ToUpper();
+            //            string tRightName = RightName;
+            //            //Add01,Modify000003,后面的数字全移掉。权限归类
+            //            int iPos = 0;
+            //            for (int i1 = tRightName.Length - 1; i1 > 0; i1--)
+            //            {
+            //                if (tRightName[i1] >= 48 && tRightName[i1] <= 57)
+            //                {
+            //                    iPos = i1;
+            //                }
+            //            }
+            //            if (iPos > 0)
+            //                RightName = RightName.Remove(iPos);
+
+            //            BLL.T_RoleRight_BLL roleRightBLL = new DigiPower.Onlinecol.Standard.BLL.T_RoleRight_BLL();
+            //            string RoleID = Common.Session.GetSession("RoleID");
+            //            if (roleRightBLL.Exists(RoleID, ModuleID, RightName) == false)
+            //            {
+            //                ctrl1.Visible = false;
+            //            }
+            //        }
+            //        ValidateRight(ctrl1.Controls);
+            //    }
+            //}
+        }
+
+        /// <summary>
+        /// 列表窗体属性赋值
+        /// </summary>
+        /// <param name="col">包含查询体的服务器控件</param>
+        public void MyInit(Control col)
+        {
+            if (Session["obj"] != null)
+            {
+                pObjReturn = DigiPower.Onlinecol.Standard.Web.Comm.SetValueToPage(Session["obj"], col);
+
+                Session.Remove("obj");
+            }
+
+            SqlWhere = Request.QueryString["sqlwhere"];
+            pPageIndex = Request.QueryString["PageIndex"];
+        }
+
+        /// <summary>
+        /// 编辑窗体属性赋值
+        /// 主要是通过Request.QueryString给 Action，ID，SqlWhere，PageIndex 赋值
+        /// </summary>
+        public void MyAddInit()
+        {
+            Action = Common.DNTRequest.GetQueryString("Action").ToLower();
+            ID = Common.DNTRequest.GetQueryString("ID");
+
+            if (Action.Equals("add"))
+            {
+                ViewState["ps"] = CommonEnum.PageState.ADD;
+            }
+            if (Action.Equals("edit"))
+            {
+                ViewState["ps"] = CommonEnum.PageState.EDIT;
+            }
+            if (Action.Equals("view"))
+            {
+                ViewState["ps"] = CommonEnum.PageState.VIEW;
+            }
+            //SqlWhere = Common.DNTRequest.GetQueryString("sqlwhere");
+            ////pPageCount = Common.ConvertEx.ToInt(Request.QueryString["PageCount"]);
+            //pPageIndex = Common.DNTRequest.GetQueryString("PageIndex");
+
+            //if (Common.Session.GetSession("PageIndex") != "")
+            //{
+            //    pPageIndex = Common.Session.GetSession("PageIndex");
+            //    Session["PageIndex"] = "";
+            //}
+        }
+
+        /// <summary>
+        /// 查询方法
+        /// 操作步骤
+        /// 1：组建一个查询提交，通过ViewState["sqlwhere"]保存
+        /// 2：将控件的值赋给Model,通过obj保存
+        /// </summary>
+        /// <param name="Contr1">包含查询体的服务器控件</param>
+        /// <param name="model">Mode类</param>
+        public void Search(Control Contr1, object model)
+        {
+            ViewState["sqlwhere"] = Comm.BuildSqlWhere(Contr1.Controls);
+
+            pObjReturn = DigiPower.Onlinecol.Standard.Web.Comm.GetValueToObject(model, Contr1);
+
+            if (Session["obj"] != null)
+            {
+                Session.Remove("obj");
+
+                Session.Add("obj", pObjReturn);
+            }
+            else
+            {
+                Session.Add("obj", pObjReturn);
+            }
+        }
+    }
+}

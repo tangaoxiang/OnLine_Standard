@@ -1,0 +1,65 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="SingleProjectUserAdd.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.ArchiveManage.SingleProjectUserAdd" Title="无标题页" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownCompanyInfo.ascx" TagName="ctrlDropDownCompanyInfo"
+    TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownUser.ascx" TagName="ctrlDropDownUser"
+    TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSingleProject.ascx" TagName="ctrlDropDownSingleProject"
+    TagPrefix="uc4" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            width: 25%;
+            height:22px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif">
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: White;">
+                <table id="Table1" runat="server" width="99%" border="0" align="center" cellpadding="0"
+                    cellspacing="1" style="margin-top: 4px; margin-bottom: 4px; background-color: #c1d4da;">
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            工程：
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc4:ctrlDropDownSingleProject ID="ctrlDropDownSingleProject1" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            单位：
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc1:ctrlDropDownCompanyInfo ID="ctrlDropDownCompanyInfo1" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            用户：
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc3:ctrlDropDownUser ID="ctrlDropDownUser1" runat="server" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White;">
+                <asp:Button runat="server" Text=" 保存 " class="SelectButton" OnClick="btnSave_Click"
+                    Width="52px" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

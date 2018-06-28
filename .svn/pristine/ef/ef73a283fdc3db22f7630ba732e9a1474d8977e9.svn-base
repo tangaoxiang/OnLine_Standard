@@ -1,0 +1,327 @@
+<%@ Page Language="C#" MasterPageFile="~/SiteSon.Master" AutoEventWireup="true" CodeBehind="FileInfoList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.File.FileInfoList" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript" src="../Javascript/Common/WebCalendar.js"></script>
+    <style type="text/css">
+        .ddlWidthExt {
+            height: 21px;
+            width: 210px;
+        }
+
+        .cd {
+            width: 610px !important;
+        }
+
+        .dd {
+            width: 210px !important;
+        }
+    </style>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <table id="tbl" runat="server" class="zpxxxj" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td style="height: 10px !important;"></td>
+        </tr>
+        <tr>
+            <td class="ww">文件编号:
+            </td>
+            <td colspan="3">
+                <uc3:ctrlTextBoxEx ID="bh" labelTitle="文件题名" MaxLength="30"
+                    CssClass="cd" runat="server" readOnly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">文件题名:
+            </td>
+            <td colspan="3">
+                <uc3:ctrlTextBoxEx ID="title" canEmpty="false" labelTitle="文件题名" MaxLength="200"
+                    CssClass="cd" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">责任者:
+            </td>
+            <td colspan="3">
+                <uc3:ctrlTextBoxEx ID="zrr" canEmpty="false" labelTitle="责任者" MaxLength="40"
+                    CssClass="cd" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">文(图)号:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="w_t_h" canEmpty="false" labelTitle="文(图)号" MaxLength="50"
+                    CssClass="dd " runat="server" />
+            </td>
+            <td class="ww">实体页数:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="ManualCount" labelTitle="实体页数" runat="server" mode="Int" CssClass="dd " MaxLength="4" canEmpty="false" />
+            </td>
+        </tr>
+        <%--<tr>
+                       <td class="ww">
+                         
+                                保管期限
+                        </td>
+                       <td class="left_title_2">
+                            <asp:DropDownList runat="server" ID="bgqx" Width="100px">
+                                <asp:ListItem Value="cq" Text="长期"></asp:ListItem>
+                                <asp:ListItem Value="yj" Text="永久"></asp:ListItem>
+                                <asp:ListItem Value="dq" Text="短期"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td align="center" class="style4">
+                         
+                                密级
+                        </td>
+                        <td align="center">
+                            <asp:DropDownList runat="server" ID="mj" Width="100px">
+                                <asp:ListItem Value="mm" Text="秘密"></asp:ListItem>
+                                <asp:ListItem Value="gk" Text="公开"></asp:ListItem>
+                                <asp:ListItem Value="gn" Text="国内"></asp:ListItem>
+                                <asp:ListItem Value="nb" Text="内部"></asp:ListItem>
+                                <asp:ListItem Value="jm" Text="机密"></asp:ListItem>
+                                <asp:ListItem Value="juem" Text="绝密"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                    </tr>--%>
+        <tr>
+            <td class="ww">载体类型:
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="ztlx" CssClass="ddlWidthExt">
+                        <%--        <asp:ListItem Text=""></asp:ListItem>--%>
+                        <asp:ListItem Value="dt" Text="底图"></asp:ListItem>
+                        <asp:ListItem Value="swp" Text="缩微片"></asp:ListItem>
+                        <asp:ListItem Value="zp" Text="照片"></asp:ListItem>
+                        <asp:ListItem Value="dp" Text="底片"></asp:ListItem>
+                        <asp:ListItem Value="lyd" Text="录音带"></asp:ListItem>
+                        <asp:ListItem Value="lxd" Text="录象带"></asp:ListItem>
+                        <asp:ListItem Value="gp" Text="光盘"></asp:ListItem>
+                        <asp:ListItem Value="jsjcp" Text="计算机磁盘"></asp:ListItem>
+                        <asp:ListItem Value="jsjcd" Text="计算机磁带"></asp:ListItem>
+                        <asp:ListItem Value="dyjp" Text="电影胶片"></asp:ListItem>
+                        <asp:ListItem Value="cp" Text="唱片"></asp:ListItem>
+                        <asp:ListItem Value="zz" Selected="True" Text="纸质"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+            <td class="ww">规格:
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="gg" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="A4" Text="A4"></asp:ListItem>
+                        <asp:ListItem Value="A0" Text="A0"></asp:ListItem>
+                        <asp:ListItem Value="A1" Text="A1"></asp:ListItem>
+                        <asp:ListItem Value="A2" Text="A2"></asp:ListItem>
+                        <asp:ListItem Value="A3" Text="A3"></asp:ListItem>
+                        <asp:ListItem Value="B0" Text="B0"></asp:ListItem>
+                        <asp:ListItem Value="B5" Text="B5"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">图纸(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="tzz" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="图纸(张)" />
+            </td>
+            <td class="ww">文字数量(页):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="sl" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="文字数量(页)" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">底图(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="dtz" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="底图(张)" />
+            </td>
+            <td class="ww">图样数量(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="dw" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="图样数量(张)" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">照片(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="zpz" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="照片(张)" />
+            </td>
+            <td class="ww">照片数量(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="wzz" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="照片数量(张)" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">底片(张):
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="dpz" runat="server" mode="int" CssClass="dd " MaxLength="4" labelTitle="底片(张)" />
+            </td>
+            <td class="ww">文本稿本代码:
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="wjgbdm" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="zb" Text="正本"></asp:ListItem>
+                        <asp:ListItem Value="fb" Text="副本"></asp:ListItem>
+                        <asp:ListItem Value="cg" Text="草稿"></asp:ListItem>
+                        <asp:ListItem Value="dg" Text="定稿"></asp:ListItem>
+                        <asp:ListItem Value="sg" Text="手稿"></asp:ListItem>
+                        <asp:ListItem Value="ct" Text="草图"></asp:ListItem>
+                        <asp:ListItem Value="yt" Text="原图"></asp:ListItem>
+                        <asp:ListItem Value="dt" Text="底图"></asp:ListItem>
+                        <asp:ListItem Value="lt" Text="蓝图"></asp:ListItem>
+                        <asp:ListItem Value="sxb" Text="试行本"></asp:ListItem>
+                        <asp:ListItem Value="xdb" Text="修订本"></asp:ListItem>
+                        <asp:ListItem Value="fyj" Text="复印件"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">形成开始时间:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="StartTime" Status="Select" mode="Date" ShowLblDate="false" MaxLength="10" runat="server" CssClass="dd " />
+            </td>
+            <td class="ww">形成结束时间:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="ENDTIME" Status="Select" mode="Date" ShowLblDate="false" MaxLength="10" runat="server" CssClass="dd " />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">附注:
+            </td>
+            <td colspan="3">
+                <uc3:ctrlTextBoxEx ID="bz" runat="server" labelTitle="附注" CssClass="cd" MaxLength="400" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww"><strong>电子文件信息</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">文件类型代码:      
+            </td>
+            <td colspan="3">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="wjlxdm" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="wbwj" Text="文本文件(T)"></asp:ListItem>
+                        <asp:ListItem Value="txwj" Text="图象文件(I)"></asp:ListItem>
+                        <asp:ListItem Value="txinwj" Text="图形文件(G)"></asp:ListItem>
+                        <asp:ListItem Value="yxwj" Text="影像文件(V)"></asp:ListItem>
+                        <asp:ListItem Value="sywj" Text="声音文件(A)"></asp:ListItem>
+                        <asp:ListItem Value="cxwj" Text="程序文件(P)"></asp:ListItem>
+                        <asp:ListItem Value="sjwj" Text="数据文件(D)"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">文件格式:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="wjgs" labelTitle="文件格式" runat="server" CssClass="dd " MaxLength="20" />
+            </td>
+            <td class="ww">文件大小:
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="wjdx" labelTitle="文件大小" runat="server" mode="int" CssClass="dd " MaxLength="8" />
+            </td>
+        </tr>
+        <%-- <tr>
+            <td colspan="4"><strong>照片信息</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">拍摄地点
+            </td>
+            <td colspan="3" align="left">
+                <uc3:ctrlTextBoxEx ID="psdd" canEmpty="true" Description="拍摄地点" MaxLength="20" CssClass="dd "
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">拍摄者
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="psz" runat="server" CssClass="dd " />
+            </td>
+            <td class="ww">拍摄时间
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="pssj" runat="server" mode="Date" CssClass="dd " />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">色别
+            </td>
+            <td class="left_title_2">
+                <div class="select-box ddlWidthExt">
+                    <asp:DropDownList runat="server" ID="sb" CssClass="ddlWidthExt">
+                        <asp:ListItem Value="cs" Text="彩色"></asp:ListItem>
+                        <asp:ListItem Value="hb" Text="黑白"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+            </td>
+            <td class="ww">分别率
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="fbl" runat="server" CssClass="dd " />
+            </td>
+        </tr>
+        <tr>
+            <td class="ww">相机品牌
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="xjpp" runat="server" CssClass="dd " />
+            </td>
+            <td class="ww">相机型号
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="xjxh" runat="server" CssClass="dd " />
+            </td>
+        </tr>--%>
+    </table>
+
+
+    <table class="zpxxxj" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="lljzc">
+                <asp:Button ID="btnUp" runat="server" Text="上一条" Visible="false" OnClick="btnUp_Click" />
+                <asp:Button ID="btnSave" runat="server" Text="保存" Visible="false"
+                    OnClientClick="return saveSubmit(this);" clickflag="ok" OnClick="btnSave_Click" />
+                <asp:Button ID="btnDown" runat="server" Text="下一条" Visible="false" OnClick="btnDown_Click" />
+
+                <input type="button" id="btngoBack" value=" 返回 " onclick="Common.fnParentLayerClose()" />
+            </td>
+        </tr>
+    </table>
+    <script language="javascript" type="text/javascript">
+        function saveSubmit(obj) {
+            var flag = true;
+            $("input[type='text']").each(function () {
+                flag = Common.Validate($(this).attr("id"));
+                if (!flag)
+                    return false;
+            });
+            if (!flag) {
+                return false;
+            }
+            return Common.mouseClick(obj)
+        }
+    </script>
+</asp:Content>

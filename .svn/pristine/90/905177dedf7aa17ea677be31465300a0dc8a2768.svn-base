@@ -1,0 +1,74 @@
+﻿/*表格设计样式*/
+
+/*所有样式在container里面有效，将样式与其他区域的隔离*/
+
+#container{
+	margin:0;
+	padding:0;
+	font:12px Arial, Helvetica, sans-serif; 
+	color:#555;
+	line-height:150%;
+	text-align:left;
+	margin-top:10px;
+	float:left;
+}
+
+
+#container a{
+	text-decoration:none;
+	color:#057fac;
+}
+#container a:hover{
+	text-decoration:none;
+	color:#999;
+}
+#container h1{
+	font-size:140%;
+	margin:0 20px;
+	line-height:80px;	
+}
+#container h2{
+	font-size:120%;
+}
+#container #container{
+	margin:0 auto;
+	width:95%;
+	background:#fff;
+	padding-bottom:20px;
+}
+
+#container p.sig{	
+	margin:0 auto;
+	width:680px;
+	padding:1em 0;
+}
+
+
+
+/*table design*/
+#container table, td{
+	font:100% Arial, Helvetica, sans-serif;
+	text-align: left;
+}
+#container table{width:100%;border-collapse:collapse;margin:0;border:1px solid #c9c7c0;}
+#container th, #container td{text-align:left;padding:.4em;border:1px solid #fff;}
+#container th{background:url(../images/blue_back.gif) repeat-x;color:#15428b; font-weight:bold; text-align:center;}
+#container td{background:#fff; border-bottom:1px solid #ededed;}
+
+/* tablecloth styles */
+
+#container tr.even td{background:#fff; border-bottom:1px solid #ededed;}
+#container tr.odd td{background:#fafafa; border-bottom:1px solid #ededed;}
+
+#container th.over, #container tr.even th.over, #container tr.odd th.over{background:#dfe8f6;}
+#container th.down, #container tr.even th.down, #container tr.odd th.down{background:#efefef;}
+#container th.selected, #container tr.even th.selected, #container tr.odd th.selected{}
+
+#container td.over, #container tr.even td.over, #container tr.odd td.over{background:#dfe8f6;}
+#container td.down, #container tr.even td.down, #container tr.odd td.down{background:#efefef;color:#fff;}
+#container td.selected, #container tr.even td.selected, #container tr.odd td.selected{background:#efefef;color:#555;}
+
+/* use this if you want to apply different styleing to empty table cells*/
+td.empty, tr.odd td.empty, tr.even td.empty{background:#fff;}
+
+.first_th{ width:30px;}

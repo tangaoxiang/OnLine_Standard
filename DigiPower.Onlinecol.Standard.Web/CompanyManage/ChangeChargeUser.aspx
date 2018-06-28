@@ -1,0 +1,49 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteSon.Master" AutoEventWireup="true" CodeBehind="ChangeChargeUser.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CompanyManage.ChangeChargeUser" Title="变更业务指导人员" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownUser.ascx" TagName="ctrlDropDownUser"
+    TagPrefix="uc1" %>
+<asp:Content ID="Content3" ContentPlaceHolderID="Head" runat="server">
+    <style type="text/css">
+        select {
+            height: 27px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="Main" runat="server">
+    <table id="tbl" runat="server" class="xzll" cellpadding="0" border="0" style="width: 380px !important;">
+        <tr>
+            <td colspan="2" style="height: 15px;"></td>
+        </tr>
+        <tr>
+            <td class="mc">原业务指导人员： 
+            </td>
+            <td class="sr">
+                <uc1:ctrlDropDownUser ID="ddlOldUser" runat="server" Width="150" />
+            </td>
+        </tr>
+        <tr>
+            <td class="mc">新业务指导人员： 
+            </td>
+            <td class="sr">
+                <uc1:ctrlDropDownUser ID="ddlNewUser" runat="server" Width="150" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="ljzc">
+                <asp:Button ID="btnSave" runat="server" Text="  保存  "
+                    OnClientClick="return saveSubmit(this);" clickflag="ok" class="btn2" OnClick="btnSave_Click" />
+                <input type="button" id="btngoBack" value=" 返回 " onclick="Common.fnParentLayerClose()" />
+            </td>
+        </tr>
+    </table>
+    <script language="javascript" type="text/javascript">
+        function saveSubmit(obj) {
+            if ($('#ctl00_Main_ddlOldUser_ddlUser').val() == $('#ctl00_Main_ddlNewUser_ddlUser').val()) {
+                Common.fnLayerAlert("新业务指导人员跟原业务指导一样,请重选!");
+                return false;
+            }
+            return Common.mouseClick(obj)
+        }
+    </script>
+</asp:Content>

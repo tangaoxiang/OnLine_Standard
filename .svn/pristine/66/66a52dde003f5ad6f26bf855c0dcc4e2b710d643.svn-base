@@ -1,0 +1,94 @@
+body {padding:0;font-size:12px;color:000000;font-family:"宋体", arial;margin-top: 0;margin-right: 3px;margin-left: 0px;margin-bottom: 0px;}
+div,form,img,ul,li {margin: 0; padding: 0; border: 0;}
+h1,h2,h3,h4,h5,h6 { margin:0; padding:0;}
+table,td,tr,th{font-size:12px;}
+.tree_iframe,textarea{scrollbar-face-color: #DBEBFE;scrollbar-shadow-color: #B8D6FA; scrollbar-highlight-color: #FFFFFF; scrollbar-3dlight-color: #DBEBFE; scrollbar-darkshadow-color: #458CE4; scrollbar-track-color: #FFFFFF; scrollbar-arrow-color: #458CE4;}
+/* 链接颜色 */
+a:link {color: #333333; text-decoration:none;}
+a:visited {color: #333333;text-decoration:none;}
+a:hover {color: #ff0000; text-decoration:underline;}
+a:active {color: #333333;}
+/* 颜色属性 [定义规则，小写c加颜色名称] */
+.cRed,a.cRed:link,a.cRed:visited{ color:Red; }
+.cBlue,a.cBlue:link,a.cBlue:visited{color:#356DBA;}
+.cDRed,a.cDRed:link,a.cDRed:visited{ color:#bc2931;}
+.cGray,a.cGray:link,a.cGray:visited{ color: #4F544D;}
+.cDGray,a.cDGray:link,a.cDGray:visited{ color: #666;}
+.cWhite,a.cWhite:link,a.cWhite:visited{ color:#fff;}
+.cBlack,a.cBlack:link,a.cBlack:visited{color:#000;}
+a.cBlack:hover{color:#bc2931;}
+.cYellow,a.cYellow:link,a.cYellow:visited{color:#ff0;}
+.cGreen,a.cGreen:link,a.cGreen:visited{color:#177006;}
+/* 字体属性 [定义规则，小写f加属性名称] */
+.fB {font-weight: bold;}/*粗体*/
+.fI {font-style: italic;}/*斜体*/
+
+/* 字体大小*/
+.f12px{font-size:12px;}
+.f14px{font-size:14px;}
+.f18px{font-size:18px;font-family:"黑体";color:#ffffff;padding-top: 8px;}
+
+/* 右边属性 */
+.da_Rt {background-image: url(../images/da-13.gif);background-repeat: repeat-x;}
+.da_Rx {border-top: 1px none #ABCDEE;border-right: 1px solid #ABCDEE;border-bottom: 1px none #ABCDEE;border-left: 1px solid #ABCDEE;}
+.da_Rw {background-image: url(../images/da-18.gif);background-repeat: repeat-x;}
+.da_Rbt {font-size: 14px;font-weight: bold;color: #07519A;background-image: url(../images/da-12.gif);background-position: left center;background-repeat: no-repeat;text-indent: 15px;padding-top: 3px;}
+.da_Rnx {background-image: url(../images/da-19.gif);background-repeat: repeat-y;background-position: right;}
+.da_Rntable {background-image: url(../images/da-20.gif);background-repeat: no-repeat;background-position: left top;}
+.Rzi {color: #315599;font-size: 12px;line-height: 18px;padding: 5px;}
+.da_Rtimu {color: #315599;font-size: 12px;font-weight: bold;}
+.da_down {background-image: url(../images/da-21.gif);background-repeat: no-repeat;background-position: right center;color: #FFFFFF;font-size: 12px;text-align: right;padding-top: 3px;}
+.da_weizhi {color: #356DBA;}
+
+/*文本框样式*/
+.txtStyle
+{
+    /*background-color : #FFFFFF;*/
+	border: 1px solid #426089;
+	font-size: 12px;font-weight: normal;
+}
+.search_area{ margin-top:10px; margin-bottom:10px; border:#dddddd solid 1px;}
+.search_area1{ margin-top:10px; margin-bottom:10px; padding-top:5px; padding-bottom:5px; border:#dddddd solid 1px;}
+.search_area_input{ padding-bottom:5px; padding-left:10px; padding-top:5px; border-top:#dddddd solid 1px;}
+.input01{ width:100px;}
+.search_area_button{ text-align:right;padding-bottom:5px; padding-top:5px;}
+.menuop{ text-align:right;padding-bottom:0px; padding-top:5px;}
+/*--列表样式--*/
+table.list {
+	border-width:0px;
+	border-collapse:collapse;
+	border:#9FD6FF solid 1px;
+	margin:5px;
+}
+	
+table.list td{
+	font-size:12px;
+	padding-left:2px;
+	height:20px;
+	white-space:nowrap!important;
+	border:#9FD6FF solid 1px;
+	}
+	
+table.list tr.title{
+	font-size:12px;
+	color: #014F8A;
+	white-space:nowrap;
+	text-align:center;
+	background-color:#C8E1FB;
+}
+table.list tr.title th{
+	white-space:nowrap;
+	font-weight: normal;
+	height:20px;
+	padding-top:3px;
+	padding-left:5px;
+	padding-right:5px;
+}
+table.list tr.title td{
+	white-space:nowrap;
+	font-weight:normal;
+	height:20px;
+	padding-top:3px;
+	padding-left:5px;
+	padding-right:5px;
+}

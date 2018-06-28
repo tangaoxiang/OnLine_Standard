@@ -1,0 +1,140 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ArchiveAdd.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.ArchiveAdd" Title="案卷管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlOptStatus.ascx" TagName="ctrlOptStatus" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo"
+    TagPrefix="uc3" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseLabelExt {
+            width: 35%;
+        }
+
+        .promiseInputWidthExt {
+            width: 280px;
+        }
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }  
+        tr {
+            background-color: #fff;
+        }
+    </style>
+    <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+        <tr>
+            <td class="left_title_3 promise" colspan="4">&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">案卷题名：
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrlTextBoxEx ID="ajtm" CssClass="regedit_input promiseInputWidthExt" canEmpty="false" MaxLength="255"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    编制单位：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrlTextBoxEx ID="bzdw" CssClass="regedit_input promiseInputWidthExt" canEmpty="false" MaxLength="80"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <%--    <label>
+                    卷盒类型：</label>--%>
+                <label>
+                    案卷厚度：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlDropDownSystemInfo ID="boxType" CurrentType="boxtype" runat="server" Width="287px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    保管期限：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlDropDownSystemInfo ID="bgqx" runat="server" CurrentType="05" Width="287px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    密级：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlDropDownSystemInfo ID="mj" runat="server" CurrentType="04" Width="287px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    立卷人：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrlTextBoxEx ID="lrr" CssClass="regedit_input promiseInputWidthExt" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    编制日期：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrlTextBoxEx ID="lrsj" CssClass="regedit_input promiseInputWidthExt" mode="Date" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    案卷类型：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlDropDownSystemInfo ID="ajlx" runat="server" CurrentType="06" Width="287px" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    序号：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrlTextBoxEx ID="xh" CssClass="regedit_input promiseInputWidthExt" Description="序号" mode="int" canEmpty="false"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">卷内备考：                 
+            </td>
+            <td class="left_title_2">
+                <asp:TextBox ID="note" runat="server" Rows="5" TextMode="MultiLine" Width="69%" Height="55"
+                    CssClass="regedit_input promiseInputWidthExt"></asp:TextBox>
+
+            </td>
+        </tr>
+    </table>
+
+    <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="left_title_4">
+                <asp:Button ID="btnSave" runat="server" Text=" 保存 " CssClass="btn2" OnClick="btnSave_Click"
+                    Width="52px" />
+                <asp:Button ID="BtnBack" runat="server" Text=" 返回 " class="btn2" Width="52px"
+                    OnClick="BtnBack_Click" />
+            </td>
+        </tr>
+    </table>
+
+</asp:Content>

@@ -1,0 +1,231 @@
+using System;
+namespace DigiPower.Onlinecol.Standard.Model {
+    /// <summary>
+    /// 实体类T_UsersInfo_MDL 。(属性说明自动提取数据库字段的描述信息)
+    /// </summary>
+    [Serializable]
+    public class T_UsersInfo_MDL {
+        public T_UsersInfo_MDL() { }
+        #region Model
+        private int _userid;
+        private int _companyid;
+        private int _roleid;
+        private string _username;
+        private string _cardid;
+        private string _loginname;
+        private string _passwd;
+        private string _sex;
+        private string _mobile;
+        private string _tel;
+        private string _fax;
+        private string _email;
+        private string _qq;
+        private string _msn;
+        private DateTime? _createdate;
+        private string _createdby;
+        private bool _isvalid;
+        private string _usertype;
+        private bool _isleader;
+        private bool _issuperadmin;
+        private DateTime? _lastlogintime;
+        private string _lastloginip;
+        private int? _traincount;
+        private string _regdate;
+        private string _loginusbkey;
+        private string _position;
+        private string _ownerfiletmp;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int UserID {
+            set { _userid = value; }
+            get { return _userid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CompanyID {
+            set { _companyid = value; }
+            get { return _companyid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RoleID {
+            set { _roleid = value; }
+            get { return _roleid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string UserName {
+            set { _username = value; }
+            get { return _username; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string CardID {
+            set { _cardid = value; }
+            get { return _cardid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LoginName {
+            set { _loginname = value; }
+            get { return _loginname; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Passwd {
+            set { _passwd = value; }
+            get { return _passwd; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Sex {
+            set { _sex = value; }
+            get { return _sex; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Mobile {
+            set { _mobile = value; }
+            get { return _mobile; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Tel {
+            set { _tel = value; }
+            get { return _tel; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Fax {
+            set { _fax = value; }
+            get { return _fax; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string EMail {
+            set { _email = value; }
+            get { return _email; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string QQ {
+            set { _qq = value; }
+            get { return _qq; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MSN {
+            set { _msn = value; }
+            get { return _msn; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? Createdate {
+            set { _createdate = value; }
+            get { return _createdate; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Createdby {
+            set { _createdby = value; }
+            get { return _createdby; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsValid {
+            set { _isvalid = value; }
+            get { return _isvalid; }
+        }
+        /// <summary>
+        /// 单位用户/档案馆用户
+        /// </summary>
+        public string UserType {
+            set { _usertype = value; }
+            get { return _usertype; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLeader {
+            set { _isleader = value; }
+            get { return _isleader; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsSuperAdmin {
+            set { _issuperadmin = value; }
+            get { return _issuperadmin; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? LastLoginTime {
+            set { _lastlogintime = value; }
+            get { return _lastlogintime; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LastLoginIP {
+            set { _lastloginip = value; }
+            get { return _lastloginip; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? TrainCount {
+            set { _traincount = value; }
+            get { return _traincount; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string RegDate {
+            set { _regdate = value; }
+            get { return _regdate; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string LoginUSBKey {
+            set { _loginusbkey = value; }
+            get { return _loginusbkey; }
+        }
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Position {
+            set { _position = value; }
+            get { return _position; }
+        }
+        /// <summary>
+        /// 外协单位可以查看的文件类别
+        /// </summary>
+        public string OwnerFileTmp {
+            set { _ownerfiletmp = value; }
+            get { return _ownerfiletmp; }
+        }
+
+        #endregion Model
+
+    }
+}

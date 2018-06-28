@@ -1,0 +1,227 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow {
+    public partial class ImageWjdj : PageBase {
+        ColorList colorList = new ColorList();
+        T_Other_BLL otherBLL = new T_Other_BLL();
+        T_FileList_BLL fileListBLL = new T_FileList_BLL();
+        T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 工程类型
+        /// </summary>
+        public string projecttype = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 30;
+
+        protected void Page_Load(object sender, EventArgs e) {
+            MyAddInit();
+            Ajax.Utility.RegisterTypeForAjax(typeof(ImageWjdj));
+
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            if (!IsPostBack) {
+                ddlFileType.DataBindEx(Common.ConvertEx.ToInt(singleProjectID), null, "BH", "S");
+                ctrlProjectBaseInfo1.DataBindEx(singleProjectID);                     //工程信息      
+                rdbFileStatus.DataBindEx(true);
+
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("fileStatus")))
+                    rdbFileStatus.SelectValue = Server.UrlDecode(DNTRequest.GetQueryString("fileStatus"));
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("ddlFileType")))
+                    ddlFileType.SelectValue = Server.UrlDecode(DNTRequest.GetQueryString("ddlFileType")).ToUpper();
+
+                BindGridView(1);
+            }
+        }
+
+        //绑定归档目录
+        private void BindGridView(int pageIndex) {
+            T_SingleProject_MDL spMDL = spBLL.GetModel(Common.ConvertEx.ToInt(singleProjectID));
+            if (spMDL != null) {
+                projecttype = spMDL.ProjectType;
+
+                //取当前工程的所有归档目录
+                string strWhere = " SingleProjectID=" + singleProjectID;
+
+                //显示声像节点 固定为S类
+                strWhere += " AND BH like 'S%' ";
+
+                if (!String.IsNullOrWhiteSpace(rdbFileStatus.SelectValue) && rdbFileStatus.SelectValue != "0")
+                    strWhere += " AND Status=" + rdbFileStatus.SelectValue;
+                if (!String.IsNullOrWhiteSpace(ddlFileType.SelectValue) && ddlFileType.SelectValue != "0")
+                    strWhere += " AND BH like '" + ddlFileType.SelectValue + "%' ";
+
+                Session["FileInfostrWhere"] = strWhere;
+
+                if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0) {
+                    pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                    ViewState["CurrentPageIndex"] = pageIndex;
+                } else {
+                    pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+                }
+
+                DataTable dt = fileListBLL.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+                AspNetPager.AlwaysShow = true;
+                AspNetPager.PageSize = pageSize;
+
+                AspNetPager.RecordCount = itemCount;
+                AspNetPager.CurrentPageIndex = pageIndex;
+
+                rpData.DataSource = dt;
+                rpData.DataBind();
+            }
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e) {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e) {
+            BindGridView(1);
+        }
+
+        /// <summary>
+        /// 根据文件状态返回文件对应的背景色
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public string getTdColorForFileStatus(object status) {
+            return " style='background-color:" + colorList.GetMyColorString(ConvertEx.ToString(status)) + ";'";
+        }
+
+        /// <summary>
+        ///  格式化电子文件图标,文件级
+        /// </summary>     
+        /// <param name="isFolder">是否是目录级</param> 
+        /// <param name="bh">文件编号</param>      
+        /// <param name="fileListID">文件id</param>           
+        public string getEfileImage(object isFolder, string bh, string fileListID) {
+            string strImage = " <img extFile=\"0\" style=\"cursor:pointer; border:0px; color:white;\" onclick=\"lookPDF(0,'" +
+             bh + "'," + fileListID + ")\" src=\"../Javascript/Layer/image/JPG.png\" alt=\"无文件\" />";
+
+            if ((ConvertEx.ToBool(isFolder) && fileListBLL.GetFileCountByPID(ConvertEx.ToInt(fileListID)) > 0
+                && bh.Length > 1) || !(ConvertEx.ToBool(isFolder))) {
+                strImage = " <img extFile=\"0\" style=\"cursor:pointer;border:0px; color:white;\" onclick=\"lookPDF(1,'" +
+                    bh + "'," + fileListID + ")\" src=\"../Javascript/Layer/image/JPG_1.png\" alt=\"点击查看\" />";
+            }
+            return strImage;
+        }
+
+        /// <summary>
+        /// 根据文件 isFolder 显示返回的Input html
+        /// </summary>
+        /// <param name="isFolder"></param>                                                                             
+        /// <param name="value"></param>
+        /// <param name="maxlength"></param>
+        /// <param name="jsHtml"></param>
+        /// <returns></returns>
+        public string getInputTextForIsFolder(object isFolder, object value, string maxlength, string jsHtml) {
+            if (ConvertEx.ToBool(isFolder))
+                return "<input type=\"text\" title=\"" + value.ToString() + "\" value=\"" + value.ToString() + "\" class=\"regedit_input\" disabled=\"disabled\"  />";
+            else
+                return "<input type=\"text\" title=\"" + value.ToString() + "\" value=\"" + value.ToString() + "\"" +
+                        "class=\"regedit_input\" maxlength=\"" + maxlength + "\" " + jsHtml + "/>";
+
+
+            //<img style="cursor: pointer;" onclick="lookPDF('<%# Eval("BH")%>',<%# Eval("FileListID")%>)"
+            //   src="../Javascript/Layer/image/EFILE_1.png" alt="点击查看" />
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void ExctFileList(string strFileListID, string strTitle, string strPsz, string strPsdd, string strPssj, string strOrderIndex) {
+            try {
+                int FileListId = ConvertEx.ToInt(strFileListID);
+                if (FileListId > 0) {
+                    T_FileList_MDL model = fileListBLL.GetModel(FileListId);
+                    if (!model.IsFolder) {
+                        model.Title = strTitle;
+                        model.psz = strPsz;
+                        if (strPssj != "") {
+                            model.pssj = ConvertEx.ToDate(strPssj);
+                        }
+                        model.psdd = strPsdd;
+                        model.OrderIndex = ConvertEx.ToInt(strOrderIndex);
+
+                        model.CreateDate = System.DateTime.Now;//文件登记时间
+                        fileListBLL.Update(model);
+
+                        T_Other_BLL otherBLL = new T_Other_BLL();
+                        otherBLL.UpdateArchiveStatus(model.FileListID.ToString(), 10, "0");
+                    }
+                }
+            } catch (Exception ex) {
+                LogUtil.Debug(this, "文件登记归档目录保存操作", ex);
+            }
+        }
+
+        /// <summary>
+        /// 删除归档目录,模板目录不能删除
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public bool DeleteFileList(string FileListID) {
+            bool flag = false;
+            T_FileList_MDL Mdl = fileListBLL.GetModel(ConvertEx.ToInt(FileListID));
+            if (Mdl != null && !Mdl.IsFolder) {
+                fileListBLL.Delete(ConvertEx.ToInt(FileListID));
+
+                PublicModel.writeLog(SystemSet.EumLogType.DelData.ToString(), string.Concat("T_FileList;key=", FileListID,
+                    ";SingleProjectID=", Mdl.SingleProjectID, ";FileListID=", FileListID, ";Title=", Mdl.Title, ";工程外观图删除"));
+                flag = true;
+            }
+            return flag;
+        }
+
+        /// <summary>
+        ///  重置文件审核状态 
+        /// </summary>
+        /// <param name="singleProjectID"></param>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void ResetFileStatus(string singleProjectID, string FileListID, int status) {
+            otherBLL.UpdateArchiveStatus(FileListID, status, "0");
+        }
+    }
+}

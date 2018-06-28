@@ -1,0 +1,16 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CompanyRegPreview.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.CompanyManage.CompanyRegPreview" %>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <img src='../Upload/Pic/Project/<%=Request.QueryString["imagepath"].ToString()%>' />
+    </div>
+    </form>
+</body>
+</html>

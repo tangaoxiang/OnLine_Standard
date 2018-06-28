@@ -1,0 +1,197 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteSon.Master" AutoEventWireup="true"
+    CodeBehind="ChangePassword.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.MySpace.ChangePassword"
+    Title="个人资料维护" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrltextboxex" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo" TagPrefix="uc5" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseLabelExt {
+            width: 35%;
+        }
+
+        .promiseInputWidthExt {
+            width: 280px;
+        }
+
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }
+
+        tr {
+            background-color: #fff;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function istrue(str) {
+            var reg = /^(([a-z]+[0-9]+)|([0-9]+[a-z]+))[a-z0-9]*$/i; //数字和字母组合
+            return reg.test(str);
+        }
+        function btnPwd() {
+            var oldPwd, newPwd1, newPwd2;
+            var objoldPwd, objnewPwd1, objnewPwd2;
+            var i = 1;
+
+            $("input[type='password']").each(function () {
+                if (i == 1) {
+                    oldPwd = $(this).val();
+                    objoldPwd = $(this);
+                }
+                else if (i == 2) {
+                    newPwd1 = $(this).val();
+                    objnewPwd1 = $(this);
+                }
+                else {
+                    newPwd2 = $(this).val();
+                    objnewPwd2 = $(this);
+                }
+                i++;
+            });
+            if (oldPwd.length < 1) {
+                alert('原密码不能为空!');
+                objoldPwd.focus();
+                return false;
+            }
+            if (!ChangePassword.CheckPwd(oldPwd).value) {
+                alert('原密码输入错误!');
+                objoldPwd.select();
+                return false;
+            }
+            if (newPwd1.length < 6 || newPwd2.length < 6) {
+                alert('新密码不能为空,长度至少是6-20位!');
+                (newPwd1.length < 6) ? objnewPwd1.focus() : objnewPwd2.focus();
+                return false;
+            }
+            if (!istrue(newPwd1) || !istrue(newPwd2)) {
+                alert('新密码只能由数字和字母组合而成!');
+                (!istrue(newPwd1)) ? objnewPwd1.focus() : objnewPwd2.focus();
+                return false;
+            }
+            if (newPwd1 != newPwd2) {
+                alert('新密码两次输入不一致!');
+                objnewPwd1.select();
+                return false;
+            }
+            return true;
+            //ChangePassword.UpdatePwd(newPwd2).value
+            //alert('密码修改成功!');
+        }
+
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+        <tr>
+            <td class="left_title_3 promise" colspan="4">&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    所属单位：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="CompanyName" runat="server" enabled="false" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    用户全名：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="UserName" runat="server" MaxLength="25" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    传真：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Fax" runat="server" MaxLength="13" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    电话：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Tel" runat="server" MaxLength="13" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    手机：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="Mobile" runat="server" mode="Int" MaxLength="11" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    职位：</label>
+            </td>
+            <td class="left_title_2">                                                                                              
+                <uc5:ctrldropdownsysteminfo ID="Position" CurrentType="PositionType" runat="server" Width="288" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    登录账号：</label>
+            </td>
+            <td class="left_title_2">
+                <uc3:ctrlTextBoxEx ID="LoginName" runat="server" enabled="false" CssClass="regedit_input promiseInputWidthExt" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    原密码：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="oldPasswd" CssClass="regedit_input promiseInputWidthExt" TextMode="Password" canEmpty="false"
+                    runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    新密码：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="newPasswd1" CssClass="regedit_input promiseInputWidthExt" TextMode="Password" canEmpty="false"
+                    MaxLength="20" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td class="left_title_1 promiseLabelExt">
+                <label>
+                    确认新密码：</label>
+            </td>
+            <td class="left_title_2">
+                <uc1:ctrltextboxex ID="newPasswd2" CssClass="regedit_input promiseInputWidthExt" TextMode="Password" canEmpty="false"
+                    MaxLength="20" runat="server" />
+            </td>
+        </tr>
+    </table>
+
+    <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="left_title_4">
+                <asp:Button ID="btnSave" runat="server" Text="  保存  " class="btn2" OnClientClick="return btnPwd();" OnClick="btnSave_Click" />
+                &nbsp;<uc4:ctrlBtnBack ID="ctrlBtnBack1" runat="server" SetCssClass="btn2" Visible="false" />
+            </td>
+        </tr>
+    </table>
+
+
+</asp:Content>

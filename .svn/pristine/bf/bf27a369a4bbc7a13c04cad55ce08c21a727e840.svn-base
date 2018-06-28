@@ -1,0 +1,47 @@
+﻿/* CSS Document */
+
+body{
+	margin:0 0 0 0
+}
+
+.button_area{
+	 padding:2px 0 5px 0;
+	 background:#eeedea url(../images/button_area_back.gif) repeat-x;
+	 width:100%;
+	 border:1px solid #c9c7c0;
+	 border-bottom:1px solid #9a9994;
+}
+ 
+.button{
+	 background:none;
+	 overflow:visible;
+	 font:12px Arial,Sans-serif;
+	 text-decoration:none;
+	 color:#333;
+	 border:solid #bbbbbb 1px;
+	 height:19px;
+	 line-height:19px;
+}
+.headSPAN{
+	color:#15428b;
+	font-size:12px;
+	background-color:#cedff5;
+}
+.headIMG{
+	border:0;
+	width:14px;
+	height:15px;
+	margin-left:5px;
+}
+.pageTEXT{
+	width:25px;
+	margin-top:5px;
+	padding-left:1px;
+}
+.buttonTOP{
+	margin-top:5px;
+}
+.inputButton{
+background-image:url(../images/blue_back.gif);
+height:23px;
+}

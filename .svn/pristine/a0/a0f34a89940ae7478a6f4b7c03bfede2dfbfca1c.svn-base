@@ -1,0 +1,237 @@
+﻿body {
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    font-size: 12px;
+    font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;
+}
+
+.STYLE1 {
+    font-size: 12px;
+}
+
+.STYLE3 {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.STYLE4 {
+    color: #03515d;
+    font-size: 12px;
+}
+
+.STYLE10 {
+    color: #000000;
+    font-size: 12px;
+}
+
+.STYLE19 {
+    color: #344b50;
+    font-size: 12px;
+}
+
+.BtnStyle {
+    cursor: hand;
+    text-align: center;
+}
+
+.SelectText {
+    border: solid 1px #8db2e3;
+}
+
+.Hidden {
+    display: none;
+}
+/*表格鼠标样式*/
+.mouseoveritem {
+    background-color: #99ccFF;
+}
+
+.mouseclickitem {
+    background-color: #FFFF88;
+}
+
+.gv_table_head {
+    height: 22px;
+    background: url("/images/tab_bg.gif");
+}
+
+.gv_table_center {
+    background-color: #FFFFFF;
+    text-align: center;
+    border-top: 1px solid #99CCFF;
+    border-right: 1px solid #99CCFF;
+    border-bottom: 1px solid #99CCFF;
+    border-left: 1px solid #99CCFF;
+    line-height: 22px;
+    width: 100%;
+}
+
+.cssTitle {
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+}
+/*问题列表样式*/
+.l_mainbody {
+    width: 700px;
+    margin: 10px 0 10px 10px;
+    border-width: 1px 1px 1px 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+    background-color: #edf2f5;
+}
+
+.l_mainbodydata {
+    width: auto;
+    margin-top: 10px;
+}
+
+.l_data {
+    width: 700px;
+    margin-top: 5px;
+    height: auto !important;
+    border-width: 1px 1px 1px 0;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+*html .l_data {
+    width: auto;
+    border-width: 0 1px 1px 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+* + html .l_data {
+    width: auto;
+    height: 100%;
+    border-width: 0 1px 1px 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+.l_d1 {
+    float: left;
+    width: 10%;
+    word-break: break-all;
+    margin-top: 10px;
+    height: auto;
+    border-spacing: 0;
+    border-width: 0 0 0 0;
+    border-color: #99ccff;
+    border-style: solid;
+    text-indent: 5px;
+    text-align: center;
+}
+
+.l_d2 {
+    float: left;
+    width: 90%;
+    word-break: break-all;
+    height: auto;
+    line-height: normal;
+    border-width: 0 0 0 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    text-align: left;
+}
+
+.l_middledata {
+    width: auto;
+    height: auto !important;
+    border-width: 0 0 0 0;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+*html .l_middledata {
+    width: auto;
+    height: auto;
+    border-width: 1px 1px 1px 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+* + html .l_middledata {
+    width: auto;
+    height: 100%;
+    border-width: 1px 1px 1px 1px;
+    border-color: #99ccff;
+    border-style: solid;
+    clear: both;
+}
+
+.l_mid1 {
+    float: left;
+    width: 70%;
+    word-break: break-all;
+    height: auto;
+    line-height: inherit;
+    border-width: 0 0 0 0;
+    border-color: #99ccff;
+    border-style: solid;
+    overflow: hidden;
+}
+
+.l_mid2 {
+    float: left;
+    width: 30%;
+    height: auto;
+    line-height: inherit;
+    border-width: 0 0 0 0;
+    border-color: #99ccff;
+    border-style: solid;
+    text-align: right;
+}
+
+.l_f_body_div0 {
+    width: 100%;
+    border-top: 1px #99ccff solid;
+}
+
+.l_f_body_div1 {
+    width: 15%;
+    float: left;
+    height: 100px;
+    line-height: 102px;
+    font-weight: bold;
+    text-align: right;
+    border-right: 1px #99ccff solid;
+}
+
+.l_f_body_div2 {
+    width: 80%;
+    float: left;
+    height: 100px;
+    line-height: 102px;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.l_f_body_div3 {
+    width: 15%;
+    float: left;
+    height: 20px;
+    line-height: 22px;
+    font-weight: bold;
+    text-align: right;
+    border-right: 1px #99ccff solid;
+}
+
+.l_f_body_div4 {
+    width: 80%;
+    float: left;
+    height: 20px;
+    line-height: 22px;
+    text-align: left;
+    padding-left: 5px;
+}

@@ -1,0 +1,309 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class ImageWjdj : PageBase
+    {
+        T_FileList_BLL fileListBLL = new T_FileList_BLL();
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 工程类型
+        /// </summary>
+        public string projecttype = string.Empty;
+
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        public bool IsRollBack = false;
+
+        private string checkflag = string.Empty;
+
+        public string singlelist = string.Empty;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 20; 
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ImageWjdj));
+
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            workFlowID = DNTRequest.GetQueryString("WorkFlowID");
+            checkflag = DNTRequest.GetQueryString("Checkflag");
+            singlelist = DNTRequest.GetQueryString("singlelist");
+            if (!IsPostBack)
+            {
+                if (checkflag == "ONLINE_CHECK") //在线预验收-声像验收    
+                {
+                    btnAcceptY.Visible = true;
+                    btnAcceptN.Visible = true;
+                    btnSave001.Visible = false;
+                    btnRecover.Visible = false;
+                }
+                Status.DataBindEx(true);
+                ctrlProjectBaseInfo1.DataBindEx(singleProjectID);
+
+                if (workFlowID != "4" && workFlowID != "28")//非"文件登记"流程，隐藏按钮与操作列
+                {
+                    InitControlState();
+                }
+
+                BindGridView(1);
+            }
+        }
+
+        private void InitControlState()
+        {
+            btnSave001.Visible = false;
+            btnAcceptY.Visible = false;
+            btnAcceptN.Visible = false;
+            btnRecover.Visible = false;
+
+            gvData.Columns[9].Visible = false;
+        }
+
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                System.Drawing.Color col = System.Drawing.Color.White;
+                DataRowView view = e.Row.DataItem as DataRowView;
+
+                CBLL.ColorList colorList = new ColorList();
+                col = colorList.GetMyColor(ConvertEx.ToString(view["Status"]));
+                e.Row.BackColor = col;
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    if (!ConvertEx.ToBool(view["IsFolder"]))
+                    {
+                        e.Row.Cells[i].BackColor = col;
+                    }
+                }
+
+                if (Common.ConvertEx.ToBool(view["IsFolder"]))
+                {
+                    for (int i = 1; i < e.Row.Cells.Count; i++)
+                    {
+                        foreach (Control control in e.Row.Cells[i].Controls)
+                        {//禁用文件节点   
+                            if (control is HtmlControl)
+                            {
+                                if (control is HtmlInputText)
+                                {
+                                    ((HtmlInputText)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((HtmlControl)control).Disabled = true;
+                            }
+                            if (control is WebControl)
+                            {
+                                if (control is TextBox)
+                                {
+                                    ((TextBox)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((WebControl)control).Enabled = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //绑定归档目录
+        private void BindGridView(int pageIndex)
+        {
+            //取当前工程的所有归档目录
+            string strWhere = "SingleProjectID=" + singleProjectID + " And BH like 'S%'";
+            if (Status.SelectValue != "0" && Status.SelectValue != "")
+            {
+                strWhere += " AND Status=" + Status.SelectValue;
+            }
+            DataTable dt = fileListBLL.GetListPaging(strWhere, pageSize, pageIndex, " BH asc", out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGridView(1);
+        }
+
+        public string SetTextDisabled(object isFolder, object bh = null,object ys=null)
+        {
+            //if (checkflag == "ONLINE_CHECK") //在线预验收-声像验收   
+            //{
+            //    return " disabled='disabled' style='border:solid 0px;' ";
+            //}
+            //else{ }
+            if (bh != null && bh.ToString() == "S")
+            {
+                return " disabled='disabled' style='border:solid 0px;' ";
+            }
+            else
+            {
+                if (ConvertEx.ToBool(isFolder) ||
+                     (ys != null && ConvertEx.ToInt(workFlowID) != (int)SystemSet.WorkFlowStatus.ONLINE_CHECK))
+                    return " disabled='disabled' style='border:solid 0px;' ";
+                else if (ys == null && ConvertEx.ToInt(workFlowID) == (int)SystemSet.WorkFlowStatus.ONLINE_CHECK)
+                    return " disabled='disabled' style='border:solid 0px;' ";
+                else
+                    return "";
+            }
+        }
+
+        public string SetTextDisabled(object isFolder, int types, object bh = null)
+        {
+            if (checkflag == "ONLINE_CHECK") //在线预验收-声像验收   
+            {
+                return " disabled='disabled' style='border:solid 0px;' ";
+            }
+            else
+            {
+                if(bh.ToString()=="S")
+                {
+                    return " disabled='disabled' style='border:solid 0px;' ";
+                }
+                else
+                {
+                    if (!ConvertEx.ToBool(isFolder) && types != 3)
+                        return " disabled='disabled' style='border:solid 0px;' ";
+                    else
+                        return "";
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除归档目录,模板目录不能删除
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public bool DeleteFileList(string FileListID)
+        {
+            bool flag = false;
+            T_FileList_BLL Bll = new T_FileList_BLL();
+            T_FileList_MDL Mdl = Bll.GetModel(ConvertEx.ToInt(FileListID));
+            if (Mdl != null && !Mdl.IsFolder)
+            {
+                Bll.Delete(ConvertEx.ToInt(FileListID));
+                flag = true;
+            }
+            return flag;
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void ExctFileList(string strFileListID, string strTitle, string strPsz, string strPsdd,
+            string strPssj, string strOrderIndex, string strRemark)
+        {
+            try
+            {
+                int FileListId = ConvertEx.ToInt(strFileListID);
+                if (FileListId > 0)
+                {
+                    T_FileList_BLL Bll = new T_FileList_BLL();
+                    T_FileList_MDL model = Bll.GetModel(FileListId);
+
+                    if (!model.IsFolder)
+                    {
+                        model.Title = strTitle;
+                        model.psz = strPsz;
+                        if (strPssj != "")
+                        {
+                            model.pssj = ConvertEx.ToDate(strPssj);
+                        }
+                        model.psdd = strPsdd;
+                        model.OrderIndex = ConvertEx.ToInt(strOrderIndex); ;
+                        model.Remark = strRemark;
+
+                        model.CreateDate = System.DateTime.Now;//文件登记时间
+                        Bll.Update(model);
+
+                        T_Other_BLL otherBLL = new T_Other_BLL();
+                        otherBLL.UpdateArchiveStatus(model.FileListID.ToString(), 10, "0");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //LogUtil.Debug(this, "文件登记归档目录保存操作", ex);
+            }
+        }
+
+        /// <summary>
+        /// 恢复,预验收通过,预验收不通过
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public void ResetStatus(string FileListID, string Status, string strRemark)
+        {
+            T_Other_BLL otherBLL = new T_Other_BLL();
+            otherBLL.UpdateArchiveStatus(FileListID, ConvertEx.ToInt(Status), "0");//-1表示退回上一次状态
+
+            int FileListId = ConvertEx.ToInt(FileListID);
+            if (FileListId > 0)
+            {
+                T_FileList_BLL Bll = new T_FileList_BLL();
+                T_FileList_MDL model = Bll.GetModel(FileListId);
+
+                if (!model.IsFolder)
+                {
+                    model.Remark = strRemark;
+                    Bll.Update(model);
+                }
+            }
+        }
+    }
+}

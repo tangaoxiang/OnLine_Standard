@@ -1,0 +1,114 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Text;
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class JiaoJieDengJiList : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                MyAddInit();
+                BindGrid();
+            }
+
+            //非档案馆人员
+            if (Common.Session.GetSessionBool("IsCompany") == true)
+            {
+                Response.Redirect("./");
+            }
+        }
+
+        public void BindGrid()
+        {
+            T_JiaoJieDengJi_BLL dengJiBLL = new T_JiaoJieDengJi_BLL();
+            DataSet ds = new DataSet();
+
+            string strWhere = "";
+            if (TXT_PROJ_NAME.Text != "")
+            {
+                strWhere += " AND PROJ_NAME LIKE '%" + TXT_PROJ_NAME.Text + "%'";
+            }
+            if (TXT_PROJ_NO.Text != "")
+            {
+                strWhere += " AND PROJ_NO LIKE '%" + TXT_PROJ_NO.Text + "%'";
+            }
+
+            if (TXT_JSDW.Text != "")
+            {
+                strWhere += " AND JSDW LIKE '%" + TXT_JSDW.Text + "%'";
+            }
+
+            ds = dengJiBLL.GetList(strWhere);
+
+            List<GridExPara> selectList = new List<GridExPara>();
+
+            GridExPara p1 = new GridExPara();
+            p1.FieldName = "ORDER_INDEX";
+            p1.ShowName = "序号";
+            selectList.Add(p1);
+
+            GridExPara p2 = new GridExPara();
+            p2.FieldName = "PROJ_NO";
+            p2.ShowName = "工程编号";
+            selectList.Add(p2);
+
+            GridExPara p3 = new GridExPara();
+            p3.FieldName = "PROJ_NAME";
+            p3.ShowName = "工程名称";
+            selectList.Add(p3);
+
+            GridExPara p4 = new GridExPara();
+            p4.FieldName = "JSDW";
+            p4.ShowName = "建设单位";
+            selectList.Add(p4);
+
+            GridExPara p5 = new GridExPara();
+            p5.FieldName = "AJH";
+            p5.ShowName = "案卷号";
+            selectList.Add(p5);
+
+            GridExPara p6 = new GridExPara();
+            p6.FieldName = "JS";
+            p6.ShowName = "卷数";
+            selectList.Add(p6);
+
+            GridExPara p7 = new GridExPara();
+            p7.FieldName = "AREA";
+            p7.ShowName = "面积";
+            selectList.Add(p7);
+
+            ctrlGridEx1.InitGrid("SID", selectList, ds, "~/Report/JIAOJIEDengJiAdd.aspx?Action=edit&sqlwhere=" + ViewState["sqlwhere"] + "&PageIndex=" + ctrlGridEx1.PageIndex + "", false, true, "编辑");
+        }
+
+        //查询
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            this.BindGrid();
+        }
+
+        protected void BTN_ADD_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("./JiaoJieDengJiAdd.aspx");
+        }
+
+        protected void BTN_PRINT_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("./JiaoJieDengJiPrint.aspx");
+        }
+    }
+}

@@ -1,0 +1,337 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+using System.IO;
+
+namespace DigiPower.Onlinecol.Standard.Web.iSignature
+{
+    public partial class SignatureFilesList : PageBase
+    {
+        BLL.T_SingleProject_BLL spBLL = new BLL.T_SingleProject_BLL();
+        BLL.T_FileList_BLL fileBLL = new BLL.T_FileList_BLL();
+        BLL.T_WorkFlowDefine_BLL wkfBLL = new BLL.T_WorkFlowDefine_BLL();
+        BLL.T_Company_BLL comBLL = new BLL.T_Company_BLL();
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 20;
+
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(SignatureFilesList));
+            SingleProjectID.Value = DNTRequest.GetQueryString("SingleProjectID");
+            companyID.Value = Common.Session.GetSessionInt("CompanyID").ToString();
+            MyAddInit();
+            if (!IsPostBack)
+            {
+                pPageIndex = "0";
+            }
+
+            BindGridView(1);
+
+        }
+
+
+        //绑定归档目录
+        private void BindGridView(int pageIndex)
+        {
+
+            Model.T_SingleProject_MDL spMDL = spBLL.GetModel(Common.ConvertEx.ToInt(SingleProjectID.Value));
+            //singleProjectNo = spMDL.gcbm;
+
+            //取当前工程的所有归档目录
+            string strWhere = " SingleProjectID=" + SingleProjectID.Value;
+
+            //不显示声像节点 //jdk 2014.11.16
+            strWhere += " AND BH not like '%S%' ";
+
+            if (Common.Session.GetSession("SuperAdmin").ToLower() == "true" ||
+                Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+            {//Leo 超级管理员看全部    档案馆的人也可以看全部   
+                strWhere += " AND ((IsFolder=0) OR  (IsFolder=0 AND CONVERT_FLAG=1))";
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(companyID.Value) && companyID.Value != "0")
+                {
+                    Model.T_Company_MDL comMDL = comBLL.GetModel(Common.ConvertEx.ToInt(companyID.Value));
+
+                    if (comMDL != null)
+                    {
+                        //strWhere += string.Format(" AND ((IsFolder=1 AND DefaultCompanyType={0})",
+                        //    comMDL.CompanyType);
+                        strWhere += string.Format(" AND (IsFolder=0 AND CompanyID={0} AND  CONVERT_FLAG=1) ",
+                            comMDL.CompanyID);
+                    }
+                }
+            }
+
+            Session["FileInfostrWhere"] = strWhere;
+
+            DataTable dt = fileBLL.GetListPaging(strWhere, pageSize, pageIndex, out itemCount);
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        protected void btnSignature_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(SingleProjectID.Value))
+            {
+                string isAll = "0";
+                string strWhere = "SingleProjectID=" + SingleProjectID.Value;
+
+                if (Common.Session.GetSession("SuperAdmin").ToLower() == "true" ||
+                    Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+                {//Leo 超级管理员看全部    档案馆的人也可以看全部   
+                    strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND   ISNULL(SIGNATURE_FLAG,0)=0";
+                    isAll = "1";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(companyID.Value) && companyID.Value != "0")
+                    {
+                        Model.T_Company_MDL comMDL = comBLL.GetModel(Common.ConvertEx.ToInt(companyID.Value));
+
+                        if (comMDL != null)
+                        {
+                            strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND  ISNULL(SIGNATURE_FLAG,0)=0";
+                            strWhere += string.Format(" AND CompanyID={0}",
+                                comMDL.CompanyID);
+                        }
+                    }
+                }
+                DataSet ds = fileBLL.GetList(strWhere, "bh", true);
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    ClientScript.RegisterStartupScript(Page.GetType(), "calculateHash", string.Format(
+                        "<script type='text/javascript'>calculateHash({0},{1},{2});</script>",
+                        SingleProjectID.Value, companyID.Value, isAll));
+                }
+                else
+                    Common.MessageBox.Show(this, "没有可签章的文件！");
+            }
+            else
+                Common.MessageBox.Show(this, "获取工程主键时出错，请关闭后重新打开！");
+
+        }
+
+        public string SetTextDisabled(object isFolder)
+        {
+            if (ConvertEx.ToBool(isFolder))
+                return " disabled='disabled' style='border:solid 0px;' ";
+            else
+                return "";
+        }
+
+        public string SetTextDisabledSign(object isSign)
+        {
+            if (!ConvertEx.ToBool(isSign))
+                return " disabled='disabled' style='border:solid 0px;' ";
+            else
+                return "";
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                System.Drawing.Color col = System.Drawing.Color.White;
+                DataRowView view = e.Row.DataItem as DataRowView;
+
+                int status = ConvertEx.ToInt(view["SIGNATURE_FLAG"]);
+                CBLL.ColorList colorList = new ColorList();
+                col = colorList.GetMyColor((status * 10).ToString());
+                e.Row.BackColor = col;
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    if (!ConvertEx.ToBool(view["IsFolder"]))
+                    {
+                        e.Row.Cells[i].BackColor = col;
+                    }
+                }
+
+                if (Common.ConvertEx.ToBool(view["IsFolder"]))
+                {
+                    for (int i = 1; i < e.Row.Cells.Count; i++)
+                    {
+                        foreach (Control control in e.Row.Cells[i].Controls)
+                        {//禁用文件节点   
+                            if (control is HtmlControl)
+                            {
+                                if (control is HtmlInputText)
+                                {
+                                    ((HtmlInputText)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((HtmlControl)control).Disabled = true;
+                            }
+                            if (control is WebControl)
+                            {
+                                if (control is TextBox)
+                                {
+                                    ((TextBox)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((WebControl)control).Enabled = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量重置按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnReset_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(SingleProjectID.Value))
+            {
+                string strWhere = "SingleProjectID=" + SingleProjectID.Value;
+                if (Common.Session.GetSession("SuperAdmin").ToLower() == "true" ||
+                  Common.Session.GetSession("IsCompany") == false.ToString().ToLower())
+                {//Leo 超级管理员看全部    档案馆的人也可以看全部   
+                    strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND   ISNULL(SIGNATURE_FLAG,0)=0";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(companyID.Value) && companyID.Value != "0")
+                    {
+                        Model.T_Company_MDL comMDL = comBLL.GetModel(Common.ConvertEx.ToInt(companyID.Value));
+
+                        if (comMDL != null)
+                        {
+                            strWhere += " AND IsFolder=0 AND CONVERT_FLAG=1 AND  ISNULL(SIGNATURE_FLAG,0)=1";
+                            strWhere += string.Format(" AND CompanyID={0}",
+                                comMDL.CompanyID);
+                        }
+                    }
+                }
+                List<T_FileList_MDL> fileList = fileBLL.GetModelList(strWhere);
+                if (fileList != null)
+                {
+                    foreach (T_FileList_MDL obj in fileList)
+                    {
+                        ResetFile(obj);
+                    }
+                }
+
+            }
+            else
+                Common.MessageBox.Show(this, "获取工程主键时出错，请关闭后重新打开！");
+        }
+
+        /// <summary>
+        /// 入库能否查看PDF
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public bool RKLookPDFFlag(string singleProjectID)
+        {
+            bool flag = true;
+            T_SingleProject_BLL singleProjectBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL singleProjectMDL = singleProjectBLL.GetModel(ConvertEx.ToInt(singleProjectID));
+            if (singleProjectMDL != null)
+            {
+                if (ConvertEx.ToInt(singleProjectMDL.Status) >= 3721 && !SystemSet._RKLOOKPDFFLAG
+                    && singleProjectMDL.WorkFlow_DoStatus == (int)SystemSet.WorkFlowStatus.IMPORT_TO)
+                {
+                    flag = false;
+                }
+            }
+            return flag;
+        }
+
+        [Ajax.AjaxMethod]
+        public string SignatureResetFlag(string fileListID)
+        {
+            string strMsg = string.Empty;
+            if (!String.IsNullOrWhiteSpace(fileListID))
+            {
+                T_FileList_MDL model = fileBLL.GetModel(Common.ConvertEx.ToInt(fileListID));
+
+                if (model != null)
+                {
+                    if (!string.IsNullOrEmpty(model.RootPath) && !string.IsNullOrEmpty(model.PDFFilePath))
+                    {
+                        ResetFile(model);
+                        strMsg = "success";
+                    }
+                    else
+                        strMsg = "获取文件路径有误，请刷新页面后重试！";
+                }
+                else
+                    strMsg = "获取文件信息失败，请刷新页面后重试！";
+
+            }
+            return strMsg;
+        }
+
+        protected void ResetFile(T_FileList_MDL model)
+        {
+            string mEFilePath = string.Empty, oMDPdir = string.Empty, mOrgEFilePath = string.Empty;
+
+            oMDPdir = string.Concat(model.RootPath, model.SingleProjectID, "\\OMPDF\\");
+
+            mEFilePath = string.Concat(model.RootPath, model.SingleProjectID, "\\MPDF\\",
+                model.PDFFilePath.Replace("/", @"\"));
+            mOrgEFilePath = string.Concat(oMDPdir, model.PDFFilePath.Replace("/", @"\"));
+            bool isUpdate = false;
+            if (!Directory.Exists(oMDPdir))
+            {
+                Directory.CreateDirectory(oMDPdir);
+                System.IO.File.Copy(mEFilePath, mOrgEFilePath, true);
+            }
+            else
+            {
+                if (System.IO.File.Exists(mOrgEFilePath))
+                    System.IO.File.Copy(mOrgEFilePath, mEFilePath, true);
+            }
+            model.SIGNATURE_FLAG = false;
+            fileBLL.Update(model);
+        }
+
+    }
+}

@@ -1,0 +1,33 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true"
+    CodeBehind="QuestionView.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.QuestionView" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <div class="main-content">
+        <div class="content-box-content">
+            <div class="tab-content default-tab" id="tab1" style="padding: 5px;">
+                <table>
+                    <tbody class="tbody" id="bodyRepeater">
+                        <tr>
+                            <td style="width: 50%">问题类别:<strong><asp:Literal runat="server" ID="ltQuestionTypeTitle"></asp:Literal></strong></td>
+                            <td style="width: 25%">创建人:<strong><asp:Literal runat="server" ID="ltCreateUserName"></asp:Literal></strong></td>
+                            <td style="width: 25%">创建时间:<strong><asp:Literal runat="server" ID="ltCreateDate"></asp:Literal></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">问题主题:<strong><asp:Literal runat="server" ID="ltTitle"></asp:Literal></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">问题详情</td>
+                            <td style="width: 25%">浏览次数:<strong><asp:Literal runat="server" ID="ltClickCount"></asp:Literal></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="word-break: break-all;">&nbsp;&nbsp;<asp:Literal runat="server" ID="ltDescriptionHtml"></asp:Literal></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</asp:Content>

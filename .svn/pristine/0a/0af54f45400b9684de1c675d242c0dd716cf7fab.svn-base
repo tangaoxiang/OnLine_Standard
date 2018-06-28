@@ -1,0 +1,213 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+
+//新增/修改报表 -step1
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportStep1 : PageBase
+    {
+        #region 属性及构造函数
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ReportStep1));
+            if (!this.IsPostBack)
+            {
+                MyAddInit();
+                ReportTypeID.DataBindEx();
+
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    ViewState["action"] = Action;
+                    if (Action.ToLower().Equals("add"))
+                    {
+                        ViewState["pagestate"] = CommonEnum.PageState.ADD;
+                        //ReportCode.Text = GetReportCode();
+
+                        //btnNextStep.Visible = false;
+
+                        //T_Report_Type_MDL mdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(ReportTypeID.SelectValue));
+                        //if (mdl != null)
+                        //    ReportFilePath.Text = ReportCode.Text + ".mrt";
+                    }
+                    else if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["pagestate"] = CommonEnum.PageState.EDIT;
+                        BindData();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region 方法
+
+        /// <summary>
+        /// 判断报表编号是否唯一
+        /// </summary>
+        /// <param name="ReportID"></param>
+        /// <param name="ReportCode"></param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool CheckReportCode(string ReportID, string ReportCode)
+        {
+            try
+            {
+                List<T_Report_MDL> ltMdl = new T_Report_BLL().GetModelList("ReportID!=" + ReportID + " AND ReportCode='" + ReportCode.Trim() + "'");
+                if (ltMdl.Count > 0) return false;
+                else return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void BindData()
+        {
+            T_Report_BLL bll = new T_Report_BLL();
+            T_Report_MDL mdl = bll.GetModel(Common.ConvertEx.ToInt(ID));//通过ID获取Model对象
+
+            if (mdl != null)
+            {
+                ViewState["id"] = ID;
+                Comm.SetValueToPage(mdl, tbl);//将Model值赋给控件
+                ViewState["model"] = mdl;
+
+                ViewState["ReportFilePath"] = mdl.ReportFilePath;
+                SetLastReportTypeName(Common.ConvertEx.ToInt(mdl.ReportTypeID));
+                HidReportID.Value = ID.ToString();
+            }
+        }
+
+        private void SetLastReportTypeName(int ReportTypeID)
+        {
+            //存放原先的路径,如果更改了报表类型,则将报表从原先文件夹移动到当前选择的类型文件夹
+            T_Report_Type_MDL tpMdl = new T_Report_Type_BLL().GetModel(ReportTypeID);
+            ViewState["ReportTypeName"] = tpMdl.ReportTypeName;
+
+        }
+
+        /// <summary>
+        /// 创建报表及其所属文件夹
+        /// </summary>
+        /// <param name="mdl">T_Report_MDL</param>
+        /// <param name="flag">true:add flase:edit</param>
+        private void CreateReportOrDirectory(T_Report_MDL mdl, bool flag)
+        {
+            string ReportFileName = mdl.ReportFilePath;
+            T_Report_Type_MDL tpMdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(mdl.ReportTypeID));
+            if (tpMdl != null)
+            {
+                string DirectoryPath = Server.MapPath("../Report/ReportFiles/");
+                if (!Directory.Exists(DirectoryPath + "/" + tpMdl.ReportTypeName)) //报表文件夹不存在则创建
+                    Directory.CreateDirectory(DirectoryPath + "/" + tpMdl.ReportTypeName);
+
+                if (!System.IO.File.Exists(DirectoryPath + "/" + tpMdl.ReportTypeName + "/" + mdl.ReportFilePath))
+                {
+                    if (flag)//创建.mrt报表
+                    {
+                        //FileStream Stream = System.IO.File.Create(DirectoryPath + "/" + tpMdl.ReportTypeName + "/" + mdl.ReportFilePath);
+                        //Stream.Close();
+                        //Stream.Dispose();
+                    }
+                    else    //移动报表
+                    {
+                        //如果更改了报表类型/报表名称,则将报表从原先文件夹移动到当前选择的类型文件夹
+                        string oldReportTypeName = Common.ConvertEx.ToString(ViewState["ReportTypeName"]);
+                        string oldReportFilePath = Common.ConvertEx.ToString(ViewState["ReportFilePath"]);
+                        if (System.IO.File.Exists(DirectoryPath + "/" + oldReportTypeName + "/" + oldReportFilePath))
+                            System.IO.File.Move(DirectoryPath + "/" + oldReportTypeName + "/" + oldReportFilePath, DirectoryPath + "/" + tpMdl.ReportTypeName + "/" + ReportFileName);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 生成报表编号
+        /// 报表格式为R000001
+        /// </summary>
+        /// <returns></returns>
+        private string GetReportCode()
+        {
+            string MaxID = "";
+            int ReportListCount = new T_Other_BLL().GetReportListCount();
+
+            if (ReportListCount == 0) MaxID = "1";
+            else MaxID = Common.ConvertEx.ToString(ReportListCount + 1);
+
+            StringBuilder strCode = new StringBuilder();
+            strCode.Append("R");
+            for (int i = 0; i < 6 - MaxID.Length; i++)
+            {
+                strCode.Append("0");
+            }
+            strCode.Append(MaxID);
+            return strCode.ToString();
+        }
+
+        #endregion
+
+        #region 事件
+
+        //protected void btnSave_Click(object sender, EventArgs e)
+        //{
+
+        //}
+
+        //step to 2
+        protected void btnNextStep_Click(object sender, EventArgs e)
+        {
+            T_Report_BLL bll = new T_Report_BLL();
+            T_Report_MDL mdl = new T_Report_MDL();
+
+            if (ViewState["model"] != null)     //修改时重新构造Model
+                mdl = ViewState["model"] as T_Report_MDL;
+
+            object obj = Comm.GetValueToObject(mdl, tbl);//将控件值赋给Model
+
+            if (obj != null)
+            {
+                if (((CommonEnum.PageState)ViewState["pagestate"]) == CommonEnum.PageState.ADD)
+                {
+                    mdl.ReportFilePath = ReportCode.Text + ".mrt";
+                    ViewState["id"] = bll.Add(mdl);
+                    CreateReportOrDirectory(mdl, true);
+                    btnNextStep.Visible = true;
+                    //btnSave.Enabled = false;
+                }
+                else if (((CommonEnum.PageState)ViewState["pagestate"]) == CommonEnum.PageState.EDIT)
+                {
+                    T_Report_MDL newMdl = obj as T_Report_MDL;
+                    newMdl.ReportFilePath = ReportCode.Text + ".mrt";
+                    bll.Update(newMdl);
+                    CreateReportOrDirectory(newMdl, false);
+                    ViewState["id"] = newMdl.ReportID;
+                    SetLastReportTypeName(Common.ConvertEx.ToInt(newMdl.ReportTypeID));
+                }
+            }
+
+            Common.MessageBox.Show(this, "操作成功;请点击返回或下一步进行其它操作!");
+
+            Response.Redirect("ReportStep2.aspx?action=" + ViewState["action"].ToString() + "&id=" + ViewState["id"].ToString() + "");
+        }
+
+        #endregion
+    }
+}

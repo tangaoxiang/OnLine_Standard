@@ -1,0 +1,42 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteSon.Master" AutoEventWireup="true" CodeBehind="ArchiveListProView.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CompanyManage.ArchiveListProView" Title="档案跟踪-图表" %>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="Head" runat="server">
+    <link href="../Javascript/Layer/css/old_select_file.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseLabelExt {
+            width: 180px;
+        }
+
+        .promiseInputWidthExt {
+            width: 280px;
+        }
+
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }
+
+        tr {
+            background-color: #fff;
+        }
+
+        .left_title_2 {
+            line-height: 0px !important;
+        }
+
+        .left_title_1 {
+            background-color: white !important;
+            color: black !important;
+            font-weight: initial !important;
+        }
+
+        .promise {
+            background-color: white !important;
+            color: black !important;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="Main" runat="server">
+    <asp:Literal ID="ltHTML" runat="server"></asp:Literal>
+</asp:Content>

@@ -1,0 +1,32 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="top.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main.top" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="../CSS/table.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../CSS/form.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../CSS/button.css" media="screen" rel="stylesheet" type="text/css" />
+    <!-- EXT 框架整体样式表, 请让此文件保持和html文件在同一个目录-->
+    <link rel="stylesheet" type="text/css" href="ext-all.css" />
+    <script language="javascript" type="text/javascript" src="link_frame.js"></script>
+    <script language="javascript" type="text/javascript">
+        function Navgate(title, id, url) {
+            window.top.Content.CreateTitle(title, id, url);
+        }
+                  
+        function onloadnav() {
+            window.setTimeout("Navgate('我的任务',181,'../DefaultMyTaskList.aspx')", 1000);
+        }
+    </script>
+</head>
+<body bgcolor="#DFE8F6">
+    <form id="form1" runat="server">
+        <div>   
+            <asp:Literal ID="Literal1" runat="server"></asp:Literal>
+        </div>
+    </form>
+</body>
+</html>

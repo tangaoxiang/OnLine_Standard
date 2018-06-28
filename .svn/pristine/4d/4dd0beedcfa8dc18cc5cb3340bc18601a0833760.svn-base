@@ -1,0 +1,145 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class BaoSongInfo : PageBase
+    {
+        string SingleProjectId = string.Empty;
+        string CodeType = string.Empty;
+        BLL.T_ReadyCheckBook_BLL readBLL = new BLL.T_ReadyCheckBook_BLL();
+        BLL.T_FileList_BLL fileBLL = new BLL.T_FileList_BLL();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            SingleProjectId = DNTRequest.GetQueryString("SingleProjectID");
+            CodeType = DNTRequest.GetQueryString("CodeType");
+            if (!IsPostBack)
+            {   
+                T_SingleProject_MDL singMDL = new T_SingleProject_BLL().GetModel(ConvertEx.ToInt(SingleProjectId));
+                if (singMDL != null)
+                {
+                    jsdw.Text = singMDL.jsdw;
+                }
+
+                if (CodeType == "3")
+                {
+                    lblrpttitile.Text = "阜阳市建设工程档案认可意见书";
+                    hidReportCode.Value = "yys_yjs1";
+                    lblysbh.Text = "预验收编号";
+                    TableRowShow(7, Table1.Rows.Count); 
+                }
+                else if (CodeType == "1")
+                {
+                    lblrpttitile.Text = "阜阳市建设工程档案移交证明书";
+                    hidReportCode.Value = "proj_certificate";
+                    lblysbh.Text = "验收编号";
+                    TableRowShow(2,7); 
+                }
+                hidSingleProjectId.Value = SingleProjectId;
+
+                string strWhere = "SingleProjectID='" + SingleProjectId + "' and CodeType=" + CodeType;
+                IList<T_ReadyCheckBook_MDL> ltMdl = readBLL.GetModelList(strWhere);
+                if (ltMdl != null && ltMdl.Count > 0)
+                {
+                    T_ReadyCheckBook_MDL readMDL = ltMdl[0];
+                    txtTotalScroll.Text = ConvertEx.ToString(readMDL.TOTAL_SCROLL);
+                    txtCharacterScroll.Text = ConvertEx.ToString(readMDL.CHARACTER_SCROLL);
+                    txtPicScroll.Text = ConvertEx.ToString(readMDL.PIC_SCROLL);
+                    //txtPicPageCount.Text = ConvertEx.ToString(readMDL.PIC_PAGE_COUNT);
+                    txtPhotoPageCount.Text = ConvertEx.ToString(readMDL.PHOTO_COUNT);
+                    txtRadioCount.Text = ConvertEx.ToString(readMDL.RADIO_COUNT);
+                    txtOtherMaterial.Text = readMDL.OTHER_MATERIAL;
+                    txtDirectoryScroll.Text = ConvertEx.ToString(readMDL.Directory_SCROLL);
+                    txtDirectoryPage.Text = ConvertEx.ToString(readMDL.Directory_PAGE_COUNT);
+                    hidReadyCheckBookID.Value=readMDL.ReadyCheckBookID.ToString();
+                    ysbh.Text = readMDL.zljddw;
+                    jsdwfzr_Name.Text = readMDL.jsdwfzr_Name;
+                    jsdwfzr_Tel.Text = readMDL.jsdwfzr_Tel;
+                    ArchiveUserName.Text = readMDL.ArchiveUserName;
+                    ArchiveUser_Tel.Text = readMDL.ArchiveUser_Tel;
+                    if (readMDL.cscd != null)
+                        cscd.Text = readMDL.cscd.ToString();
+                }
+                else
+                { 
+                    DataSet ds = new T_Other_BLL().GetArchiveInfo(SingleProjectId);
+                    if (ds.Tables.Count > 0)
+                    {
+                        DataTable table = ds.Tables[0];
+                        txtTotalScroll.Text = Common.ConvertEx.ToString(table.Rows[0]["archiveCount"]);                 //案卷个数
+                        txtCharacterScroll.Text = Common.ConvertEx.ToString(table.Rows[0]["wz"]);                       //文字   
+                        txtPicScroll.Text = Common.ConvertEx.ToString(table.Rows[0]["tzz"]);                            //图纸层                                                    
+                        txtRadioCount.Text = Common.ConvertEx.ToString(table.Rows[0]["gp"]);                            //光盘 
+                    }
+                }
+            }
+        }
+        protected void TableRowShow(int startindex,int endindex)
+        {
+            for (int i = startindex; i < endindex; i++)
+            {
+                Table1.Rows[i].Visible = false;
+            }
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_ReadyCheckBook_MDL readMDL = new T_ReadyCheckBook_MDL();
+            if (CodeType == "1")
+            {
+                readMDL.TOTAL_SCROLL = ConvertEx.ToInt(txtTotalScroll.Text);
+                readMDL.CHARACTER_SCROLL = ConvertEx.ToInt(txtCharacterScroll.Text);
+                readMDL.PIC_SCROLL = ConvertEx.ToInt(txtPicScroll.Text);
+                //readMDL.PIC_PAGE_COUNT = ConvertEx.ToInt(txtPicPageCount.Text);
+                readMDL.PHOTO_COUNT = ConvertEx.ToInt(txtPhotoPageCount.Text);
+                readMDL.RADIO_COUNT = ConvertEx.ToInt(txtRadioCount.Text);
+                readMDL.OTHER_MATERIAL = txtOtherMaterial.Text.Trim();
+                readMDL.Directory_SCROLL = ConvertEx.ToInt(txtDirectoryScroll.Text);
+                readMDL.Directory_PAGE_COUNT = ConvertEx.ToInt(txtDirectoryPage.Text);
+            }
+            else if (CodeType == "3")
+            {
+                readMDL.cscd = cscd.Text;
+                readMDL.jsdwfzr_Name = jsdwfzr_Name.Text;
+                readMDL.jsdwfzr_Tel = jsdwfzr_Tel.Text;
+                readMDL.ArchiveUserName = ArchiveUserName.Text;
+                readMDL.ArchiveUser_Tel = ArchiveUser_Tel.Text;
+            }
+            readMDL.SingleProjectID = ConvertEx.ToInt(SingleProjectId);
+            readMDL.EndDate = System.DateTime.Now;
+            readMDL.BeginDate = System.DateTime.Now;
+            readMDL.CreateTime = DateTime.Now;
+            readMDL.CreateUserID = ConvertEx.ToInt(Session["UserID"]);
+            readMDL.CodeType = CodeType;
+            readMDL.ReadyCheckBookID = Int32.Parse(hidReadyCheckBookID.Value);
+            readMDL.zljddw = ysbh.Text;
+
+            List<T_ReadyCheckBook_MDL> ltMdl = readBLL.GetModelList("SingleProjectID=" + SingleProjectId + " AND CodeType='" + CodeType + "'");
+            if (ltMdl.Count > 0)
+            {
+                readBLL.Update(readMDL);
+            }
+            else
+            {
+                readBLL.Add(readMDL);
+            }
+            MessageBox.Show(this, "保存成功");
+            //转到PDF "../ViewReport.aspx?strWhere=SingleProjectID=" + SingleProjectId + "&ReportCode=proj_certificate";
+            //string url = "../ViewReport.aspx?strWhere=SingleProjectID=" + SingleProjectId + "&ReportCode=" + ReportCode;
+            //ClientScript.RegisterStartupScript(Page.GetType(), "open008", "<script type='text/javascript'>window.close();openCommonWindowScroll('" + url + "',1000,1200);</script>");
+        }
+
+    }
+}

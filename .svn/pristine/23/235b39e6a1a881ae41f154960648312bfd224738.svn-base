@@ -1,0 +1,1031 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.0" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="1">
+      <Archive_FileList_16 Ref="2" type="DataTableSource" isKey="true">
+        <Alias>Archive_FileList_16</Alias>
+        <Columns isList="true" count="94">
+          <value>FileListID,System.Int32</value>
+          <value>SingleProjectID,System.Int32</value>
+          <value>ArchiveID,System.Int32</value>
+          <value>recID,System.Int32</value>
+          <value>PID,System.Int32</value>
+          <value>DefaultCompanyType,System.Int32</value>
+          <value>DH,System.String</value>
+          <value>MyCode,System.String</value>
+          <value>BH,System.String</value>
+          <value>Title,System.String</value>
+          <value>MustSubmitFlag,System.Boolean</value>
+          <value>OldStatus,System.String</value>
+          <value>Status,System.String</value>
+          <value>EndTime,System.DateTime</value>
+          <value>OperateUserID,System.String</value>
+          <value>OperateUserName,System.String</value>
+          <value>OrderIndex,System.Int32</value>
+          <value>ManualCount,System.Int32</value>
+          <value>PagesCount,System.Int32</value>
+          <value>WinRecvPagesCount,System.Int32</value>
+          <value>Remark,System.String</value>
+          <value>PDFFilePath,System.String</value>
+          <value>AlonePack,System.Boolean</value>
+          <value>IsFolder,System.Boolean</value>
+          <value>IsSystem,System.Boolean</value>
+          <value>FileType,System.String</value>
+          <value>archive_form_no,System.String</value>
+          <value>zajh,System.String</value>
+          <value>w_t_h,System.String</value>
+          <value>wjtm,System.String</value>
+          <value>zrr,System.String</value>
+          <value>qssj,System.DateTime</value>
+          <value>zzsj,System.DateTime</value>
+          <value>yc,System.String</value>
+          <value>wb,System.String</value>
+          <value>sl,System.Int32</value>
+          <value>bgqx,System.String</value>
+          <value>mj,System.String</value>
+          <value>dz_k,System.String</value>
+          <value>dz_l,System.String</value>
+          <value>dz_g,System.String</value>
+          <value>dz_c,System.String</value>
+          <value>dz_x,System.String</value>
+          <value>ztlx,System.String</value>
+          <value>dw,System.String</value>
+          <value>gg,System.String</value>
+          <value>ty,System.String</value>
+          <value>ztc,System.String</value>
+          <value>note,System.String</value>
+          <value>sw,System.String</value>
+          <value>dz,System.String</value>
+          <value>lrr,System.String</value>
+          <value>lrsj,System.DateTime</value>
+          <value>shzt,System.Int16</value>
+          <value>shr_1,System.String</value>
+          <value>shsj_1,System.DateTime</value>
+          <value>shr_2,System.String</value>
+          <value>shsj_2,System.DateTime</value>
+          <value>shr_3,System.String</value>
+          <value>shsj_3,System.DateTime</value>
+          <value>aipdate,System.DateTime</value>
+          <value>aipuser,System.String</value>
+          <value>ShortDH,System.String</value>
+          <value>swgph,System.String</value>
+          <value>cfdz,System.String</value>
+          <value>wjbt,System.String</value>
+          <value>zrz,System.String</value>
+          <value>wh,System.String</value>
+          <value>wjfwqx,System.String</value>
+          <value>xcsj,System.String</value>
+          <value>dzwjxx,System.String</value>
+          <value>fz,System.String</value>
+          <value>CreateDate,System.DateTime</value>
+          <value>CreateDate2,System.DateTime</value>
+          <value>tzz,System.Int32</value>
+          <value>dtz,System.Int32</value>
+          <value>zpz,System.Int32</value>
+          <value>wzz,System.Int32</value>
+          <value>dpz,System.Int32</value>
+          <value>wjgbdm,System.String</value>
+          <value>wjlxdm,System.String</value>
+          <value>wjgs,System.String</value>
+          <value>wjdx,System.String</value>
+          <value>psdd,System.String</value>
+          <value>psz,System.String</value>
+          <value>pssj,System.DateTime</value>
+          <value>sb,System.String</value>
+          <value>fbl,System.String</value>
+          <value>xjpp,System.String</value>
+          <value>xjxh,System.String</value>
+          <value>bz,System.String</value>
+          <value>archive_dh,System.String</value>
+          <value>StartTime,System.String</value>
+          <value>EFILE_COUNT,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Name>Archive_FileList_16</Name>
+        <NameInSource>Archive_FileList_16</NameInSource>
+      </Archive_FileList_16>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="8">
+      <value>,xh,xh,System.String,,False,False</value>
+      <value>temp,TEMP_UserName,TEMP_UserName,System.String,系统管理员,False,False</value>
+      <value>temp,TEMP_0,TEMP_0,System.String,,False,False</value>
+      <value>temp,TEMP_1,TEMP_1,System.String,,False,False</value>
+      <value>temp,TEMP_2,TEMP_2,System.String,,False,False</value>
+      <value>temp,TEMP_3,TEMP_3,System.String,,False,False</value>
+      <value>temp,TEMP_4,TEMP_4,System.String,,False,False</value>
+      <value>temp,TEMP_5,TEMP_5,System.String,,False,False</value>
+    </Variables>
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="3" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="5">
+        <PageHeaderBand1 Ref="4" type="PageHeaderBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,0.4,19,3.6</ClientRectangle>
+          <Components isList="true" count="8">
+            <文本1 Ref="5" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>5.8,1.4,7.2,0.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,24,Bold</Font>
+              <Guid>c1edc547676d41cc82aaa1478d2da9d6</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>文本1</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>卷 内 目 录</Text>
+              <TextBrush>Black</TextBrush>
+            </文本1>
+            <Text5 Ref="6" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,2.4,1.6,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>序号</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+            <Text7 Ref="7" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2,2.4,2.2,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <Guid>42831a274fc146dcae1af774746bd7e6</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>文件编号</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text7>
+            <Text12 Ref="8" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.2,2.4,2.6,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <Guid>78b18676de1d4da49768a9a8a16b1d8b</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>责 任 者</Text>
+              <TextBrush>Black</TextBrush>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text13 Ref="9" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13,2.4,1.8,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <Guid>92255ff4b2684a5096f0d489f0b0692f</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text13</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>日期</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text13>
+            <Text14 Ref="10" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>14.8,2.4,1.6,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,11,Bold</Font>
+              <Guid>5d746920d352441d8bb7c4c043b7769e</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text14</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>页次</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text14>
+            <Text15 Ref="11" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.4,2.4,2.2,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <Guid>c5dd71bfcdd248cbb971b2d34238e98e</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text15</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>备注</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <VertAlignment>Center</VertAlignment>
+            </Text15>
+            <Text11 Ref="12" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.8,2.4,6.2,1.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>黑体,11,Bold</Font>
+              <Guid>f361ce2f68d24ed48e97663597ef3131</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text11</Name>
+              <Page isRef="3" />
+              <Parent isRef="4" />
+              <Text>文 件 材 料 题 名</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text11>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>PageHeaderBand1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </PageHeaderBand1>
+        <PageFooterBand1 Ref="13" type="PageFooterBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,25,19,2.7</ClientRectangle>
+          <Components isList="true" count="0" />
+          <Conditions isList="true" count="0" />
+          <Name>PageFooterBand1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </PageFooterBand1>
+        <Text3 Ref="14" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>-0.4,3,0.2,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>黑体,28,Bold</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text3</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <TextBrush>Black</TextBrush>
+        </Text3>
+        <数据区1 Ref="15" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,4.8,19,1.4</ClientRectangle>
+          <Components isList="true" count="7">
+            <Text2 Ref="16" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,0,1.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>fc549c6cb8c64ceebb2a0fd477042d16</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Line}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text8 Ref="17" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2,0,2.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>8656b1c4670c45caaeb468f845485201</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Archive_FileList_16.w_t_h}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text8>
+            <Text17 Ref="18" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.2,0,2.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>f26169b83d6d42b9aff6279a8d87b671</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text17</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Archive_FileList_16.zrr}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text17>
+            <Text18 Ref="19" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13,0,1.8,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>f9826dc8548049ad87026c8db6472b36</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Format("{0:yyyyMMdd}", Archive_FileList_16.StartTime)}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text19 Ref="20" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>14.8,0,1.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>0273d6a5a8d94691bd71f249d8c809a1</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Archive_FileList_16.yc}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text20 Ref="21" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.4,0,2.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>e37a4f8f9bf146b3aff1a4c0506089e6</Guid>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Archive_FileList_16.EFILE_COUNT}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+            <Text16 Ref="22" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.8,0,6.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>宋体,10</Font>
+              <Guid>0f3fe4ffe3384f72a8b2b3b07580303e</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text16</Name>
+              <Page isRef="3" />
+              <Parent isRef="15" />
+              <Text>{Archive_FileList_16.Title}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text16>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataSourceName>Archive_FileList_16</DataSourceName>
+          <Filters isList="true" count="0" />
+          <Name>数据区1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Sort isList="true" count="0" />
+        </数据区1>
+        <EmptyBand1 Ref="23" type="Stimulsoft.Report.Components.StiEmptyBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,7,19,1.4</ClientRectangle>
+          <Components isList="true" count="7">
+            <Text1 Ref="24" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,0,1.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>acba90a7ed2e4f97ab9885fed001a1ce</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text1>
+            <Text4 Ref="25" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2,0,2.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>529d89d6358b47c6b170d3c078041403</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text4>
+            <Text9 Ref="26" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>4.2,0,2.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>6f9caf2c42cc4f7bb833e9e0188648ec</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text9>
+            <Text10 Ref="27" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13,0,1.8,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>5f0122e730fd45c0b171ba2fc14464d9</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text10>
+            <Text21 Ref="28" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>14.8,0,1.6,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>79abc3dabef04ea587e6f714284dde1a</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text21>
+            <Text22 Ref="29" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.4,0,2.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>f24c044cb7a14b779a6aeae5e09fa1bf</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text22</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text22>
+            <Text6 Ref="30" type="Text" isKey="true">
+              <Border>All;Black;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6.8,0,6.2,1.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>仿宋,11</Font>
+              <Guid>0ce30800ffc54b7e8c63e0f9fab1a7b2</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="3" />
+              <Parent isRef="23" />
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text6>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>EmptyBand1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+        </EmptyBand1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>46c5457ea7584d3f813f7b6b95cd5ae3</Guid>
+      <Margins>1,1,1,1</Margins>
+      <Name>Page1</Name>
+      <Page isRef="3" />
+      <PageHeight>29.7</PageHeight>
+      <PageWidth>21</PageWidth>
+      <PaperSize>A4</PaperSize>
+      <Report isRef="0" />
+      <Watermark Ref="31" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+  </Pages>
+  <PrinterSettings Ref="32" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>4/28/2016 9:11:22 AM</ReportChanged>
+  <ReportCreated>8/7/2010 2:06:03 PM</ReportCreated>
+  <ReportGuid>0b2e337d6be0481c87a7f3414ec95ed7</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2009.1.400</ReportVersion>
+  <Script>using System;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using System.Drawing;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using System.Windows.Forms;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using System.Data;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using Stimulsoft.Controls;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using Stimulsoft.Base.Drawing;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using Stimulsoft.Report;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using Stimulsoft.Report.Dialogs;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+using Stimulsoft.Report.Components;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+namespace Reports
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public class Report : Stimulsoft.Report.StiReport
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public Report()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            this.InitializeComponent();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #region StiReport Designer generated code - do not modify#endregion StiReport Designer generated code - do not modify
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

@@ -1,0 +1,92 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlConstructionBaseInfo.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlConstructionBaseInfo" %>
+<%@ Register Src="ctrlArchiveFormType.ascx" TagName="ctrlArchiveFormType"
+    TagPrefix="uc2" %>
+<%@ Register Src="ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+
+<style type="text/css">
+    .promiseLabelExt {
+        width: 135px;
+    }
+
+    .promiseInputWidthExt {
+        width: 200px;
+    }    table {
+        background-color: #c9c7c0;
+        margin-top: 3px;
+    }
+
+    tr {
+        background-color: #fff;
+    }
+</style>
+<table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td class="left_title_3 promise" colspan="4">项目信息
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">项目类别：</td>
+        <td class="left_title_2">
+            <uc2:ctrlArchiveFormType ID="projecttype" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">项目号：</td>
+        <td class="left_title_2">
+            <asp:TextBox ID="xmh" runat="server" ReadOnly="true" CssClass="regedit_input">自动生成</asp:TextBox>
+            <asp:HiddenField ID="constructionprojectid" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">项目名称:
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc3:ctrlTextBoxEx ID="xmmc" canEmpty="false" Description="项目名称" MaxLength="254"
+                CssClass="regedit_input" runat="server" width="400px" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">项目地点:
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc3:ctrlTextBoxEx ID="xmdd" CssClass="regedit_input" canEmpty="false" Description="项目地点"
+                width="400px" MaxLength="254" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">建设单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="jsdw" CssClass="regedit_input" MaxLength="100" canEmpty="false"
+                Description="建设单位" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">立项批准单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="lxpzdw" CssClass="regedit_input" Description="立项指令单位"
+                MaxLength="100" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">土地使用证号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="tdsyzh" CssClass="regedit_input" Description="土地使用证号"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">用地规划许可证号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="ydghxkzh" CssClass="regedit_input"  Description="用地规划许可证号"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1 promiseLabelExt">立项批准文号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="lxpzwh" CssClass="regedit_input" Description="立项批准文号"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1 promiseLabelExt">土地出让年限：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="tdcrnx" CssClass="regedit_input" MaxLength="4" Description="土地出让年限"
+                mode="Int" runat="server" />
+        </td>
+    </tr>
+</table>
+

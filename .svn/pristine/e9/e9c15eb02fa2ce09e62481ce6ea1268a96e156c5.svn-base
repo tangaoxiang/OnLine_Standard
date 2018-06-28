@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DigiPower.Onlinecol.Standard.Model
+{
+    [Serializable]
+    public class T_JiaoJieDengJi_MDL
+    {
+        public T_JiaoJieDengJi_MDL()
+        { }
+        public int SID { get; set; }
+        public string PROJ_NO { get; set; }
+        public string PROJ_NAME { get; set; }
+        public string JSDW { get; set; }
+        public string AJH { get; set; }
+        public int JS { get; set; }
+        public decimal? AREA { get; set; }
+        public int ORDER_INDEX { get; set; }
+        public DateTime CREATE_DT { get; set; }
+        public string LRR { get; set; }
+    }
+}

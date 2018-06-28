@@ -1,0 +1,69 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ReportStep4.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.ReportStep4" Title="配置查询条件" %>
+
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            text-align: left;
+            height: 23px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif"
+                colspan="3">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;" colspan="3">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td width="10px">
+                            <td>
+                                &nbsp;&nbsp;&nbsp;
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                <div align="right">
+                                    &nbsp;
+                                    <asp:Button ID="btnAdd" runat="server" OnClick="btnAdd_Click" CssClass="button"
+                                        Text=" 新增 " />
+                                    <asp:Button ID="btnDelete" runat="server" OnClientClick="return confirm('确定删除吗？')"
+                                        OnClick="btnDel_Click" CssClass="button" Text=" 删除 " />
+                                </div>
+                            </td>
+                            <td width="30" align="right">
+                                <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                            </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; background-color: White;" colspan="3">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;">
+                    <uc1:ctrlGridEx ID="ctrlGridEx1" runat="server" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White; text-align: center;"
+                colspan="3">
+                <asp:Button runat="server" ID="btnBack" Text=" 返回 " Width="52px" CssClass="SelectButton"
+                    OnClick="btnBack_Click" />
+                &nbsp;
+                <asp:Button runat="server" ID="btnNextStep" Text=" 预览 " Width="52px" CssClass="SelectButton"
+                    OnClick="btnNextStep_Click" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

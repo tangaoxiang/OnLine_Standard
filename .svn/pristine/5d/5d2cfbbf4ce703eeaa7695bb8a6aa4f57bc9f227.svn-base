@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.0" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="1">
+      <dts Ref="2" type="DataTableSource" isKey="true">
+        <Alias>dts</Alias>
+        <Columns isList="true" count="6">
+          <value>jgsj,System.String</value>
+          <value>kgsj,System.String</value>
+          <value>gcmc,System.String</value>
+          <value>gcbm,System.String</value>
+          <value>jsdw,System.String</value>
+          <value>sgdw,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Name>dts</Name>
+        <NameInSource>dts</NameInSource>
+      </dts>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="3" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="25">
+        <Text1 Ref="4" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>3.8,1,12.6,1.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,24</Font>
+          <HorAlignment>Center</HorAlignment>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text1</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>建设工程档案移交责任书</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text1>
+        <Text2 Ref="5" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.4,3.8,2.8,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text2</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>工程名程：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text2>
+        <Text3 Ref="6" type="Text" isKey="true">
+          <Border>Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>4.2,3.8,11,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>98f9597747334836a5b693bdba2a56a5</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text3</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{dts.gcmc}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text3>
+        <Text4 Ref="7" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.4,4.6,2.8,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>15c952b2c57e43558a9d295c690de7ba</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text4</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>开竣工时间：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text4>
+        <Text5 Ref="8" type="Text" isKey="true">
+          <Border>Bottom;Black;1;Solid;False;4;Black</Border>
+          <Brush>Transparent</Brush>
+          <ClientRectangle>4.2,4.6,11,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>92728154e6a84452ae978d7061bd0845</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text5</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{dts.kgsj}至{dts.jgsj}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text5>
+        <Text6 Ref="9" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>12.4,3,4,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>27ef2c21e6e145ceb8a365de0d3b8a69</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text6</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>编号：{dts.gcbm}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text6>
+        <Text7 Ref="10" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.4,5.4,16.8,1.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>e19da91095da40bea106a8785dfec3a6</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text7</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>        为贯彻《新疆维吾尔自治区实施〈城市建设档案管理规定〉细则》，切实加强工程档案的管理，确保工程档案完整、准确、及时地报送城建档案馆，根据有关文件精神，建设单位与城乡建设档案馆签订建设工程档案移交责任书；
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Center</VertAlignment>
+        </Text7>
+        <Text8 Ref="11" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1.8,7.4,4.8,0.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>dac555cd0c184a60aa4bafab37cfe0ce</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text8</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>一、建设单位责任</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text8>
+        <Text9 Ref="12" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,8.1,17,2.7</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>295a528552d24ab295e9a20d32e89f69</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text9</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   1、移交工程档案内容包括：基建文件；原材料成品及半成品合格证；试验报告；施工试验；施工记录；技术复核；隐蔽工程验收记录；图纸会审记录及施工组织设计；施工技术交底及施工日志；建筑给排水采暖工程技术资料、低温热水地板辐射采暖工程资料；建筑电气工程资料；工程质量验收记录；竣工类资料；竣工图；工程竣工后的正面、背面、侧面六寸彩色照片各一张（放在第一卷的第一页，不编页码）。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text9>
+        <Text10 Ref="13" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,11,17,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>52e1c47a00bd49fa9823b11dc045b0d8</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text10</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   2、编制方法与质量要求：按照《建设工程文件归档整理规范》来立卷、编目、装订。</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text10>
+        <Text11 Ref="14" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,12,17,1.7</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>d7f24636ed754db3819ffab48e299dad</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text11</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   二、城乡建设档案馆责任：对工程档案的内容、编制方法和要求进行业务指导，监督建设单位及时收集、编制工程档案。城乡建设档案馆对接受的工程档案要及时登记；做好保管、保护工作，开发档案信息资源，热情为建设单位服务。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text11>
+        <Text12 Ref="15" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,13.9,17,1.7</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>86d78cde70ec4d47a821e61a7d4d3a95</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text12</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   三、建设单位在组织竣工验收前，应提请城乡建设档案馆对工程档案进行预验收，工程档案应包括纸质、照片及电子档案三合一，对验收合格的工程档案予以接收，并出具《建设工程档案认可证》，不符合条件的，责令整改，重新进行预验收。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text12>
+        <Text13 Ref="16" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,15.8,17,1.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>a76cb2df33c748d1aed95c85a0681d71</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text13</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   四、建设单位在取得《建设工程档案认可证》后，方可到建筑工程质量监督站办理竣工验收相关手续。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text13>
+        <Text14 Ref="17" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,17.2,17,1.7</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>647f9f4b257b44c0a04b391b07e8595c</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text14</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   五、建设工程档案预验收后形成的档案，应当在建设工程竣工验收后十五天内向城乡建设档案馆补充移交。工程档案全部移交后，城乡建设档案馆出具《建设工程档案接收证明书》，并将《建设工程档案认可证》收回。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text14>
+        <Text15 Ref="18" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>1,19.1,17,1.7</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>b9cc369d5f084ae384757e96d15d685d</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text15</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>   六、建设单位工程竣工验收后三个月内未按规定向城乡建设档案馆移交工程档案的，城乡建设档案馆应发出限期改正通知书，逾期仍不改正的，建设局依据《建设工程管理条例》做出罚款决定。
+</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text15>
+        <Text16 Ref="19" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>2,21.6,2.4,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>75ecd829e49c477fa485fd3b67b9d65a</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text16</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>建设单位：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text16>
+        <Text17 Ref="20" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>2,23,2.4,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>1602a7b24e4d4d56bc34e1e7e4a8a9b3</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text17</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>施工单位：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text17>
+        <Text18 Ref="21" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>2,24.4,6.6,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>1c7cdf3dcc854bdbaebd36ff3dd58a8b</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text18</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>阜阳市住建局城建档案馆 </Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text18>
+        <Text19 Ref="22" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>4.4,21.2,5.6,1.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>573f1590946641ed987679d1798eab6f</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text19</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{dts.jsdw}</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text19>
+        <Text20 Ref="23" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>4.4,22.6,5.6,1.2</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>ad2441975d67431fb7540579b74fd5f5</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text20</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>{dts.sgdw}</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text20>
+        <Text21 Ref="24" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>10.4,21.6,4.2,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>1a3a1e42bf4549689404cbf0bcd0035c</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text21</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>承办人员及电话：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text21>
+        <Text22 Ref="25" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>10.4,23,4.2,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>16b85c703f1847958b74906efe9d4f3a</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text22</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>承办人员及电话：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text22>
+        <Text23 Ref="26" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>10.4,24.4,2.4,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>544c88d6d4b14a8db22dc0ccac252ab8</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text23</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>承办人员：</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text23>
+        <Text24 Ref="27" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>10.4,25.2,7.8,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>dca0f90965c948ba96941742c5e39cdc</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text24</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>签订日期：{Format("{0:yyyy-MM-dd}", Today)}</Text>
+          <TextBrush>Black</TextBrush>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text24>
+        <Text25 Ref="28" type="Text" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>14.6,24.4,3.6,0.8</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <Font>宋体,12</Font>
+          <Guid>342bf0cda7464e93b526e95b276b947d</Guid>
+          <Margins>0,0,0,0</Margins>
+          <Name>Text25</Name>
+          <Page isRef="3" />
+          <Parent isRef="3" />
+          <Text>电话：6020238</Text>
+          <TextBrush>Black</TextBrush>
+          <TextOptions>HotkeyPrefix=None, LineLimit=False, RightToLeft=False, Trimming=None, WordWrap=True, Angle=0, FirstTabOffset=40, DistanceBetweenTabs=20,</TextOptions>
+          <Type>Expression</Type>
+          <VertAlignment>Bottom</VertAlignment>
+        </Text25>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>d08760ffba464bdd935c57e7ad0d406b</Guid>
+      <Margins>1,1,1,1</Margins>
+      <Name>Page1</Name>
+      <Page isRef="3" />
+      <PageHeight>29.7</PageHeight>
+      <PageWidth>21</PageWidth>
+      <PaperSize>A4</PaperSize>
+      <Report isRef="0" />
+      <Watermark Ref="29" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <ShowImageBehind>False</ShowImageBehind>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+  </Pages>
+  <PrinterSettings Ref="30" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>1/7/2015 4:34:30 PM</ReportChanged>
+  <ReportCreated>1/7/2015 11:22:29 AM</ReportCreated>
+  <ReportGuid>be4508f98c3442c29f85ff9e959e88a2</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2009.1.400</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        
+        public Report()
+        {
+            this.InitializeComponent();
+        }
+        #region StiReport Designer generated code - do not modify#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

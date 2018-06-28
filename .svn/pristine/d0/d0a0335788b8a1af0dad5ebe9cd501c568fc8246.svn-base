@@ -1,0 +1,95 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="Rwfp.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.Rwfp" Title="报建确认" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownUser.ascx" TagName="ctrlDropDownUser"
+    TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlCompanyQucikReg.ascx" TagName="ctrlCompanyQucikReg"
+    TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlArchiveTypeDetail.ascx" TagName="ctrlArchiveTypeDetail" TagPrefix="uc4" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <style type="text/css">
+        select {
+            height: 27px;
+            width: 240px;
+        }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="HidSingleProjectID" value="<%=_singleProjectid %>" />
+    <input type="hidden" id="HidworkFlowID" value="<%=_workFlowID %>" />
+    <input type="hidden" runat="server" id="hidUrlPar" />
+
+    <table id="tbl" runat="server" style="height: 80px;" class="zpxxxj" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>业务指导人员：<uc1:ctrlDropDownUser ID="ddlUser" runat="server" />
+            </td>
+            <td class="lljzc" colspan="3">
+                <input type="button" id="btnSave" value=" 确认并分配 "
+                    onclick="btnRwfp(this);" clickflag="ok" />
+                <input type="button" id="btnDelete" value=" 删除 "
+                    onclick="fnDelete(this);" clickflag="ok" />
+                <input type="button" id="btngoBack" value=" 返回 " onclick="Common.fnParentLayerClose()" />
+            </td>
+        </tr>
+    </table>
+    <fieldset style="width: 99%; border: 1px solid #dddddd;">
+        <legend>工程报建信息</legend>
+        <uc2:ctrlCompanyQucikReg ID="ctrlCompanyQucikReg" runat="server" />
+    </fieldset>
+
+    <script language="javascript" type="text/javascript">
+        var singleProjectId = $('#HidSingleProjectID').val();                        //工程ID    
+        function fnDelete(obj) {
+            if ($(obj).attr("clickflag") == 'ok') {
+                $(obj).attr("clickflag", "no");
+                layer.confirm('确定要删除工程报建信息?<br/>注意:建设单位第一次报建则删除所有信息!<br/>已报建过的账号则只删除工程相关信息!', function () {
+                    var len = Rwfp.DeleteSingleProject(singleProjectId).value;
+                    if (len.indexOf(ResultState.Success) > -1) {
+                        layer.alert("工程删除成功!", { btnAlign: 'c' }, function (index) {
+                            layer.close(index);
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.document.getElementById('hidOpenFlag').value = '1';
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        Common.fnLayerAlert(len);
+                        return false;
+                    }
+                });
+            }
+            else {
+                Common.fnLayerAlert("程序正在处理中,请稍后.......");
+                return false;
+            }
+        }
+
+        function btnRwfp(obj) {
+            var workFlowID = $('#HidworkFlowID').val();                                //流程ID 
+            var chargeUserID = $('#ctl00_Main_ddlUser_ddlUser').val();                 //指导人员
+            if (Number(chargeUserID) == 0) {
+                Common.fnLayerAlert("请选择业务指导人员!");
+                return false;
+            }
+            if ($(obj).attr("clickflag") == 'ok') {
+                $(obj).attr("clickflag", "no");
+                var len = Rwfp.AllotSingleProject(singleProjectId, chargeUserID, workFlowID).value;
+                if (len.indexOf(ResultState.Failure) < 0) {
+                    layer.alert("分配成功,工程编号为:" + len, { btnAlign: 'c' }, function (index) {
+                        layer.close(index);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.document.getElementById('hidOpenFlag').value = '1';
+                        parent.layer.close(index);
+                    });
+                } else {
+                    Common.fnLayerAlert(len);
+                    return false;
+                }
+            }
+            else {
+                Common.fnLayerAlert("程序正在处理中,请稍后.......");
+                return false;
+            }
+        }
+    </script>
+</asp:Content>

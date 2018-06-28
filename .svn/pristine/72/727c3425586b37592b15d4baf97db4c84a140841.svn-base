@@ -1,0 +1,22 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrReportStep.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.ctrReportStep" %>
+<table style="font-size: 12px;">
+    <tr style="height: 28px;">
+        <td style="background-image: url(../Images/button_area_back.gif);">
+            <label runat="server" id="lblStep1">
+                &nbsp;&nbsp;新增报表&nbsp;&nbsp;</label>
+        </td>
+        <td style="background-image: url(../Images/button_area_back.gif);">
+            <label runat="server" id="lblStep2">
+                &nbsp;&nbsp;配置数据库&nbsp;&nbsp;</label>
+        </td>
+        <td style="background-image: url(../Images/button_area_back.gif);">
+            <label runat="server" id="lblStep3">
+                &nbsp;&nbsp;报表设计&nbsp;&nbsp;</label>
+        </td>
+        <td style="background-image: url(../Images/button_area_back.gif);">
+            <label runat="server" id="lblStep4">
+                &nbsp;&nbsp;新增查询条件&nbsp;&nbsp;</label>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,17 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlProjectBaseInfo.ascx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlProjectBaseInfo" %>
+<div style="padding: 0px ">
+<table width="99%" border="1" align="center" cellpadding="1" cellspacing="0" 
+    bordercolor="c1d4da" style="border-collapse: collapse;" id="tablepro" 
+    runat="server">
+    <tr>
+        <td height="22" align="left" style="width:50%">工程名称：<asp:Literal 
+                ID="gcmc" runat="server"></asp:Literal>
+        </td>
+        <td align="left">工程类别：<asp:Label ID="ProjectTypeName" runat="server"></asp:Label></td>
+    </tr>
+    <tr>
+        <td align="left" height="22">工程编号：<asp:Label ID="gcbm" runat="server"></asp:Label></td>
+        <td align="left">工程地址：<asp:Label ID="gcdd" runat="server"></asp:Label></td>
+    </tr>    
+    </table>
+    </div>

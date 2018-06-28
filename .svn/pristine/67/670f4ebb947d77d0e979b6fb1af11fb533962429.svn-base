@@ -1,0 +1,257 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Common;
+using System.Text;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.File
+{
+    public partial class FileInfoList : PageBase
+    {
+        #region 属性及构造方法
+        T_FileList_BLL fileBLL = new T_FileList_BLL();    
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ID = DNTRequest.GetQueryString("ID");
+
+            if (!IsPostBack)
+            {
+                if (DNTRequest.GetQueryString("action") == "view")
+                {
+                    Button1.Visible = false;
+                }
+                if (DNTRequest.GetQueryString("IsView") != "")
+                {
+                    Button1.Visible = false;
+                    Button2.Visible = true;
+                }
+                pageIndex = 1;
+                if (!String.IsNullOrEmpty(ID))
+                {
+                    BindPage(ID);
+                }
+                ztlx.SelectedValue = "zz";
+            }
+        }
+
+        #endregion
+
+        #region 事件
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            DigiPower.Onlinecol.Standard.Model.T_FileList_MDL model = null;
+            if (pageIndex != 1)
+                model = fileBLL.GetModel(Common.ConvertEx.ToInt(fileListID));
+            else
+                model = fileBLL.GetModel(Common.ConvertEx.ToInt(ID));
+
+            model = (Model.T_FileList_MDL)Comm.GetValueToObject(model, tbl);
+            if (model != null)
+            {
+               if(ConvertEx.ToInt(model.ManualCount) > 0)
+               {
+                   if (model.wjgbdm == "ct" || 
+                       model.wjgbdm == "yt" || 
+                       model.wjgbdm == "dt" || 
+                       model.wjgbdm == "lt")
+                    {
+                        model.tzz = ConvertEx.ToInt(model.ManualCount);
+                    }
+                   else
+                   {
+                       model.sl = ConvertEx.ToInt(model.ManualCount);
+                   }
+               }
+                model.qssj = DateTime.Now;
+                model.zzsj = DateTime.Now;
+                model.lrsj = DateTime.Now;
+                model.shsj_1 = DateTime.Now;
+                model.shsj_2 = DateTime.Now;
+                model.shsj_3 = DateTime.Now;
+                model.aipdate = DateTime.Now;
+                model.pssj = DateTime.Now;
+                model.CreateDate = DateTime.Now;
+                //if (StartTime.Text.Trim().Length < 1)
+                //{
+                //    model.StartTime = DateTime.Now.ToString("yyyy-MM-dd");
+                //}
+                //if (ENDTIME.Text.Trim().Length < 1)
+                //{
+                //    model.EndTime = DateTime.Now.ToString("yyyy-MM-dd");
+                //}
+
+                fileBLL.Update(model);
+
+                if (DNTRequest.GetQueryString("SuppleMent") == "")
+                {//除了案卷补录管理页面过来外,其它的都改变状态  jd11.18
+                    BLL.T_Other_BLL otherBLL = new DigiPower.Onlinecol.Standard.BLL.T_Other_BLL();
+                    otherBLL.UpdateArchiveStatus(model.FileListID.ToString(), 10, "0");
+                }
+                ////Leo 记录处理结果，及处理时间
+                //Model.T_WorkFlowDoResult_MDL doResultMDL = new Model.T_WorkFlowDoResult_MDL();
+                //doResultMDL.SingleProjectID = Common.ConvertEx.ToInt(newmodel.SingleProjectID);
+                //doResultMDL.WorkFlowID = Common.ConvertEx.ToInt(workflowid.Value);
+                //doResultMDL.DoUserID = Common.ConvertEx.ToInt(Common.Session.GetSession("UserID"));
+                //doResultMDL.DoUserName = Common.Session.GetSession("UserName");
+                //doResultMDL.DoDateTime = System.DateTime.Now;
+                //doResultMDL.DoFinishFlag = true;
+                //BLL.T_WorkFlowDoResult_BLL doResultBLL = new T_WorkFlowDoResult_BLL();
+                //doResultBLL.Add(doResultMDL);
+
+
+                if (DNTRequest.GetQueryString("tabIndex") != "")
+                { //由文件登记页面过来
+                    string tabIndex = DNTRequest.GetQueryInt("tabIndex", 0).ToString("D2");
+                    StringBuilder script = new StringBuilder();
+                    script.Append("<script>");
+                    script.Append("window.opener.document.getElementById('ctl00_ContentPlaceHolder1_ctrlGridEx1_SmartGridView1_ctl" + tabIndex + "_title').value='" + model.Title + "';");
+                    script.Append("window.opener.document.getElementById('ctl00_ContentPlaceHolder1_ctrlGridEx1_SmartGridView1_ctl" + tabIndex + "_zrr').value='" + model.zrr + "';");
+                    script.Append("window.opener.document.getElementById('ctl00_ContentPlaceHolder1_ctrlGridEx1_SmartGridView1_ctl" + tabIndex + "_w_t_h').value='" + model.w_t_h + "';");
+                    script.Append("window.opener.document.getElementById('ctl00_ContentPlaceHolder1_ctrlGridEx1_SmartGridView1_ctl" + tabIndex + "_StartTime').value='" + model.StartTime + "';");
+                    script.Append("window.opener.document.getElementById('ctl00_ContentPlaceHolder1_ctrlGridEx1_SmartGridView1').rows[" + (ConvertEx.ToInt(tabIndex) - 1).ToString() + "].style.backgroundColor='yellowgreen'; ");
+                    script.Append("window.close();</script>");
+
+                    this.Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "page", script.ToString());
+                }
+                else
+                {
+                    Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "success", "<script>alert('保存成功！')</script>");
+                }
+            }
+            else
+            {
+                Response.Write("<script>window.close();</script>");
+            }
+
+
+            //string url = "/WorkFlow/wjdj.aspx?SingleProjectID=" + SingleProjectID + "&WorkFlowID=" + WorkFlowID; 
+            //Response.Redirect(url);
+
+            //Response.Write("<script>window.opener.location.reload();window.opener=null;window.open('','_self');window.close();</script>");
+        }
+
+        #endregion
+
+        #region 方法
+
+        /// <summary>
+        /// 绑定页面
+        /// </summary>
+        /// <param name="ID"></param>
+        private void BindPage(string ID)
+        {
+            Model.T_FileList_MDL model = new DigiPower.Onlinecol.Standard.Model.T_FileList_MDL();
+
+            model = fileBLL.GetModel(Convert.ToInt32(ID));
+
+            if (model != null)
+            {
+                fileListID = ID;
+                DigiPower.Onlinecol.Standard.Web.Comm.SetValueToPage(model, this.tbl);
+
+                if (model.StartTime.Length < 1)
+                    StartTime.Text = "";
+
+                if (model.EndTime.Length < 1)
+                    ENDTIME.Text = "";
+
+                ltBH.Text = model.BH;
+
+                if (ConvertEx.ToInt(model.Status) < 1 && string.IsNullOrWhiteSpace(model.zrr))
+                {
+                  zrr.Text = Session["CompanyName"].ToString();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 绑定页面
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="fileListID"></param>
+        private void BindPage(bool upOrDown)
+        {
+            T_FileList_MDL model = fileBLL.GetFileByPageIndex(fileListID, Common.Session.GetSession("FileInfostrWhere"), upOrDown);
+            if (model != null)
+            {
+                fileListID = model.FileListID.ToString();
+                DigiPower.Onlinecol.Standard.Web.Comm.SetValueToPage(model, this.tbl);
+
+                if (model.StartTime.Length < 1)
+                    StartTime.Text = "";
+
+                if (model.EndTime.Length < 1)
+                    ENDTIME.Text = "";
+
+                ltBH.Text = model.BH;
+
+                if (ConvertEx.ToInt(model.Status) < 1)
+                {
+                    zrr.Text = Session["CompanyName"].ToString();
+                }
+            }
+        }
+
+        public int pageIndex
+        {
+            get { return (int)ViewState["pageIndex"]; }
+            set { ViewState["pageIndex"] = value; }
+        }
+
+        public string fileListID
+        {
+            get { return (string)ViewState["fileListID"]; }
+            set { ViewState["fileListID"] = value; }
+        }
+
+        #endregion
+
+        protected void ltUp_Click(object sender, EventArgs e)
+        {
+            if (pageIndex > 0)
+            {
+                pageIndex--;
+                BindPage(true);
+            }
+        }
+
+        protected void ltDown_Click(object sender, EventArgs e)
+        {
+            T_FileList_BLL fileBLL = new T_FileList_BLL();
+            if (fileBLL.GetFileCountByCompany(Common.Session.GetSession("FileInfostrWhere")) > 0)
+            {
+                pageIndex++;
+                BindPage(false);
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

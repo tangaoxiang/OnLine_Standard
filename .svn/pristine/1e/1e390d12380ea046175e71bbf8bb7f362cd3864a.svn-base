@@ -1,0 +1,57 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ReportView.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.ReportView" Title="报表预览" %>
+
+<%@ Register Assembly="Stimulsoft.Report.Web, Version=2009.2.465.0, Culture=neutral, PublicKeyToken=ebe6666cba19647a"
+    Namespace="Stimulsoft.Report.Web" TagPrefix="cc2" %>
+<%@ Register Src="../CommonCtrl/ctrl_Search_Para.ascx" TagName="ctrl_Search_Para"
+    TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+
+    <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: White;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1" valign="middle" style="margin-top: 2px;">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <uc1:ctrl_Search_Para ID="ctrl_Search_Para1" runat="server" />
+                                        </td>
+                                        <td>
+                                            <asp:Button ID="btnSeach" runat="server" OnClick="btnSeach_Click" Text=" 查询 " class="SelectButton" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; background-color: White;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;">
+                    <cc2:StiWebViewer GlobalizationFile="Report/Localization/zh-CHS.xml" ID="StiWebViewer1"
+                        runat="server" RenderMode="AjaxWithCache" Height="768px" Width="100%" ScrollBarsMode="True"
+                        ShowExportToBmp="False" ShowExportToCsv="False" ShowExportToDbf="False" ShowExportToExcel2007="False"
+                        ShowExportToGif="False" ShowExportToMetafile="False" ShowExportToMht="False"
+                        ShowExportToOds="False" ShowExportToOdt="False" ShowExportToPcx="False" ShowExportToPdf="False"
+                        ShowExportToPng="False" ShowExportToRtf="False" ShowExportToText="False" ShowExportToTiff="False"
+                        ShowExportToXml="False" ShowExportToXps="False" PdfStandardFonts="True" PrintDestination="Pdf" />
+                </div>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

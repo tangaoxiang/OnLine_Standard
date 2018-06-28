@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class QuestionList : PageBase
+    {
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 15;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(QuestionList));
+            if (!IsPostBack)
+            {
+                if (Common.Session.GetSessionBool("IsCompany") == true)
+                    RadioButton1.Checked = true;
+                else
+                    RadioButton2.Checked = true;
+                BindGrid(1);
+            }
+        }
+
+        void BindGrid(int pageIndex)
+        {
+            string CreateUserID = "";
+            string ToUserID = "";
+            if (RadioButton1.Checked == true)
+            {
+                CreateUserID = Common.Session.GetSession("UserID");
+            }
+            else if (RadioButton2.Checked == true)
+            {
+                ToUserID = Common.Session.GetSession("UserID");
+            }
+
+            string strWhere = " 1=1  ";
+            if (gcmc.Text.Trim().Length > 0)
+            {
+                strWhere += " AND b.gcmc like '%" + gcmc.Text.Trim() + "%' ";
+            }
+
+            DataTable dt = new T_Question_BLL().GetListPaging(qsTitle.Text.Trim(), CreateUserID, ToUserID, strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid(1);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGrid(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 删除问题
+        /// </summary>
+        /// <param name="Key"></param>
+        [Ajax.AjaxMethod]
+        public void DeleteQuestion(string Key)
+        {
+            T_Question_BLL bll = new T_Question_BLL();
+            bll.Delete(ConvertEx.ToInt(Key));
+        }
+    }
+}

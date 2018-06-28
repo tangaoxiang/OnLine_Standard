@@ -1,0 +1,33 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="DocumentEdit.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.iwebpdf.DocumentEdit" %>
+
+
+
+<html>
+<head id="Head1" runat="server">
+    <meta http-equiv="Content-Type" content="text/html;">
+    <title>电子文件预览</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <object classid="clsid:CA8A9780-280D-11CF-A24D-444553540000" id="pdf1" height="100%" width="100%" border="0">
+            <param name="src" id="pdf_src" value="<%=mEFilePath%>">
+        </object>
+
+        <script type="text/javascript">
+            if (document.getElementById('pdf1') != null) {
+                document.getElementById('pdf1').setShowToolbar(true);
+                //document.oncontextmenu=nocontextmenu;
+                document.getElementById('pdf1').setShowScrollbars(true);
+            }
+
+
+            //window.moveTo(0, 0);
+            //window.resizeTo(window.screen.width - 150, window.screen.height);
+
+        </script>
+
+    </form>
+</body>
+</html>
+
+

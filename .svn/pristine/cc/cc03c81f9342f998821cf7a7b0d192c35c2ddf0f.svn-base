@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <SearchSql>
+    <![CDATA[
+        select a.*                                                                   
+        from T_EFile a inner join T_FileList b on a.FileListID=b.FileListID where 1=1 {0}
+        order by a.OrderIndex asc 
+   ]]>
+  </SearchSql>
+</SqlList>

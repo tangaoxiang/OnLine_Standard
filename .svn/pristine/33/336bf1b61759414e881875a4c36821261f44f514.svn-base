@@ -1,0 +1,49 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+
+namespace DigiPower.Onlinecol.Standard.Web.ArchiveManage
+{
+    public partial class SingleProjectUserAdd : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {            
+            MyAddInit();
+            ctrlDropDownCompanyInfo1.MySelectChange += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownCompanyInfo.SelectChange(CompanySelectChange);
+            if (!IsPostBack)
+            {
+                ctrlDropDownSingleProject1.DataBindEx();
+
+                ctrlDropDownCompanyInfo1.AutoPostBack = true;
+
+                ctrlDropDownCompanyInfo1.BindDataWithNoJSDW();
+
+                ctrlDropDownUser1.BindDataByCompanyID(ctrlDropDownCompanyInfo1.SelectValue);
+            }
+        }
+
+        private void CompanySelectChange()
+        {
+            ctrlDropDownUser1.BindDataByCompanyID(ctrlDropDownCompanyInfo1.SelectValue);
+        }
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            Model.T_SingleProjectUser_MDL mdl = new DigiPower.Onlinecol.Standard.Model.T_SingleProjectUser_MDL();
+            mdl.SingleProjectID = Common.ConvertEx.ToInt(ctrlDropDownSingleProject1.SelectValue);
+            BLL.T_UsersInfo_BLL userBLL = new DigiPower.Onlinecol.Standard.BLL.T_UsersInfo_BLL();
+
+            mdl.RoleID = Common.ConvertEx.ToInt(userBLL.GetModel(Common.ConvertEx.ToInt(ctrlDropDownUser1.SelectValue)).RoleID);
+
+            BLL.T_SingleProjectUser_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_SingleProjectUser_BLL();
+            bll.Add(mdl);
+            Response.Redirect("SingleProjectUserList.aspx");
+        }
+    }
+}

@@ -1,0 +1,35 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="CompanyReg2Edit.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.CompanyReg2Edit" Title="项目管理" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownCompanyInfo.ascx" TagName="ctrlDropDownCompanyInfo"
+    TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc2" %>
+<%--<%@ Register Src="../CommonCtrl/ctrlDropDownTable.ascx" TagName="ctrlDropDownTable"
+    TagPrefix="uc3" %>--%>
+<%@ Register Src="../CommonCtrl/ctrlConstructionBaseInfo.ascx" TagName="ctrlConstructionBaseInfo"
+    TagPrefix="uc4" %>
+<%@ Register Src="../CommonCtrl/ctrlConstructionExtInfo.ascx" TagName="ctrlConstructionExtInfo"
+    TagPrefix="uc5" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc6" %>
+<asp:Content ID="Content3" ContentPlaceHolderID="head" runat="server">
+    <script type="text/javascript" src="../JS/Validate.js"></script>
+    <script type="text/javascript" src="../JS/WebCalendar.js"></script>
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div>
+
+        <uc4:ctrlConstructionBaseInfo ID="ctrlConstructionBaseInfo1" runat="server" />
+        <table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="left_title_4">
+                    <asp:Button ID="btnSave" runat="server" Text=" 保存 " Width="52px" class="btn2"
+                        OnClick="btnSave_Click" />
+                    &nbsp;<uc6:ctrlBtnBack ID="ctrlBtnBack1" SetCssClass="btn2" runat="server" />
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</asp:Content>

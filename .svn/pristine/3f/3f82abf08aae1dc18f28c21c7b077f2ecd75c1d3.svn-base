@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <Columns isShow="1">
+    <engArchNo title="案卷序号"></engArchNo>
+    <singleProjName title="工程名称"></singleProjName>
+    <archTitle title="案卷题名"></archTitle>
+    <drawPages title="图纸卷内页数"></drawPages>
+    <filePages title="文件卷内页数"></filePages>
+    <photoPages title="照片卷内页数"></photoPages>
+    <efilePages title="电子文件卷内页数"></efilePages>
+    <makeOrgName title="编制单位"></makeOrgName>
+    <archivingDate title="编制日期"></archivingDate>
+    <archTypeCode title="案卷类型"></archTypeCode>
+    <oldArchId title="原档号"></oldArchId>
+    <shelvingTypeCode title="装盒类型"></shelvingTypeCode>
+    <archWidth title="案卷厚度"></archWidth>
+    <storageTypeCode title="保管期限"></storageTypeCode>
+    <securityLevelCode title="密级"></securityLevelCode>
+    <makeDate title="编制日期"></makeDate>
+    <textNums title="文字页数"></textNums>
+    <drawNums title="图纸页数"></drawNums>
+    <photoNums title="照片页数"></photoNums>
+    <efileNums title="图纸页数"></efileNums>
+    <regNo title="电子文件页数"></regNo>
+    <archNote title="案卷备注"></archNote>
+    <arrangedBy title="案卷录入人"></arrangedBy>
+  </Columns>
+
+  <SearchSql>
+    <![CDATA[
+        select 
+        a.ArchiveID,
+        a.xh,          
+        
+        a.xh as engArchNo,
+        b.gcmc as singleProjName,
+        a.ajtm as archTitle,
+        a.tzCount as drawPages,
+        a.wzCount as filePages,
+        a.zpCount as photoPages,
+        '' as efilePages,
+        a.bzdw as makeOrgName,     
+        (CASE WHEN a.lrsj='' THEN '' ELSE convert(varchar(10),a.lrsj,23) end) as archivingDate,
+        a.dh as oldArchId,
+        '单卷' as shelvingTypeCode,
+        '3' as archWidth,
+        '永久' as storageTypeCode,
+        '秘密' as securityLevelCode,    
+        (CASE WHEN a.lrsj='' THEN '' ELSE convert(varchar(10),a.lrsj,23) end) as makeDate,
+        a.wzCount as textNums,
+        a.tzCount as drawNums,
+        a.zpCount as photoNums,
+        '' as efileNums,
+        a.ShortDH as regNo,
+        a.note as archNote,
+        a.lrr as arrangedBy,
+        (SELECT c.SystemInfoName FROM T_SystemInfo c WHERE c.SystemInfoID=a.ajlx)as archTypeCode 
+        from T_Archive a inner join T_SingleProject b on a.SingleProjectID=b.SingleProjectID 
+        where 1=1 {0}
+        order by a.xh asc 
+   ]]>
+  </SearchSql>
+</SqlList>

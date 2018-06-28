@@ -1,0 +1,105 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.IO;
+using System.Drawing;
+using System.Web.UI.WebControls;
+using System.Configuration;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using Stimulsoft.Report;
+using System.Data;
+using Stimulsoft.Report.Web;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public static class ReportPDF
+    {
+        /// <summary>
+        /// 根据工程ID 将报表导出PDF,注意:报表必须预先在T_Report做出记录    , 
+        /// 新生成的报表PDF文件名: pdfFileName=String.Concat(SingleProjectID, "-", ReportCode, ".pdf"); 
+        /// 报表PDF存放路径: Server.MapPath("../Upload/TempReport/" + pdfFileName
+        /// </summary>
+        /// <param name="SingleProjectID">工程ID</param>
+        /// <param name="ReportCode">报表类型</param>
+        /// <param name="DelOldReportPDF">是否删除已生成的PDF</param>
+        /// <returns></returns>
+        public static string ReportExportPDF(string SingleProjectID, string ReportCode, bool DelOldReportPDF)
+        {
+            string pdfFileName = String.Concat(SingleProjectID, "-", ReportCode, ".pdf");
+            try
+            {
+                if (DelOldReportPDF && System.IO.File.Exists(HttpContext.Current.Server.MapPath("../Upload/TempReport/" + pdfFileName)))
+                {
+                    System.IO.File.Delete(HttpContext.Current.Server.MapPath("../Upload/TempReport/" + pdfFileName));
+                }
+
+                List<T_Report_MDL> ltReport = new T_Report_BLL().GetModelList("ReportCode='" + ReportCode + "'");
+                if (ltReport.Count > 0)
+                {
+                    T_Report_MDL trMdl = ltReport[0];
+                    T_Report_Type_MDL trtMdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(trMdl.ReportTypeID));
+                    if (trMdl == null || trtMdl == null)
+                        return SystemSet._RETURN_FAILURE_VALUE + "报表数据不存在!";
+
+                    if (!Directory.Exists(HttpContext.Current.Server.MapPath("../ajax"))) //如果不用报表空间预先加载报表,必须先创建此目录
+                        Directory.CreateDirectory(HttpContext.Current.Server.MapPath("../ajax"));
+
+                    if (!Directory.Exists(HttpContext.Current.Server.MapPath("../Upload/TempReport/")))//存放报表PDF的临时目录
+                        Directory.CreateDirectory(HttpContext.Current.Server.MapPath("../Upload/TempReport/"));
+
+                    string reportPath = HttpContext.Current.Server.MapPath("../Report/ReportFiles/" + trtMdl.ReportTypeName + "/" + trMdl.ReportFilePath);
+                    if (System.IO.File.Exists(reportPath))
+                    {
+                        StiReport Report = new StiReport();
+                        Report.Load(reportPath);//加载报表         
+
+                        if (ReportCode.ToLower() == "zrs")
+                        {
+                            string strSql = "select * from T_SingleProject where SingleProjectID=" + SingleProjectID + " ";
+                            DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                            Report.RegData("Report", dataSet);
+                            Report.Render(false);
+                            Report.ExportDocument(StiExportFormat.Pdf, HttpContext.Current.Server.MapPath("../Upload/TempReport/" + pdfFileName));
+                        }
+                        else if (ReportCode.ToLower() == "rkz")
+                        {
+                            string strSql = "select * from T_SingleProject where SingleProjectID=" + SingleProjectID + " ";
+                            DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                            Report.RegData("Report", dataSet);
+                            Report.Render(false);
+                            Report.ExportDocument(StiExportFormat.Pdf, HttpContext.Current.Server.MapPath("../Upload/TempReport/" + pdfFileName));
+                        }
+                        else if (ReportCode.ToLower() == "zms")
+                        {
+                            string strSql = "select P.gcbm,P.jsdw,P.gcmc,P.ghxkzh,P.gcdd,P.sgxkzh,"
+                              + " (CASE P.ProjectType WHEN 1 then P1.jzmj WHEN 2 THEN P2.jzmj WHEN 3 THEN '' END) AS JZMJ, "
+                              + " (CASE P.ProjectType WHEN 1 then P1.gcjs WHEN 2 THEN P2.zjs WHEN 3 THEN '' END) AS gczj, "
+                              + " P.kgsj,P.jgsj from T_SingleProject P "
+                              + " LEFT JOIN a_single_project P1 ON P.SingleProjectID=P1.SingleProjectID"
+                              + " LEFT JOIN b_single_project P2 ON P.SingleProjectID=p2.SingleProjectID"
+                              + " WHERE P.SingleProjectID=" + SingleProjectID;
+
+                            T_Other_BLL otherBLL = new T_Other_BLL();
+                            DataSet dataSet = otherBLL.GetDataSet(strSql);
+                            if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                            {
+                                dataSet.Tables[0].Columns.Add(new DataColumn("wzCount")); //文字卷数
+                                dataSet.Tables[0].Columns.Add(new DataColumn("tzCount")); //图纸卷数                                               
+                            }
+                            Report.RegData("Report", dataSet);
+                            Report.Render(false);
+                            Report.ExportDocument(StiExportFormat.Pdf, HttpContext.Current.Server.MapPath("../Upload/TempReport/" + pdfFileName));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                pdfFileName = SystemSet._RETURN_FAILURE_VALUE + ex.Message;
+            }
+            return pdfFileName;
+        }
+    }
+}

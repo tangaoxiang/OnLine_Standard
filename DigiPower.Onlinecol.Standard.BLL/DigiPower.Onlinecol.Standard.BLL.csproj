@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4275650D-1B3A-4D94-A4B2-B3EEC4AE2C7B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DigiPower.Onlinecol.Standard.BLL</RootNamespace>
+    <AssemblyName>DigiPower.Onlinecol.Standard.BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LTP.Common">
+      <HintPath>..\Lib\LTP.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="a_single_project_BLL.cs" />
+    <Compile Include="b_single_project_BLL.cs" />
+    <Compile Include="construction_project_a_BLL.cs" />
+    <Compile Include="construction_project_b_BLL.cs" />
+    <Compile Include="construction_project_c_BLL.cs" />
+    <Compile Include="c_single_project_BLL.cs" />
+    <Compile Include="PageCtrl.cs" />
+    <Compile Include="s_archive_type_BLL.cs" />
+    <Compile Include="T_Archive_BLL.cs" />
+    <Compile Include="T_EFile_ConvertLog_BLL.cs" />
+    <Compile Include="T_Area_BLL.cs" />
+    <Compile Include="T_CanDefineType_BLL.cs" />
+    <Compile Include="T_CellTmp_BLL.cs" />
+    <Compile Include="T_CompanyArchiveUser_BLL.cs" />
+    <Compile Include="T_Company_BLL.cs" />
+    <Compile Include="T_Construction_Project_BLL.cs" />
+    <Compile Include="T_DefineReult_BLL.cs" />
+    <Compile Include="T_EFile_BLL.cs" />
+    <Compile Include="T_EFile_OutSideRelated_BLL.cs" />
+    <Compile Include="T_FieldDefine_BLL.cs" />
+    <Compile Include="T_Field_BLL.cs" />
+    <Compile Include="T_FileAttach_BLL.cs" />
+    <Compile Include="T_FileListDoResult_BLL.cs" />
+    <Compile Include="T_FileListTmp_BLL.cs" />
+    <Compile Include="T_FileListTmp_CellRptTmp_BLL.cs" />
+    <Compile Include="T_FileListTmp_OutSideRelated_BLL.cs" />
+    <Compile Include="T_FileList_BLL.cs" />
+    <Compile Include="T_FileList_CellRpt_BLL.cs" />
+    <Compile Include="T_FileList_SignatureLog_BLL.cs" />
+    <Compile Include="T_FileList_SignatureTmp_BLL.cs" />
+    <Compile Include="T_Module_BLL.cs" />
+    <Compile Include="T_MyArchive_BLL.cs" />
+    <Compile Include="T_OperationLog_BLL.cs" />
+    <Compile Include="T_Other_BLL.cs" />
+    <Compile Include="T_ProjectPromise_BLL.cs" />
+    <Compile Include="T_QuestionAnswer_BLL.cs" />
+    <Compile Include="T_QuestionToUser_BLL.cs" />
+    <Compile Include="T_QuestionType_BLL.cs" />
+    <Compile Include="T_Question_BLL.cs" />
+    <Compile Include="T_ReadyCheckBook_BLL.cs" />
+    <Compile Include="T_Report_BLL.cs" />
+    <Compile Include="T_Report_MainSql_BLL.cs" />
+    <Compile Include="T_Report_Type_BLL.cs" />
+    <Compile Include="T_Right_BLL.cs" />
+    <Compile Include="T_RoleRight_BLL.cs" />
+    <Compile Include="T_Role_BLL.cs" />
+    <Compile Include="T_Search_Field_BLL.cs" />
+    <Compile Include="T_Search_Para_BLL.cs" />
+    <Compile Include="T_SingleProjectCompany_BLL.cs" />
+    <Compile Include="T_SingleProjectUser_BLL.cs" />
+    <Compile Include="T_SingleProject_BLL.cs" />
+    <Compile Include="T_SingleProject_PIC_BLL.cs" />
+    <Compile Include="T_SingleProject_Point_BLL.cs" />
+    <Compile Include="T_SystemInfo_BLL.cs" />
+    <Compile Include="T_Train_Plan_BLL.cs" />
+    <Compile Include="T_Train_Rec_BLL.cs" />
+    <Compile Include="T_UsersInfo_BLL.cs" />
+    <Compile Include="T_WorkFlowBtn_BLL.cs" />
+    <Compile Include="T_WorkFlowDefine_BLL.cs" />
+    <Compile Include="T_WorkFlowDoResult_BLL.cs" />
+    <Compile Include="T_WorkFlow_BLL.cs" />
+    <Compile Include="UserOperate.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.Common\DigiPower.Onlinecol.Standard.Common.csproj">
+      <Project>{7bca3804-897d-495a-83eb-094fd6e49d3b}</Project>
+      <Name>DigiPower.Onlinecol.Standard.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.DAL\DigiPower.Onlinecol.Standard.DAL.csproj">
+      <Project>{ba1a2833-1963-4d8c-b8fe-617376d39333}</Project>
+      <Name>DigiPower.Onlinecol.Standard.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DigiPower.Onlinecol.Standard.Model\DigiPower.Onlinecol.Standard.Model.csproj">
+      <Project>{800e194a-0b70-44e3-b463-e433d905fe1d}</Project>
+      <Name>DigiPower.Onlinecol.Standard.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

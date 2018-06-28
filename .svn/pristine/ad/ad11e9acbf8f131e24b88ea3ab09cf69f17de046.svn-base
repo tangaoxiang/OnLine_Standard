@@ -1,0 +1,271 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+using System.Configuration;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class QuickReg : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                BindDate();
+
+                string strwhere = " currenttype='CompanyType' AND SystemInfoCode='JSCompanyInfo'";
+                List<T_SystemInfo_MDL> systeminfolist = new List<T_SystemInfo_MDL>();
+                systeminfolist = (new T_SystemInfo_BLL()).GetModelList(strwhere);
+                if (systeminfolist.Count > 0)
+                {
+                    CompanyType.Value = systeminfolist[0].SystemInfoID.ToString();
+                }
+                //AppTitle.Text = ConfigurationManager.AppSettings["AppTitle"];
+
+                //ctrlAjdw.DataBindExForCompanyType("AJCompanyInfo");
+                //ctrlZjdw.DataBindExForCompanyType("ZJCompanyInfo");
+
+                ctrlArchiveTypeDetail1.DataBindEx();
+                ctrlArchiveTypeDetail1.SelectValue = "I0000";
+
+                gcdd.Text = "阜阳市"; //默认地点
+            }
+        }
+
+        /// <summary>
+        /// 数据绑定
+        /// </summary>
+        protected void BindDate()
+        {
+            AREA_CODE.BindDdlArea(true);//区域
+            ProjectType.DataBindEx();     //工程类别
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            //不同意协议
+            if (!CheckBox1.Checked)
+            {
+                MessageBox.Show(this, "您选择的不同意本次注册条款，将无法完成在本网站的注册行为！");
+                return;
+            }
+
+            #region 检查两次密码是否相同
+            if (Passwd.Text.Trim().Length < 6 || Passwd_check.Text.Trim().Length < 6)
+            {
+                MessageBox.Show(this, "密码长度必须不少于6位！");
+                return;
+            }
+
+            if (Passwd.Text.Trim() != Passwd_check.Text.Trim())
+            {
+                MessageBox.Show(this, "两次输入的密码不相同！");                  
+                return;
+            }
+
+            System.Text.RegularExpressions.Regex r1 = new System.Text.RegularExpressions.Regex("[A-Za-z].*[0-9]|[0-9].*[A-Za-z]");
+            if (r1.IsMatch(Passwd.Text.Trim()) == false)
+            {
+                MessageBox.Show(this, "登录密码必须由数字和字母组成！");
+                return;
+            }
+            #endregion
+
+            //电信手机号码正则       
+            string dianxin = @"^1[3578][01379]\d{8}$";
+            System.Text.RegularExpressions.Regex r2 = new System.Text.RegularExpressions.Regex(dianxin);
+            //联通手机号正则       
+            string liantong = @"^1[34578][01256]\d{8}$";
+            System.Text.RegularExpressions.Regex r3 = new System.Text.RegularExpressions.Regex(liantong);    
+            //移动手机号正则        
+            string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$";
+            System.Text.RegularExpressions.Regex r4 = new System.Text.RegularExpressions.Regex(yidong);    
+                                                                               
+            //手机号验证判断
+            string phone = Mobile.Text.Trim();
+
+            if (r2.IsMatch(phone) || r3.IsMatch(phone) || r4.IsMatch(phone))
+            {
+               
+            }
+            else
+            {
+                MessageBox.Show(this, "必须为有效联系方式!");
+                return;
+            }
+
+            #region 检查登录名及密码是否已经存在
+            BLL.T_UsersInfo_BLL userBLL = new DigiPower.Onlinecol.Standard.BLL.T_UsersInfo_BLL();
+            if (userBLL.Exists("LoginName='" + LoginName.Text + "'"))
+            {
+                Common.MessageBox.Show(this, "此登录账号已被使用，请输入新的登录账号！");
+                return;
+            }
+            #endregion
+
+            //获取一个最新的工程编号,需要确认后才产生这个号
+            string NewEngineerID = "";// new T_Other_BLL().GetNewEngineerID();
+
+            #region 单位信息
+            T_Company_MDL mCompanyInfo = new T_Company_MDL();
+            T_Company_BLL bCompanyInfo = new T_Company_BLL();
+
+            mCompanyInfo = Comm.GetValueToObject(mCompanyInfo, table_Company) as T_Company_MDL;
+            mCompanyInfo.CreateDate = DateTime.Now;
+            mCompanyInfo.IsCompany = true;
+            mCompanyInfo.CreateIP = Common.DNTRequest.GetIP();
+
+            int tCompanyID = bCompanyInfo.Add(mCompanyInfo);
+            #endregion
+
+            #region 项目信息
+            T_Construction_Project_MDL cpModel = new T_Construction_Project_MDL();
+            T_Construction_Project_BLL cpBll = new T_Construction_Project_BLL();
+
+            cpModel.CompanyID = tCompanyID;                     //所属单位
+            cpModel.xmmc = xmmc.Text; // gcmc.Text;                           //项目名称
+            cpModel.xmh = NewEngineerID;                        //项目号
+            if (jgsj.Text.Length > 0)
+                cpModel.jgrq = Common.ConvertEx.ToDate(jgsj.Text);  //开工时间
+            cpModel.jgsj = jgsj.Text;
+            cpModel.ProjectType = ProjectType.SelectValue;
+
+            int tConstructionProjectID = cpBll.Add(cpModel);
+            #endregion
+
+            #region 工程信息
+            T_SingleProject_MDL spModel = new T_SingleProject_MDL();
+            T_SingleProject_BLL spBll = new T_SingleProject_BLL();
+
+            spModel = Comm.GetValueToObject(spModel, tablemain) as T_SingleProject_MDL;
+            spModel.AREA_CODE = AREA_CODE.SelectValue;
+            spModel.ConstructionProjectID = tConstructionProjectID;
+            spModel.CreateDate = DateTime.Now;
+            spModel.Status = 0;//初始为0，未分配
+            spModel.jsdw = mCompanyInfo.CompanyName;//建设单位，是当前单位
+
+            spModel.gcdd = gcdd.Text.Trim();
+            spModel.zdh = ctrlArchiveTypeDetail1.SelectValue;
+
+            int tSingleProjectID = spBll.Add(spModel); //工程ID
+            UploadFile(tSingleProjectID);//上传证书
+
+
+            //加入工作流
+            (new T_WorkFlowDefine_BLL()).AddWorkFlowDefine(tSingleProjectID);
+
+            #endregion
+
+            if (tCompanyID > 0)//更新用户
+            {
+                Model.T_UsersInfo_MDL userMDL = new DigiPower.Onlinecol.Standard.Model.T_UsersInfo_MDL();
+                BLL.T_UsersInfo_BLL userbll = new DigiPower.Onlinecol.Standard.BLL.T_UsersInfo_BLL();
+                userMDL = (T_UsersInfo_MDL)Comm.GetValueToObject(userMDL, tLoginInfo);
+                //须先加角色信息
+                Model.T_Role_MDL roleMDL = new T_Role_MDL();
+                roleMDL.RoleName = "单位档案管理员";
+                roleMDL.CompanyID = tCompanyID;
+                BLL.T_Role_BLL roleBLL = new T_Role_BLL();
+                int RoleID = roleBLL.Add(roleMDL);
+
+                //再加用户信息
+                userMDL.Passwd = DESEncrypt.Encrypt(Passwd.Text);
+                userMDL.UserType = "ArchiveUser";
+                userMDL.RoleID = RoleID;
+                userMDL.UserName = userMDL.LoginName;
+                userMDL.CompanyID = tCompanyID;
+                userMDL.Createdate = DateTime.Now;
+                userMDL.LastLoginTime = DateTime.Now;
+                userMDL.IsLeader = true;
+                userMDL.IsValid = false;//刚开始创建时，不可以登录使用，需要确认工程后，些账号才解开。
+                userMDL.Createdby = "注册建立";
+                //userMDL.LockIP = Common.DNTRequest.GetIP();//刚开始创建时，不可以登录使用，需要确认工程后，些账号才解开。
+                int tUserID = userbll.Add(userMDL);
+
+                //把此用户加入到这个工程用户中去                    
+                //CBLL.SingleProjectRole projectRole = new DigiPower.Onlinecol.Standard.CBLL.SingleProjectRole();
+                //projectRole.Update(tSingleProjectID, userMDL.RoleID, userMDL.UserID);
+                PublicModel.AddSingleProjectUser(tSingleProjectID, userMDL);
+
+
+                T_RoleRight_BLL roleRightBLL = new T_RoleRight_BLL();
+                roleRightBLL.AddSame(RoleID, mCompanyInfo.CompanyType);
+                spModel = spBll.GetModel(tSingleProjectID);
+                spModel.CompanyUserID = tUserID;
+                spBll.Update(spModel);
+
+                //加入到工程->公司表中去                
+                //Model.T_SingleProjectCompany_MDL spcMDL = new T_SingleProjectCompany_MDL();
+                //spcMDL.SingleProjectID = tSingleProjectID;
+                //spcMDL.CompanyID = tCompanyID;
+                //BLL.T_SingleProjectCompany_BLL spcBLL = new T_SingleProjectCompany_BLL();
+                //spcBLL.Add(spcMDL);
+
+                PublicModel.AddSingleProjectCompany(tSingleProjectID, tCompanyID);   //建设单位
+                //PublicModel.AddSingleProjectCompany(tSingleProjectID, ConvertEx.ToInt(ctrlAjdw.SelectValue)); //安监单位
+                //PublicModel.AddSingleProjectCompany(tSingleProjectID, ConvertEx.ToInt(ctrlZjdw.SelectValue)); //质监单位
+
+                MessageBox.ShowAndCloseWin(this, "您已经成功注册，但您注册的信息，必需确认后才可以登录使用。请耐心等待，或致电：" + SystemSet._QUICKREGTEL);
+            }
+        }
+
+        #region 保存上传证件
+        string savePath = "/Upload/Pic/";
+        protected void UploadFile(int tSingleProjectID)
+        {
+            HttpFileCollection uploadFiles = HttpContext.Current.Request.Files;//获取所有客户端上传文件对象
+            HttpPostedFile userPostFile = null;
+
+            if (uploadFiles.Count > 0)
+            {
+                for (int i = 0; i < uploadFiles.Count; i++)
+                {
+                    userPostFile = uploadFiles[i];//获取独立的文件对象
+                    string fileName = Common.Common.SaveFile(Server.MapPath(savePath), userPostFile, "R");
+
+                    if (fileName != "")
+                    {
+                        T_FileAttach_BLL bll = new T_FileAttach_BLL();
+                        T_FileAttach_MDL mdl = new T_FileAttach_MDL();
+                        mdl.AttachName = fileName;
+                        mdl.AttachPath = savePath + fileName;
+                        mdl.CreateDate = DateTime.Now;
+                        mdl.PriKeyValue = tSingleProjectID;
+                        mdl.OrderIndex = 0;
+                        mdl.Flag = "Company_Registration";
+
+                        if (Hid_ghxkz.Value != "")
+                        {
+                            Hid_ghxkz.Value = "";
+                            mdl.AttachCode = "ghxkz";
+                        }
+                        else if (Hid_sgxkz.Value != "")
+                        {
+                            Hid_sgxkz.Value = "";
+                            mdl.AttachCode = "sgxkz";
+                        }
+                        else if (Hid_other.Value != "")
+                        {
+                            mdl.AttachCode = "other";
+                        }
+
+                        bll.Add(mdl);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("责任书.doc");
+            
+        }
+    }
+}

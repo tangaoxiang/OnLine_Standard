@@ -1,0 +1,396 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Common;
+
+namespace DigiPower.Onlinecol.Standard.Web.SuppleMent
+{
+    public partial class SmUpLoadEFileList : PageBase
+    {
+        #region 属性及构造方法
+
+        //文件ID
+        string FileID = "";
+
+        //工程编号
+        string ProNo = "000000";
+
+        //电子文件存放起始路径
+        string StartPath = "";
+
+        //文件路径
+        //string path = null;
+
+        //文件名
+        string NewGUID = Guid.NewGuid().ToString();
+
+        //原始文件路径
+        string OPath = null;
+
+        //PDF路径
+        //string PdfPath = null;
+
+        //合并PDF路径
+        //string MPdfPath = null;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ctrlGridEx1.MyGridView_DataRowBound += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlGridEx.GridView_DataRowBound(ctrlGridEx1_MyGridView_DataRowBound);
+
+            StartPath = Common.Common.EFileStartPath;
+
+            MyAddInit();
+
+            if (!String.IsNullOrEmpty(Common.DNTRequest.GetQueryString("ProNo")))
+            {
+                ProNo = Common.DNTRequest.GetQueryString("ProNo");
+                HidProNo.Value = ProNo;
+            }
+
+            if (!string.IsNullOrEmpty(Common.DNTRequest.GetQueryString("WorkFlowID")))
+            {
+                HidFlowid.Value = Common.DNTRequest.GetQueryString("WorkFlowID");
+            }
+            //ProNo = StartPath + ProNo;
+            FileID = Common.DNTRequest.GetQueryString("ID");
+
+            StartPath += ProNo;
+            OPath = StartPath + "\\ODOC\\";
+            //PdfPath = StartPath + "\\PDF\\";
+            //MPdfPath = StartPath + "\\MPDF\\";
+
+            if (!IsPostBack)
+            {
+                this.btnDelete.Attributes.Add("onclick", "javascript:return confirm('你确认要删除吗?')");
+            }
+
+            BindGridView();
+        }
+
+        #endregion
+
+        #region 事件
+
+        protected void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            //if (e.Row.RowType == DataControlRowType.Header)
+            //{
+            //    e.Row.Cells[e.Row.Cells.Count - 2].Text = "原文";
+            //}
+            //if (e.Row.RowType == DataControlRowType.DataRow)
+            //{
+            //    //if (Common.ConvertEx.ToInt(e.Row.Cells[5].Text) > 0)
+            //    {
+            //        DataRowView view = e.Row.DataItem as DataRowView;
+
+            //        //查看PDF 
+            //        string URL = "<a target=\"_blank\" href=\"../File/DocumentEdit.aspx?fileType=PDF&SingleProjectID=0&ID=" + ConvertEx.ToString(view["ArchiveListCellRptID"]) + "\">查看</a></";
+            //        //e.Row.Cells[e.Row.Cells.Count - 2].Text = URL;
+            //    }
+            //    //else
+            //    //{
+            //    //    e.Row.Cells[e.Row.Cells.Count - 2].Text = "";
+            //    //}
+            //}
+
+        }
+
+        protected void btnUpLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (FileUpload1.HasFile)
+                {
+                    //创建目录
+                    CreateDic();
+
+                    //电子文件存放全路径
+                    string FileFullPath = OPath + NewGUID + FileUpload1.FileName.Substring(FileUpload1.FileName.LastIndexOf('.'));
+                    //保存原始文件
+                    this.FileUpload1.SaveAs(FileFullPath);
+                    //string PDFT_Archiveame = PdfPath + NewGUID + ".pdf";
+                    ////将原始文件打印成PDF
+                    //Common.PrintToPDF pdfTool = new DigiPower.Onlinecol.Standard.Common.PrintToPDF(ProNo);
+                    //pdfTool.PrintPDF(FileFullPath, PDFT_Archiveame);
+
+                    //int PDFcount = pdfTool.GetPDFCount(PDFT_Archiveame);
+
+                    //插入数据库
+                    DigiPower.Onlinecol.Standard.Model.T_EFile_MDL model = new DigiPower.Onlinecol.Standard.Model.T_EFile_MDL();
+
+                    model.PageCounts = 0;// PDFcount;
+
+                    model.FileListID = Common.ConvertEx.ToInt(FileID);
+
+                    model.FileType = 1;
+                    model.OrderIndex = 100;//前后都方便插入
+
+                    model.Title = FileUpload1.FileName.Substring(0, FileUpload1.FileName.LastIndexOf('.'));
+                    model.RootPath = Common.Common.EFileStartPath;//记信根目录即可
+                    //if (!String.IsNullOrEmpty(path))
+                    //{
+                    //    model.FilePath = path + "\\" + NewGUID + FileUpload1.FileName.Substring(FileUpload1.FileName.LastIndexOf('.'));
+                    //}
+                    //else
+                    //{
+                    model.FilePath = NewGUID + FileUpload1.FileName.Substring(FileUpload1.FileName.LastIndexOf('.'));
+                    //}
+
+                    //model.PDFFilePath = PDFT_Archiveame.Replace(PdfPath, " ").Trim();
+
+                    model.FileType = 0;
+                    model.Status_Text = "上传成功,当晚批量计算页数！";
+                    model.CREATE_DT = System.DateTime.Now.ToShortDateString();
+                    model.CONVERT_FLAG = false;
+
+                    DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+
+                    bll.Add(model);
+
+                    //更新文件级转换标志，等批量转换晚上转
+                    BLL.T_FileList_BLL fileListBLL = new BLL.T_FileList_BLL();
+                    Model.T_FileList_MDL fileListMDL = fileListBLL.GetModel(model.FileListID);
+                    fileListMDL.CONVERT_FLAG = false;
+                    fileListMDL.RootPath = Common.Common.EFileStartPath;
+                    fileListBLL.Update(fileListMDL);
+
+                    //BLL.T_Other_BLL otherBLL = new DigiPower.Onlinecol.Standard.BLL.T_Other_BLL();
+                    //otherBLL.UpdateArchiveStatus(model.FileListID.ToString(), 10);
+
+                    //合并PDF
+                    //MergerPdf();
+
+                    BindGridView();
+                }
+            }
+            catch (Exception ex)
+            {
+                InsertIntoLog(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            //Response.Redirect("AreaAdd.aspx?Action=add&ID=0&sqlwhere = "+ SqlWhere +"");
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+            if (ctrlGridEx1.GetSelects().Count > 0)
+            {
+                int iCount = ctrlGridEx1.GetSelects().Count;
+                for (int i = 0; i < iCount; i++)
+                {
+                    DigiPower.Onlinecol.Standard.Model.T_EFile_MDL model = new DigiPower.Onlinecol.Standard.Model.T_EFile_MDL();
+                    model = bll.GetModel(Convert.ToInt32(ctrlGridEx1.GetSelects()[i]));
+                    try
+                    {
+                        //删除电子文件
+                        //if (model != null && model.PDFFilePath != "" && System.IO.File.Exists(PdfPath + model.PDFFilePath))
+                        //{
+                        //    System.IO.File.Delete(PdfPath + model.PDFFilePath);
+                        //}
+                        if (model != null && OPath + model.FilePath != "" && System.IO.File.Exists(OPath + model.FilePath))
+                        {
+                            System.IO.File.Delete(OPath + model.FilePath);
+                        }
+                        //删除电子文件记录
+                        bll.Delete(Convert.ToInt32(ctrlGridEx1.GetSelects()[i]));
+
+                        //Leo 更新文件夹，晚上重新生产一次
+                        int FileListID = model.FileListID;
+                        BLL.T_FileList_BLL fileListBLL = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+                        Model.T_FileList_MDL fileListMDL = fileListBLL.GetModel(FileListID);
+                        fileListMDL.CONVERT_FLAG = false;
+                        fileListBLL.Update(fileListMDL);
+                    }
+                    catch { }
+                }
+
+                //重新合并
+                //MergerPdf();
+
+                BindGridView();
+            }
+        }
+        #endregion
+
+        #region 方法
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView()
+        {
+            BLL.T_EFile_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+            DataSet ds = new DataSet();
+            ds = bll.GetList("1=1" + " and FileListID = " + FileID + " and FileType = 0");
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                List<string> l1 = new List<string>();
+
+                l1.Add("Title");
+                //l1.Add("FilePath");
+                //l1.Add("PDFFilePath");
+                l1.Add("status_text");
+                l1.Add("Create_dt");
+                l1.Add("convert_dt");
+                //l1.Add("PageCounts");
+                l1.Add("OrderIndex");
+                //l1.Add("Status");
+                //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+                ctrlGridEx1.InitGrid("ArchiveListCellRptID", l1, ds, "~/File/UpLoadFileAdd.aspx?SuppleMent=SuppleMent&Action=Edit&FileListID=" + FileID + "&ProNo=" + ProNo + "");
+                //ctrlGridEx1.PageIndex = PageIndex; 
+            }
+        }
+
+        ///// <summary>
+        ///// 合并PDF
+        ///// </summary>
+        //private void MergerPdf_DEL()
+        //{
+        //    //try
+        //    {
+        //        ArrayList list = new ArrayList();
+
+        //        BLL.T_EFile_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_EFile_BLL();
+
+        //        DataSet ds = bll.GetList("FileListID = " + FileID + " and FileType = 1 ");
+
+        //        //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        //        //{
+        //        //    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+        //        //    {
+        //        //        list.Add(PdfPath + ds.Tables[0].Rows[i]["PDFFilePath"].ToString());
+        //        //    }
+        //        //}
+
+        //        DataSet ds1 = bll.GetList("FileListID = " + FileID + " and FileType = 0 ");
+
+        //        //if (ds1 != null && ds1.Tables.Count > 0 && ds1.Tables[0].Rows.Count > 0)
+        //        //{
+        //        //    for (int i = 0; i < ds1.Tables[0].Rows.Count; i++)
+        //        //    {
+        //        //        list.Add(PdfPath + ds1.Tables[0].Rows[i]["PDFFilePath"].ToString());
+        //        //    }
+        //        //}
+
+        //        string[] newMPDF = new string[list.Count];
+
+        //        if (newMPDF != null && newMPDF.Length > 0)
+        //        {
+        //            for (int i = 0; i < newMPDF.Length; i++)
+        //            {
+        //                newMPDF[i] = list[i].ToString();
+        //            }
+        //        }
+
+        //        if (newMPDF != null && newMPDF.Length > 0)
+        //        {
+        //            //if (System.IO.Directory.Exists(MTemp))
+        //            //{
+        //            //    System.IO.Directory.Delete(MTemp, true);
+
+        //            //    System.IO.Directory.CreateDirectory(MTemp);
+        //            //}
+
+        //            //if (System.IO.Directory.Exists(MPdfPath))
+        //            //{
+        //            //    System.IO.Directory.Delete(MPdfPath, true);
+        //            //    System.IO.Directory.CreateDirectory(MPdfPath);//这样会删了所有文件，仅删除一个文件就可以了
+        //            //}
+
+        //            //合并新文件到合并临时目录
+        //            Common.PrintToPDF pdfTool = new DigiPower.Onlinecol.Standard.Common.PrintToPDF(ProNo);
+        //            pdfTool.MergerPDF(newMPDF, MPdfPath + "\\" + NewGUID + ".pdf");
+        //        }
+        //        //复制新合并文件到原目录
+        //        //System.IO.File.Copy(MTemp + "\\" + NewGUID + ".pdf", MPdfPath + "\\" + NewGUID + ".pdf", true);
+
+        //        //更新目录合并PDF信息
+        //        DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL tbll = new DigiPower.Onlinecol.Standard.BLL.T_FileList_BLL();
+        //        DigiPower.Onlinecol.Standard.Model.T_FileList_MDL tmodel = tbll.GetModel(Common.ConvertEx.ToInt(FileID));
+        //        string oldMPDFFile = MPdfPath + "\\" + tmodel.PDFFilePath;
+        //        if (tmodel.PDFFilePath != "" && System.IO.File.Exists(oldMPDFFile))
+        //        {
+        //            System.IO.File.Delete(oldMPDFFile);
+        //        }
+        //        if (System.IO.File.Exists(MPdfPath + "\\" + NewGUID + ".pdf"))
+        //        {
+        //            tmodel.PDFFilePath = NewGUID + ".pdf";
+        //            Common.PrintToPDF pdfTool = new DigiPower.Onlinecol.Standard.Common.PrintToPDF(ProNo);
+        //            tmodel.PagesCount = pdfTool.GetPDFCount(MPdfPath + "\\" + NewGUID + ".pdf");
+        //        }
+        //        else
+        //        {
+        //            tmodel.PDFFilePath = "";
+        //            tmodel.PagesCount = 0;
+        //        }
+
+        //        tbll.Update(tmodel);
+        //    }
+        //    //catch (Exception ex)
+        //    //{
+        //    //    InsertIntoLog(ex.Message);
+        //    //}
+        //}
+
+        /// <summary>
+        /// 创建目录
+        /// </summary>
+        /// <param name="path"></param>
+        private void CreateDic()
+        {
+            if (!System.IO.Directory.Exists(StartPath))
+            {
+                System.IO.Directory.CreateDirectory(StartPath);
+            }
+            //创建电子文件存放目录
+            if (!System.IO.Directory.Exists(OPath))
+            {
+                System.IO.Directory.CreateDirectory(OPath);
+            }
+            //if (!System.IO.Directory.Exists(PdfPath))
+            //{
+            //    System.IO.Directory.CreateDirectory(PdfPath);
+            //}
+            //if (!System.IO.Directory.Exists(MPdfPath))
+            //{
+            //    System.IO.Directory.CreateDirectory(MPdfPath);
+            //}
+        }
+        #endregion
+
+        private void InsertIntoLog(string text)
+        {
+            BLL.T_OperationLog_BLL bll = new DigiPower.Onlinecol.Standard.BLL.T_OperationLog_BLL();
+            Model.T_OperationLog_MDL mdl = new DigiPower.Onlinecol.Standard.Model.T_OperationLog_MDL();
+
+            mdl.CreateDate = DateTime.Now;
+            mdl.CreateIP = Request.UserHostAddress;
+            mdl.Description = text;
+            mdl.ErrorMsg = text;
+            mdl.UserID = Common.ConvertEx.ToInt(Session["UserId"]);
+            mdl.UserName = Common.Session.GetSession("UserName");
+            bll.Add(mdl);
+        }
+    }
+}

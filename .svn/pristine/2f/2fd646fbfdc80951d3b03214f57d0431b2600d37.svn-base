@@ -1,0 +1,205 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+
+//查看案卷下的所有文件
+
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class ArchiveToFileList : System.Web.UI.Page
+    {
+        #region 属性及构造方法
+
+        T_FileList_BLL fileListBLL = new T_FileList_BLL();
+        public string Store = string.Empty;
+
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string SingleProjectID = string.Empty;
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 50;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ArchiveToFileList));
+            Store = DNTRequest.GetQueryString("Store");
+            SingleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+
+            if (!this.IsPostBack)
+            {
+                BindGridView(1);
+            }
+
+            if (Common.Session.GetSessionBool("IsCompany") == true)
+            {
+                //非档案馆人员，不可能改动档案信息
+                btnUpdateXH.Visible = false;
+            }
+        }
+        #endregion
+
+        #region 事件
+        //GridView DataRowBound事件   jdk 10.26
+        protected void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            //if (e.Row.RowType == DataControlRowType.DataRow)
+            //{
+            //    DataRowView view = e.Row.DataItem as DataRowView;
+            //    string StrLook = "<a style=\"cursor:pointer;\" onclick=\"JLookFile(" +
+            //          Convert.ToString(view["FileListID"]) + "," + Convert.ToString(view["SingleProjectID"]) + ")\" >查看</a>";
+
+            //    e.Row.Cells[8].Text = StrLook;
+
+            //    e.Row.Cells[2].Style.Add("word-break", "break-all ");
+            //}
+        }
+
+        /// <summary>
+        /// 拆卷，删除选中文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            //List<string> ltKey = ctrlGridEx1.GetSelects();
+            //if (ltKey.Count > 0)
+            //{
+            //    //T_Other_BLL bll = new T_Other_BLL();
+            //    T_FileList_BLL flBLL = new T_FileList_BLL();
+            //    foreach (string FileListID in ltKey)
+            //    {
+            //        T_FileList_MDL flMDL = flBLL.GetModel(Common.ConvertEx.ToInt(FileListID));
+            //        flMDL.ArchiveID = 0;
+            //        //bll.DeleteFileToArchive("FileListID=" + Key + " AND ArchiveID=" + Common.DNTRequest.GetQueryString("ArchiveID"));
+            //        flBLL.Update(flMDL);
+            //    }
+            //    BindGridView();
+            //}
+        }
+
+        /// <summary>
+        /// 上移
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            //List<string> ltIndex = ctrlGridEx1.GetSelects();
+            //if (ltIndex.Count > 0)
+            //{
+            //    int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+            //    int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+            //    T_FileList_BLL flBLL = new T_FileList_BLL();
+            //    T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+            //    flBLL.UpdateXH(ArchiveID, flMDL.OrderIndex, true);
+            //    BindGridView();
+            //}
+        }
+
+        /// <summary>
+        /// 下移
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            //List<string> ltIndex = ctrlGridEx1.GetSelects();
+            //if (ltIndex.Count > 0)
+            //{
+            //    int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+            //    int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+            //    T_FileList_BLL flBLL = new T_FileList_BLL();
+            //    T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+            //    flBLL.UpdateXH(ArchiveID, flMDL.OrderIndex, false);
+            //    BindGridView();
+            //}
+        }
+        #endregion
+
+        #region 方法
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView(int pageIndex)
+        {
+            string strWhere = " ArchiveID=" + DNTRequest.GetQueryString("ArchiveID");
+            DataTable dt = fileListBLL.GetListPaging(strWhere, pageSize, pageIndex, "bh asc", out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 更新文件序号
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void UpdateArchiveXH(string fileListID, string OrderIndex)
+        {
+            T_FileList_MDL flMDL = fileListBLL.GetModel(ConvertEx.ToInt(fileListID));
+            if (flMDL != null)
+            {
+                flMDL.OrderIndex = ConvertEx.ToInt(OrderIndex);
+                fileListBLL.Update(flMDL);
+            }
+        }
+
+        /// <summary>
+        /// 入库能否查看PDF
+        /// </summary>
+        /// <param name="FileListID"></param>
+        [Ajax.AjaxMethod]
+        public bool RKLookPDFFlag(string singleProjectID)
+        {
+            bool flag = true;
+            T_SingleProject_BLL singleProjectBLL = new T_SingleProject_BLL();
+            T_SingleProject_MDL singleProjectMDL = singleProjectBLL.GetModel(ConvertEx.ToInt(singleProjectID));
+            if (singleProjectMDL != null)
+            {
+                if (ConvertEx.ToInt(singleProjectMDL.Status) >= 3721 && !SystemSet._RKLOOKPDFFLAG
+                    && singleProjectMDL.WorkFlow_DoStatus == (int)SystemSet.WorkFlowStatus.IMPORT_TO)
+                {
+                    flag = false;
+                }
+            }
+            return flag;
+        }
+        #endregion
+
+    }
+}

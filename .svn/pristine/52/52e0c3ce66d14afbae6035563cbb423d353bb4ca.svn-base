@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+//接收审核信息
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlJSCheckInfo : System.Web.UI.UserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 是否显示接收审核信息
+        /// </summary>
+        public bool SetVisible
+        {
+            set { divCheck.Visible = value; }
+        }
+
+        /// <summary>
+        /// 绑定接收审核信息
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        public void DataBindEx(string SingleProjectID)
+        {
+            List<T_WorkFlowDefine_MDL> ltWorkFlowDefine2 = new T_WorkFlowDefine_BLL().GetModelList("SingleProjectID=" + SingleProjectID + " AND WorkFlowID=(select WorkFlowID from T_WorkFlow where WorkFlowCode='CHECK')");
+            if (ltWorkFlowDefine2.Count > 0)
+            {
+                SubmitUser_dash.Text = GetUserName(Common.ConvertEx.ToInt(ltWorkFlowDefine2[0].SubmitUserID));
+                SubmitDateTime_dash.Text = Common.ConvertEx.ToDate(ltWorkFlowDefine2[0].SubmitDateTime).ToString("yyyy-MM-dd");
+                RecvUser_dash.Text = GetUserName(Common.ConvertEx.ToInt(ltWorkFlowDefine2[0].RecvUserID));
+                RecvDateTime_dash.Text = Common.ConvertEx.ToDate(ltWorkFlowDefine2[0].RecvDateTime).ToString("yyyy-MM-dd");
+
+                DataSet ds = new T_Other_BLL().GetArchiveInfo(Common.DNTRequest.GetQueryString("SingleProjectID"));
+                if (ds.Tables.Count > 0)
+                {
+                    DataTable table = ds.Tables[0];
+                    ArchiveCount.Text = Common.ConvertEx.ToString(table.Rows[0]["archiveCount"]);//案卷个数
+                    wz.Text = Common.ConvertEx.ToString(table.Rows[0]["wz"]);                    //文字   
+                    tzz.Text = Common.ConvertEx.ToString(table.Rows[0]["tzz"]);                  //图纸层
+                    zp.Text = Common.ConvertEx.ToString(table.Rows[0]["zp"]);                    //照片
+                    hh.Text = Common.ConvertEx.ToString(table.Rows[0]["gp"]);                    //混合   
+                }
+            }
+        }
+
+        /// <summary>
+        /// 绑定接收审核信息
+        /// </summary>
+        /// <param name="SingleProjectID"></param>
+        public void DataBindEx(string SingleProjectID, string WorkFlowCode)
+        {
+            DataTable dt = new T_WorkFlowDefine_BLL().GetWrokFlowCheckInfo(SingleProjectID, WorkFlowCode).Tables[0];
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                SubmitUser_dash.Text = ConvertEx.ToString(dt.Rows[0]["P_SubmitUserName"]);
+                SubmitDateTime_dash.Text = ConvertEx.ToDate(dt.Rows[0]["P_SubmitDateTime"]).ToString("yyyy-MM-dd");
+                RecvUser_dash.Text = ConvertEx.ToString(dt.Rows[0]["RecvUserName"]);
+                RecvDateTime_dash.Text = ConvertEx.ToDate(dt.Rows[0]["RecvDateTime"]).ToString("yyyy-MM-dd");
+
+                DataSet ds = new T_Other_BLL().GetArchiveInfo(Common.DNTRequest.GetQueryString("SingleProjectID"));    
+                if (ds.Tables.Count > 0)
+                {
+                    DataTable table = ds.Tables[0];
+                    ArchiveCount.Text = Common.ConvertEx.ToString(table.Rows[0]["archiveCount"]);//案卷个数
+                    wz.Text = Common.ConvertEx.ToString(table.Rows[0]["wz"]);                    //文字   
+                    tzz.Text = Common.ConvertEx.ToString(table.Rows[0]["tzz"]);                  //图纸层
+                    zp.Text = Common.ConvertEx.ToString(table.Rows[0]["zp"]);                    //照片
+                    hh.Text = Common.ConvertEx.ToString(table.Rows[0]["gp"]);                    //混合   
+                }
+            }
+        }
+
+        protected string GetUserName(int userID)
+        {
+            T_UsersInfo_MDL Mdl = new T_UsersInfo_BLL().GetModel(userID);
+            if (Mdl != null)
+                return Common.ConvertEx.ToString(Mdl.UserName);
+            else
+                return "";
+        }
+    }
+}

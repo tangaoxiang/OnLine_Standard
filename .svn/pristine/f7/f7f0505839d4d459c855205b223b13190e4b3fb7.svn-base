@@ -1,0 +1,250 @@
+﻿var sumDivHead = 400;//document.write(arrayHeadId.pop());/alert(arrayHeadId.pop());
+var filesPath = ""; //框架文件目录路径
+var lastHeadId = "";
+var llastHeadId = "";
+var lastTableId = "";
+var llastTableId = "";
+var arrayHeadId = new Array();
+
+
+
+function getDivHeadLength() {
+    return (document.getElementById("DivHead").childNodes.length);
+}
+
+function IdPop(flag) {
+    for (var i = 0; i <= arrayHeadId.length; i++) {
+        lastHeadId = arrayHeadId.pop();
+        //alert(document.getElementById(lastHeadId).id);
+        if (document.getElementById(lastHeadId)) {
+            lastTableId = "DivTable" + lastHeadId.substr(7);
+            break;
+        }
+    }
+    for (var j = 0; j <= arrayHeadId.length; j++) {
+        llastHeadId = arrayHeadId.pop();
+        if (document.getElementById(llastHeadId)) {
+            llastTableId = "DivTable" + llastHeadId.substr(7);
+            arrayHeadId.push(llastHeadId);
+            break;
+        }
+    }
+    arrayHeadId.push(lastHeadId);
+    if (flag == 1) { return lastHeadId; }
+    else if (flag == 2) { return lastTableId; }
+    else if (flag == 3) { return llastHeadId; }
+    else if (flag == 4) { return llastTableId; }
+    else { return llastTableId; }
+}
+
+function CreateTitle(obj, HeadId, frameFile) {
+    var itemlength = 8;
+    if (window.navigator.appName == "Netscape") {
+        itemlength = 9;
+    }
+    // 	alert(getDivHeadLength());
+    if (getDivHeadLength() < itemlength) {
+        var frameFile = filesPath + frameFile;
+        var passId = true;
+        var tempGetHeadId = document.getElementById("DivHead" + HeadId);
+        var tempGetTableId = document.getElementById("DivTable" + HeadId);
+        if (tempGetHeadId) {
+            for (i = 1; i <= sumDivHead; i++) {
+                var tempNewId = "DivHead" + i;
+                if (tempNewId == tempGetHeadId.id) {
+                    passId = false;
+                    break;
+                }
+            }
+        }
+        //alert(passId);
+        if (passId) {
+
+            if (window.navigator.appName == "Netscape") {
+                oNewDivH = document.createElement("div");
+                document.getElementById('DivHead').appendChild(oNewDivH);
+                oNewDivH.id = "DivHead" + HeadId;
+                arrayHeadId.push(oNewDivH.id);
+                oNewDivT = document.createElement("div");
+                document.getElementById("DivTable").appendChild(oNewDivT);
+                oNewDivT.id = "DivTable" + HeadId;
+
+
+                var HeadHtml = "<table cellpadding='0' cellspacing='0' style='cursor:pointer;'  ><tr><td class='Tab_td1'></td><td class='Tab_td2' onClick=\"ShowDiv('" + oNewDivH.id + "')\">" + obj + "&nbsp;&nbsp;</td><td class='Tab_td3' onClick=\"RemoveTitle('" + oNewDivH.id + "','" + oNewDivT.id + "')\"></td></tr></table>";
+
+                var TableHtml = "<br/><iframe scrolling='auto'   frameborder='0'  width='100%'  height='100%'  src='" + frameFile + "'></iframe>";
+
+                var len1 = oNewDivH.ownerDocument.createRange();
+                if (oNewDivH.firstChild) {
+                    len1.setStartBefore(oNewDivH.firstChild);
+                    var frag = len1.createContextualFragment(HeadHtml);
+                    oNewDivH.insertBefore(frag, oNewDivH.firstChild);
+                }
+                else {
+                    oNewDivH.innerHTML = HeadHtml;
+                }
+
+                var len2 = oNewDivT.ownerDocument.createRange();
+                if (oNewDivT.firstChild) {
+                    len2.setStartBefore(oNewDivT.firstChild);
+                    var frags = len2.createContextualFragment(TableHtml);
+                    oNewDivT.insertBefore(frags, oNewDivT.firstChild);
+                }
+                else {
+                    oNewDivT.innerHTML = TableHtml;
+                }
+            }
+            else {
+                oNewDivH = document.createElement("div");
+                DivHead.appendChild(oNewDivH);// DivHead
+                oNewDivH.id = "DivHead" + HeadId;
+                arrayHeadId.push(oNewDivH.id);
+                oNewDivT = document.createElement("div");
+                DivTable.appendChild(oNewDivT); //DivTable
+                oNewDivT.id = "DivTable" + HeadId;
+                //创建标题
+
+                var HeadHtml = "<table cellpadding='0' cellspacing='0'  ><tr><td class='Tab_td1'></td><td class='Tab_td2'  onClick='ShowDiv(" + oNewDivH.id + ")'>" + obj + "&nbsp;&nbsp;</td><td class='Tab_td3' onClick='RemoveTitle(" + oNewDivH.id + "," + oNewDivT.id + ")'></td></tr></table>";
+                oNewDivH.insertAdjacentHTML("afterBegin", HeadHtml);//创建内容
+                var TableHtml = "<iframe scrolling='auto'   frameborder='0'  width='100%'  height='100%'  src='" + frameFile + "'></iframe>";
+                oNewDivT.insertAdjacentHTML("afterBegin", TableHtml);
+            }
+
+
+
+            //alert(TableHtml);
+        } else {
+            arrayHeadId.push(tempGetHeadId.id);
+            //修改标题
+            var HeadHtml = "<table cellpadding='0' cellspacing='0'  ><tr><td class='Tab_td1'></td><td class='Tab_td2' onclick='ShowDiv(" + tempGetHeadId.id + ")'>" + obj + "</td><td class='Tab_td3' onClick='RemoveTitle(" + tempGetHeadId.id + "," + tempGetTableId.id + ")'></td></tr></table>";
+            tempGetHeadId.innerHTML = HeadHtml;//修改內容
+            var TableHtml = "<iframe scrolling='auto'  width='100%' height='100%'   frameborder=0  src='" + frameFile + "'></iframe>";
+            tempGetTableId.innerHTML = TableHtml;
+        }
+
+        ShowDiv();
+    }
+    else {
+        alert('最多可以打开八个页面.\n\n如需打开新页面,请先关闭已打开的页面.');
+        return false;
+    }
+
+}
+
+function RemoveTitle(HeadId, TableId) {
+    if (window.navigator.appName == "Netscape") {
+        var HeadId = document.getElementById(HeadId);
+        var TableId = document.getElementById(TableId);
+
+        if (HeadId != null && TableId != null) {
+            if (HeadId.id == IdPop(1) && getDivHeadLength() > 1) {
+                arrayHeadId.pop();
+            }
+            ShowDiv();
+            HeadId.parentNode.removeChild(HeadId);
+            TableId.parentNode.removeChild(TableId);
+
+            //	        HeadId.removeNode(true);
+            //	        TableId.removeNode(true);
+
+            var temparray = new Array();
+            var headlen = getDivHeadLength();
+            //alert(getDivHeadLength());
+            for (var i = 0; i < arrayHeadId.length; i++) {
+                if (HeadId.id != arrayHeadId[i] && headlen < 6) {
+                    temparray.push(arrayHeadId[i]);
+                }
+            }
+            arrayHeadId = temparray;
+
+            if (getDivHeadLength() == 0) {
+                arrayHeadId = new Array();
+            }
+        }
+    }
+    else {
+        if (HeadId.id == IdPop(1) && getDivHeadLength() > 1) {
+            arrayHeadId.pop();
+        }
+        ShowDiv();
+        HeadId.removeNode(true);
+        TableId.removeNode(true);
+
+        var temparray = new Array();
+        var headlen = getDivHeadLength();
+        //alert(getDivHeadLength());
+        for (var i = 0; i < arrayHeadId.length; i++) {
+            if (HeadId.id != arrayHeadId[i] && headlen < 6) {
+                temparray.push(arrayHeadId[i]);
+            }
+        }
+        arrayHeadId = temparray;
+
+        if (getDivHeadLength() == 0) {
+            arrayHeadId = new Array();
+        }
+    }
+
+    //alert(getDivHeadLength());
+}
+
+function ShowDiv(HeadId) {
+    if (window.navigator.appName == "Netscape") {
+        var HeadId = document.getElementById(HeadId);
+
+        if (HeadId && HeadId.id != document.getElementById(IdPop(1)).id) {
+            arrayHeadId.push(HeadId.id);
+        }
+        if (!HeadId && IdPop(1) == IdPop(3) && getDivHeadLength() > 1) {
+            arrayHeadId.pop();
+        }
+        ChangClass();
+
+        if (document.getElementById(IdPop(4))) {
+            document.getElementById(IdPop(4)).style.zIndex = 3;
+            document.getElementById(IdPop(4)).style.display = 'none';
+        }
+        if (document.getElementById(IdPop(2))) {
+            document.getElementById(IdPop(2)).style.zIndex = 99;
+            document.getElementById(IdPop(2)).style.display = '';
+        }
+    }
+
+    if (HeadId && HeadId.id != document.getElementById(IdPop(1)).id) {
+        arrayHeadId.push(HeadId.id);
+    }
+    if (!HeadId && IdPop(1) == IdPop(3) && getDivHeadLength() > 1) {
+        arrayHeadId.pop();
+    }
+    ChangClass();
+
+    if (document.getElementById(IdPop(4))) {
+        document.getElementById(IdPop(4)).style.zIndex = 3;
+    }
+    if (document.getElementById(IdPop(2))) {
+        document.getElementById(IdPop(2)).style.zIndex = 99;
+    }
+}
+
+function ChangClass() {
+    var Obj = document.getElementById(IdPop(1));
+    var lastObj = document.getElementById(IdPop(3));//alert(Obj.childNodes[0].childNodes[0].childNodes[0].childNodes[0].className);
+    if (Obj) {
+        Obj.childNodes[0].childNodes[0].childNodes[0].childNodes[0].className = "Tab_td1";
+        Obj.childNodes[0].childNodes[0].childNodes[0].childNodes[1].className = "Tab_td2";
+        Obj.childNodes[0].childNodes[0].childNodes[0].childNodes[2].className = "Tab_td3";
+        RefreshMyTask(IdPop(1));
+    }
+    if (lastObj && getDivHeadLength() > 1) {
+        lastObj.childNodes[0].childNodes[0].childNodes[0].childNodes[0].className = "td2_Tab_td1";
+        lastObj.childNodes[0].childNodes[0].childNodes[0].childNodes[1].className = "td2_Tab_td2";
+        lastObj.childNodes[0].childNodes[0].childNodes[0].childNodes[2].className = "td2_Tab_td3";
+    }
+}
+
+function RefreshMyTask(HeadId) {
+    if (HeadId == "DivHead181" && $('#DivTable181').length > 0) {//判断当前是我的任务,则刷新
+        var framre = $('#DivTable181').children().eq(0);
+        $(framre).attr('src',$(framre).attr('src'));
+    }
+}

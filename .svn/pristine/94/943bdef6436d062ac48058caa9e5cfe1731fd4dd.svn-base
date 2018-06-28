@@ -1,0 +1,22 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Main.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.Main.Main" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>阜阳市"互联网+"建设工程文件跟踪管理服务系统</title>
+</head>
+<frameset rows="51,*" frameborder="0" framespacing="0" border="0">
+        <frame src="top.aspx" name="top"  marginwidth="0" marginheight="0" noresize scrolling="no" />
+        <frameset cols="179,4,*" framespacing="0" frameborder="0" border="0" id="oa_frame">
+            <frame name="left"  src="Left.aspx" marginwidth="0" marginheight="0" noresize style="overflow-x:hidden" scrolling="no">
+            <frame name="middle"  src="middle.html" marginwidth="0" marginheight="0" noresize style="overflow-x:hidden" scrolling="no">
+            <frame name="Content" id="Content"  scrolling="NO" frameborder="NO" noresize  style="border: solid 1px #99BBE8;"  src="Content.aspx" >
+        </frameset>  
+<body>
+    <form id="form1" runat="server">
+     
+    </form>
+</body>
+</html>

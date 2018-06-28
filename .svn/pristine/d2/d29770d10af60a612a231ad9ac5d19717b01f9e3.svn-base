@@ -1,0 +1,33 @@
+body
+{
+    margin-top: 0px; 
+    margin-right: 0px; 
+    margin-bottom: 0px; 
+    margin-left: 0px; 
+    padding-top: 0px; 
+    padding-right: 0px; 
+    padding-bottom: 0px; 
+    padding-left: 0px; 
+    border-top-width: 0px; 
+    border-right-width: 0px; 
+    border-bottom-width: 0px; 
+    border-left-width: 0px;
+}
+
+A:link { color: #0000FF; TEXT-DECORATION: none;}
+A:visited { COLOR: #0000FF; TEXT-DECORATION:none;}
+A:active  { COLOR: #3333ff; TEXT-DECORATION: none;}
+A:hover   { COLOR: #ff0000; TEXT-DECORATION: none;}
+
+
+table
+{  
+border-collapse: collapse;
+}
+
+td {  
+font-size: 10pt;
+
+}
+
+

@@ -1,0 +1,205 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.CBLL;
+using DigiPower.Onlinecol.Standard.Common;
+
+//文件登记
+namespace DigiPower.Onlinecol.Standard.Web.WorkFlow
+{
+    public partial class WjdjOther : PageBase
+    {
+        T_FileList_BLL fileListBLL = new T_FileList_BLL();
+        /// <summary>
+        /// 工程ID
+        /// </summary>
+        public string singleProjectID = string.Empty;
+
+        /// <summary>
+        /// 工程编号
+        /// </summary>
+        public string singleProjectNo = string.Empty;
+
+        /// <summary>
+        /// 工程类型
+        /// </summary>
+        public string projecttype = string.Empty;
+
+        /// <summary>
+        /// 流程ID
+        /// </summary>
+        public string workFlowID = string.Empty;
+
+        public bool IsRollBack = false;
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = 20;
+
+        public string EditFlag = "1";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(Wjdj));
+            singleProjectID = DNTRequest.GetQueryString("SingleProjectID");
+            MyAddInit();
+
+            if (Common.Session.GetSessionInt("CompanyType") == SystemSet._AJCOMPANYINFO || Common.Session.GetSessionInt("CompanyType") == SystemSet._ZJCOMPANYINFO)
+            {
+                EditFlag = "0";
+            }
+            if (!IsPostBack)
+            {
+                Status.DataBindEx(true);
+                ctrlProjectBaseInfo1.DataBindEx(singleProjectID);
+                ctrlDropDownFileList.DataBindEx(Common.ConvertEx.ToInt(singleProjectID), "0", "BH");
+
+                BindGridView(1);
+            }
+        }
+
+        //绑定归档目录
+        private void BindGridView(int pageIndex)
+        {
+            BLL.T_SingleProject_BLL spBLL = new T_SingleProject_BLL();
+            Model.T_SingleProject_MDL spMDL = spBLL.GetModel(Common.ConvertEx.ToInt(singleProjectID));
+            singleProjectNo = spMDL.gcbm;
+
+            //取当前工程的所有归档目录
+            string strWhere = " SingleProjectID=" + singleProjectID;
+
+            //不显示声像节点 //jdk 2014.11.16
+            strWhere += " AND BH not like '%S%' ";
+
+            if (TextBox1.Text != "")
+            {
+                strWhere += " AND TITLE LIKE '%" + TextBox1.Text + "%'";
+            }
+            if (Status.SelectValue != "0" && Status.SelectValue != "")
+            {
+                strWhere += " AND Status=" + Status.SelectValue;
+            }
+            if (ctrlDropDownFileList.SelectValue != "" && ctrlDropDownFileList.SelectValue != "0")
+            {
+                strWhere += " AND BH like '" + ctrlDropDownFileList.SelectValue + "%' ";
+            }
+            if (EditFlag == "0")
+            {
+                strWhere += " AND DefaultCompanyType =" + SystemSet._JSCOMPANYINFO + " ";
+            }
+            else
+            {
+                strWhere += " AND DefaultCompanyType =" + SystemSet._SGCOMPANY + " ";
+            }
+
+            DataTable dt = fileListBLL.GetListPaging(strWhere, pageSize, pageIndex, out itemCount); ;
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+
+            gvData.DataSource = dt;
+            gvData.DataBind();
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGridView(1);
+        }
+
+        protected void gvData_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                System.Drawing.Color col = System.Drawing.Color.White;
+                DataRowView view = e.Row.DataItem as DataRowView;
+
+                CBLL.ColorList colorList = new ColorList();
+                col = colorList.GetMyColor(ConvertEx.ToString(view["Status"]));
+                e.Row.BackColor = col;
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    if (!ConvertEx.ToBool(view["IsFolder"]))
+                    {
+                        e.Row.Cells[i].BackColor = col;
+                    }
+                }
+
+                if (Common.ConvertEx.ToBool(view["IsFolder"]))
+                {
+                    for (int i = 1; i < e.Row.Cells.Count; i++)
+                    {
+                        foreach (Control control in e.Row.Cells[i].Controls)
+                        {//禁用文件节点   
+                            if (control is HtmlControl)
+                            {
+                                if (control is HtmlInputText)
+                                {
+                                    ((HtmlInputText)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((HtmlControl)control).Disabled = true;
+                            }
+                            if (control is WebControl)
+                            {
+                                if (control is TextBox)
+                                {
+                                    ((TextBox)control).Attributes.Add("style", "border:solid 0px");
+                                }
+
+                                ((WebControl)control).Enabled = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public string SetTextDisabled(object isFolder)
+        {
+            if (ConvertEx.ToBool(isFolder))
+                return " disabled='disabled' style='border:solid 0px;' ";
+            else
+                return "";
+        }
+
+        public string SetTextDisabledForCompanyType()
+        {
+            if (EditFlag == "0")
+                return " disabled='disabled' style='border:solid 0px;' ";
+            else
+                return "";
+        }
+    }
+}

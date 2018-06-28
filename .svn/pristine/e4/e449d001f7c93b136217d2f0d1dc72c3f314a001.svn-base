@@ -1,0 +1,196 @@
+﻿using System;
+using System.Data;
+using System.Text;
+using System.Data.SqlClient;
+using DigiPower.Onlinecol.Standard.DbUtility;//请先添加引用
+
+namespace DigiPower.Onlinecol.Standard.DAL
+{
+    public class T_JiaoJieDengJi_DAL
+    {
+        public T_JiaoJieDengJi_DAL()
+        { }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into T_JiaoJieDengJi(");
+            strSql.Append("PROJ_NO,PROJ_NAME,JSDW,AJH,JS,AREA,CREATE_DT,lrr,ORDER_INDEX)");
+            strSql.Append(" values (");
+            strSql.Append("@gcbh,@gcmc,@jsdw,@ajh,@js,@mj,@sj,@lrr,@ORDER_INDEX)");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+                    new SqlParameter("@gcbh", SqlDbType.VarChar,50),
+                    new SqlParameter("@gcmc", SqlDbType.VarChar,250),
+                    new SqlParameter("@jsdw", SqlDbType.VarChar,500),
+                    new SqlParameter("@ajh", SqlDbType.VarChar ,100),
+                    new SqlParameter("@js", SqlDbType.Int ,40),
+                    new SqlParameter("@mj", SqlDbType.Float ,8),
+		            new SqlParameter("@sj", SqlDbType.VarChar,10),
+                    new SqlParameter("@lrr", SqlDbType.VarChar,50),
+                    new SqlParameter("@ORDER_INDEX", SqlDbType.Int,8)};
+            parameters[0].Value = model.PROJ_NO;
+            parameters[1].Value = model.PROJ_NAME;
+            parameters[2].Value = model.JSDW;
+            parameters[3].Value = model.AJH;
+            parameters[4].Value = model.JS;
+            parameters[5].Value = model.AREA;
+            parameters[6].Value = DateTime.Now;
+            parameters[7].Value = model.LRR;
+            parameters[8].Value = model.ORDER_INDEX;
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+        }
+
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL model)
+        {//PROJ_NO,PROJ_NAME,JSDW,AJH,JS,AREA,CREATE_DT,lrr,ORDER_INDEX
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("UPDATE T_JiaoJieDengJi SET ");
+            strSql.Append("PROJ_NO=@PROJ_NO,");
+            strSql.Append("PROJ_NAME=@PROJ_NAME,");
+            strSql.Append("JSDW=@JSDW,");
+            strSql.Append("AJH=@AJH,");
+            strSql.Append("JS=@JS,");
+            strSql.Append("AREA=@AREA,");
+            strSql.Append("CREATE_DT=@CREATE_DT,");
+            strSql.Append("LRR=@LRR,");
+            strSql.Append("ORDER_INDEX=@ORDER_INDEX");
+            strSql.Append(" WHERE SID=@SID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@PROJ_NO", SqlDbType.VarChar,256),
+					new SqlParameter("@PROJ_NAME", SqlDbType.NVarChar,256),
+					new SqlParameter("@JSDW", SqlDbType.VarChar,256),
+                    new SqlParameter("@AJH", SqlDbType.VarChar,64),
+                    new SqlParameter("@JS", SqlDbType.Int,20),
+                    new SqlParameter("@AREA", SqlDbType.Float,20),
+                    new SqlParameter("@CREATE_DT", SqlDbType.DateTime,8),
+                    new SqlParameter("@LRR", SqlDbType.VarChar,32),
+                    new SqlParameter("@ORDER_INDEX", SqlDbType.Int,8),
+                    new SqlParameter("@SID", SqlDbType.Int,8)};
+            parameters[0].Value = model.PROJ_NO;
+            parameters[1].Value = model.PROJ_NAME;
+            parameters[2].Value = model.JSDW;
+            parameters[3].Value = model.AJH;
+            parameters[4].Value = model.JS;
+            parameters[5].Value = model.AREA;
+            parameters[6].Value = model.CREATE_DT;
+            parameters[7].Value = model.LRR;
+            parameters[8].Value = model.ORDER_INDEX;
+            parameters[9].Value = model.SID;
+
+            DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+        }
+
+        /// <summary>
+        /// 根据单位取工程信息
+        /// </summary>
+        /// <param name="projectid"></param>
+        /// <returns></returns>
+        public DataSet GetList(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(" select * from  T_JiaoJieDengJi WHERE 1=1 ");
+            if (strWhere != "")
+            {
+                strSql.Append(strWhere);
+            }
+
+            strSql.Append(" Order By ORDER_INDEX DESC");
+
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        public DataSet GetList(string strWhere, string orderStr)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(" select * from  T_JiaoJieDengJi WHERE 1=1 ");
+            if (strWhere != "")
+            {
+                strSql.Append(strWhere);
+            }
+
+            strSql.Append(" Order By " + orderStr);
+
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        public DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL GetMaxMDL()
+        {
+            int SID = 0;
+            string strSql = "SELECT TOP 1 SID FROM T_JiaoJieDengJi ORDER BY ORDER_INDEX DESC";
+            object obj = DbHelperSQL.GetSingle(strSql.ToString());
+            if (obj == null)
+            {
+                return null;
+            }
+            else
+            {
+                SID = Convert.ToInt32(obj);
+                DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL mdl = GetModel(SID);
+                return mdl;
+            }
+        }
+
+        public DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL GetModel(int SID)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 * from T_JiaoJieDengJi ");
+            strSql.Append(" where SID=@SID ");
+            SqlParameter[] parameters = {
+					new SqlParameter("@SID", SqlDbType.Int,8)};
+            parameters[0].Value = SID;
+
+            DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL model = new DigiPower.Onlinecol.Standard.Model.T_JiaoJieDengJi_MDL();
+            DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                if (ds.Tables[0].Rows[0]["SID"].ToString() != "")
+                {
+                    model.SID = int.Parse(ds.Tables[0].Rows[0]["SID"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["PROJ_NO"].ToString() != "")
+                {
+                    model.PROJ_NO = ds.Tables[0].Rows[0]["PROJ_NO"].ToString();
+                }
+                if (ds.Tables[0].Rows[0]["LRR"].ToString() != "")
+                {
+                    model.LRR = ds.Tables[0].Rows[0]["LRR"].ToString();
+                }
+                model.PROJ_NAME = ds.Tables[0].Rows[0]["PROJ_NAME"].ToString();
+                model.JSDW = ds.Tables[0].Rows[0]["JSDW"].ToString();
+                if (ds.Tables[0].Rows[0]["ORDER_INDEX"].ToString() != "")
+                {
+                    model.ORDER_INDEX = int.Parse(ds.Tables[0].Rows[0]["ORDER_INDEX"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["JS"].ToString() != "")
+                {
+                    model.JS = int.Parse(ds.Tables[0].Rows[0]["JS"].ToString());
+                }
+                model.AJH = ds.Tables[0].Rows[0]["AJH"].ToString();
+                if (ds.Tables[0].Rows[0]["AREA"].ToString() != "")
+                {
+                    model.AREA = decimal.Parse(ds.Tables[0].Rows[0]["AREA"].ToString());
+                }
+                if (ds.Tables[0].Rows[0]["CREATE_DT"].ToString() != "")
+                {
+                    model.CREATE_DT = DateTime.Parse(ds.Tables[0].Rows[0]["CREATE_DT"].ToString());
+                }
+                return model;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+}

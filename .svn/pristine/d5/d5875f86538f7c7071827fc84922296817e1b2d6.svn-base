@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <Columns isShow="1">
+    <FILE_PATH title="文件路径"></FILE_PATH>
+    <GROUP_SID title="组ID"></GROUP_SID>
+    <PHOTO_TITLE title="照片提名"></PHOTO_TITLE>
+    <SHOOT_LOCALE title="拍摄地点"></SHOOT_LOCALE>
+    <SHOOT_USER title="拍摄人"></SHOOT_USER>
+    <SHOOT_DATE title="拍摄日期"></SHOOT_DATE>
+    <FILE_NAME title="电子文件卷内页数"></FILE_NAME>
+    <PHOTO_NOTE title="编制单位"></PHOTO_NOTE>
+  </Columns>
+
+  <SearchSql>
+    <![CDATA[
+        select 
+        a.FileListID,
+        a.ArchiveID,  
+        a.Title,
+        a.RootPath,
+        a.wjbt,
+        
+        (cast(a.FileListID as varchar)+'\\\\'+a.wjbt) as FILE_PATH,
+        a.PID as GROUP_SID,
+        a.Title as PHOTO_TITLE,
+        a.psdd as SHOOT_LOCALE,
+        a.psz as SHOOT_USER,
+        (CASE WHEN a.pssj='' THEN '' ELSE CAST(a.pssj AS date) end) as SHOOT_DATE,
+        a.wjbt as FILE_NAME,
+        a.bz as PHOTO_NOTE
+        from T_FileList a 
+        where a.bh like 'S%' {0}
+        order by a.OrderIndex asc 
+   ]]>
+  </SearchSql>
+</SqlList>

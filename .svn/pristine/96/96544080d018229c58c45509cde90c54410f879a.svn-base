@@ -1,0 +1,304 @@
+<%@ Page Language="C#" MasterPageFile="~/SiteParent.Master" AutoEventWireup="true" CodeBehind="MyTaskList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.MyTaskList" %>
+
+<%@ Register Src="~/CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc1" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
+    <script language="javascript" type="text/javascript">
+        function getNewUrl() {
+            var url = window.location.href;
+            if ($('#ctl00_Main_gcmc_TextBox1').val() != "") {
+                url = Common.urlreplace(url, 'Main_gcmc', escape($('#ctl00_Main_gcmc_TextBox1').val()));
+            }
+            if ($('#ctl00_Main_gcbm_TextBox1').val() != "") {
+                url = Common.urlreplace(url, 'Main_gcbm', escape($('#ctl00_Main_gcbm_TextBox1').val()));
+            }
+            if ($('#CurrentPageIndex').text() != "") {
+                url = Common.urlreplace(url, 'PageIndex', $('#CurrentPageIndex').text());
+            }
+            url = Common.urlreplace(url, 'rn', Math.random());
+            return url;
+        }
+
+        //查看工程信息
+        function btnLookSingle() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                window.top.parent.ParentOpenDiv('工程[' + keyList[4] + ']信息-预览', '../CompanyManage/CompanyReg3_' + Common.getFileTypeForProjectType(keyList[1]) + 'Edit.aspx?action=' + PageState.View + '&SingleProjectID=' + keyList[0] + '&rn=' + Math.random() + '&ProjectType=' + keyList[1], '900px', '90%');
+            }
+        }
+        function BtnSubmit() {//提交
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定提交工程到下一环节吗？', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        var len = MyTaskList.SubMitProject(keyList[0], keyList[1], keyList[3]).value;
+                        if (len == ResultState.Success) {
+                            layer.alert("已提交到下一流程!", { btnAlign: 'c' }, function (index) {
+                                layer.close(index);
+                                window.location.href = getNewUrl();
+                            });
+                        } else {
+                            alert(len);
+                        }
+                    }
+                });
+            }
+        }
+        function BtnAccept() {//受理
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定现在受理吗？', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (recv) {
+                        Common.fnLayerAlert("工程已被受理状态，不可以重复受理！");
+                    } else {
+                        var len = MyTaskList.AcceptProject(keyList[0], keyList[3]).value;
+                        if (len == ResultState.Success) {
+                            window.location.href = getNewUrl();
+                        } else {
+                            Common.fnLayerAlert("对不起，当前选项不可以受理。可能是已被受理过！");
+                        }
+                    }
+                });
+            }
+        }
+        function BtnRollBack() {//退回
+            if (Common.isRadioCheck()) {
+                layer.confirm('确定将工程退回到上一环节吗？', function () {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        var len = MyTaskList.ReturnProject(keyList[0]).value;
+                        if (len == ResultState.Success) {
+                            window.location.href = 'MyTaskList.aspx?WorkFlowID=' + keyList[1];
+                        } else {
+                            Common.fnLayerAlert("退回失败，请检查数据！");
+                        }
+                    }
+                });
+            }
+        }
+        //报建确认
+        function BtnRwfp() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    Common.fnLayerAlert("请先受理!");
+                } else {
+                    layer.open({
+                        type: 2,
+                        title: '工程报建确认',
+                        maxmin: false,
+                        resize: false,
+                        shadeClose: false,
+                        area: ['100%', '100%'],
+                        content: "../WorkFlow/rwfp.aspx?SingleProjectID=" + keyList[0]
+                            + "&WorkFlowID=" + keyList[1] + "&rn=" + Math.random(),
+                        end: function () {
+                            if ($("#hidOpenFlag").val() == "1") {
+                                window.location.href = getNewUrl();
+                                layer.close(index);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        //文件登记
+        function BtnWjdj() {
+            if (Common.isRadioCheck()) {
+                var keyList = Common.getRadioKeyToArray();
+                var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                if (!recv) {
+                    Common.fnLayerAlert("请先受理!");
+                } else {
+                    window.location.href = "../WorkFlow/wjdj.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                        keyList[1] + "&ModelBH=<%=workFlowCode%>&rn=" + Math.random();
+                    }
+                }
+            }
+            //在线预验收
+            function BtnZxyys() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        window.location.href = "../WorkFlow/zxyys.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                            keyList[1] + "&ModelBH=<%=workFlowCode%>&rn=" + Math.random();
+                    }
+                }
+            }
+            //接收整理
+            function BtnJszl() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        window.location.href = "../WorkFlow/ZJList.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                                    keyList[1] + "&ModelBH=<%=workFlowCode%>&rn=" + Math.random();
+                    }
+                }
+            }
+            //窗口接收-移交入库
+            function BtnIsArchiveUserClick() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        window.location.href = "../WorkFlow/WFArchiveList.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                                    keyList[1] + "&WorkFlowCode=" + keyList[6] + "&ModelBH=<%=workFlowCode%>&rn=" + Math.random();
+                    }
+                }
+            }
+            //声像管理
+            function BtnImageManage() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        window.location.href = "../WorkFlow/ImageWjdj.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                                    keyList[1] + "&WorkFlowCode=" + keyList[6] + "&action=" + PageState.Add + "&rn=" + Math.random();
+                    }
+                }
+            }
+            //声像预览
+            function BtnImageView() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    window.location.href = "../WorkFlow/ImageWjdj.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                    keyList[1] + "&WorkFlowCode=" + keyList[6] + "&action=" + PageState.View + "&rn=" + Math.random();
+                }
+            }
+            //声像审核
+            function BtnImageCheck() {
+                if (Common.isRadioCheck()) {
+                    var keyList = Common.getRadioKeyToArray();
+                    var recv = MyTaskList.CheckRecvStatus(keyList[0], keyList[1]).value;
+                    if (!recv) {
+                        Common.fnLayerAlert("请先受理!");
+                    } else {
+                        window.location.href = "../WorkFlow/ImageWjdj.aspx?SingleProjectID=" + keyList[0] + "&WorkFlowID=" +
+                             keyList[1] + "&WorkFlowCode=" + keyList[6] + "&action=" + PageState.Check + "&rn=" + Math.random();
+                    }
+                }
+            }
+
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Main" runat="server">
+    <input type="hidden" id="hidOpenFlag" />
+    <input type="hidden" id="HidworkFlowID" value="<%=workFlowID %>" />
+    <input type="hidden" id="HidworkFlowCode" value="<%=workFlowCode %>" />
+
+    <div class="main-content">
+        <div class="content-box-search">
+            <table id="c1">
+                <tr>
+                    <td class="condition">工程名称：</td>
+                    <td class="c2">
+                        <uc1:ctrlTextBoxEx runat="server" ID="gcmc" MaxLength="20" />
+                    </td>
+                    <td class="condition">工程编号：</td>
+                    <td class="c2">
+                        <uc1:ctrlTextBoxEx runat="server" ID="gcbm" MaxLength="20" />
+                    </td>
+                    <td class="ss" style="text-align: left; width: 170px">
+                        <asp:Button ID="btnSearch" runat="server" Text=" 查询 " OnClick="btnSearch_Click" />
+                        <input type="reset" value="重 置" />
+                    </td>
+
+                    <td class="c2"></td>
+                    <td class="ss"></td>
+                </tr>
+            </table>
+            <div class="ss"></div>
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <div class="anl" id="anlButtonList">
+                        <input type="button" id="MrcBtnLookSingle" title="工程信息" onclick="btnLookSingle()" value="工程信息" />
+                        <input type="button" id="MrcBtnSubmit" title=" 提交 " onclick="BtnSubmit()" value="提交" />
+                        <input type="button" id="MrcBtnAccept" title="受理" onclick=" BtnAccept()" value="受理" />
+                        <input type="button" id="MrcBtnRollBack" title="退回" onclick=" BtnRollBack()" value="退回" />
+
+                        <input type="button" id="MrcBtnRwfp" title="报建确认" onclick=" BtnRwfp()" value="报建确认" />
+                        <input type="button" id="MrcBtnWjdj" title="文件登记" onclick="BtnWjdj()" value="文件登记" />
+                        <input type="button" id="MrcBtnImageManage" title="声像管理" onclick="BtnImageManage()" value="声像管理" />
+
+                        <input type="button" id="MrcBtnZxyys" title="在线预验收" onclick="BtnZxyys()" value="在线预验收" />
+                        <input type="button" id="MrcBtnJszl" title="接收整理" onclick="BtnJszl()" value="接收整理" />
+                        <input type="button" id="MrcBtnCkjs" title="窗口接收" onclick="BtnIsArchiveUserClick()" value="窗口接收" />
+                        <input type="button" id="MrcBtnYwsh" title="业务审核" onclick="BtnIsArchiveUserClick()" value="业务审核" />
+                        <input type="button" id="MrcBtnShqd" title="审核确定" onclick="BtnIsArchiveUserClick()" value="审核确定" />
+                        <input type="button" id="MrcBtnYjrk" title="移交入库" onclick="BtnIsArchiveUserClick()" value="移交入库" />
+                        <input type="button" id="MrcBtnImageView" title="声像预览" onclick="BtnImageView()" value="声像预览" />
+                        <input type="button" id="MrcBtnImageCheck" title="声像审核" onclick="BtnImageCheck()" value="声像审核" />
+
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="20px"></th>
+                                <th width="90px">项目类型</th>
+                                <th width="70px">工程编号</th>
+                                <th>工程名称</th>
+                                <th width="150px">规划许可证号</th>
+                                <th width="150px">施工许可证号</th>
+                                <th width="60px">受理状态</th>
+                                <th width="70px">受理时间</th>
+                                <%=String.Compare(workFlowCode,
+                                DigiPower.Onlinecol.Standard.Web.SystemSet.EumWorkFlowCode.IMPORT_TO.ToString())==0?"<th width=\"55px\">工程状态</th>":""%>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody" id="bodyRepeater">
+                            <asp:Repeater ID="rpData" runat="server">
+                                <ItemTemplate>
+                                    <tr class='<%#(Container.ItemIndex%2==0)?"bg01":""%>'>
+                                        <td>
+                                            <input type="radio" name="radio" value='<%# Eval("SingleProjectID")%>,<%= workFlowID.Trim()%>,<%# Eval("SubmitStatus")%>,<%#Eval("WorkFlowDefineID")%>,<%# Eval("ProjectType")%>,<%# Eval("gcbm")%>,<%= workFlowCode.Trim()%>' />
+                                        </td>
+                                        <td><%#Eval("ProjectTypeName")%></td>
+                                        <td><%#Eval("gcbm")%></td>
+                                        <td><%#Eval("gcmc")%></td>
+                                        <td><%#Eval("ghxkzh")%></td>
+                                        <td><%#Eval("sgxkzh")%></td>
+                                        <td><%# DigiPower.Onlinecol.Standard.Web.PublicModel.GetImageforStatus(DigiPower.Onlinecol.Standard.Common.ConvertEx.ToBool(Eval("SubmitStatus")))%></td>
+                                        <td><%# Eval("SubmitStatus").ToString()!="2"?"":DigiPower.Onlinecol.Standard.Common.ConvertEx.ToDate(Eval("RecvDateTime").ToString()).ToString("yyyy-MM-dd")%></td>
+
+                                        <%#String.Compare(workFlowCode,
+                                            DigiPower.Onlinecol.Standard.Web.SystemSet.EumWorkFlowCode.IMPORT_TO.ToString())==0? 
+                                            "<td>"+DigiPower.Onlinecol.Standard.Web.PublicModel.getSingleProjectStatusNameByStatus(
+                                            DigiPower.Onlinecol.Standard.Common.ConvertEx.ToInt(Eval("Status")))+"</td>":""%>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                    <div class="pagination" style="height: 23px;">
+                        <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                            OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                            FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                            CustomInfoHTML="共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong id='CurrentPageIndex'>%CurrentPageIndex%</strong> 页，共<strong> %PageCount%</strong> 页"
+                            UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                            ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到" AlwaysShow="True">
+                        </webdiyer:AspNetPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

@@ -1,0 +1,98 @@
+﻿using System;
+using System.Data;
+using System.Configuration;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public class ExportData
+    {
+        /// <summary>
+        /// 创建XML文件
+        /// </summary>
+        /// <param name="ds"></param>
+        /// <param name="StrPath"></param>
+        /// <param name="TableName"></param>
+        /// <returns></returns>
+        public bool CreateXml(DataSet ds, string StrPath, string TableName)
+        {
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                try
+                {
+                    string XmlResult = ds.GetXml();
+
+                    if (!String.IsNullOrEmpty(XmlResult))
+                    {
+                        XmlDocument doc = new XmlDocument();
+
+                        doc.LoadXml(XmlResult);
+
+                        doc.Save(StrPath + TableName + ".xml");
+
+                        return true;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 复制文件
+        /// </summary>
+        /// <param name="OldFilePath"></param>
+        /// <param name="NewFilePath"></param>
+        public bool CreateFile(string OldFilePath, string NewFilePath)
+        {
+            if (System.IO.File.Exists(OldFilePath))
+            {
+                try
+                {
+                    System.IO.File.Copy(OldFilePath, NewFilePath, true);
+
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        public bool CreateRAR(string StrPath, string TempPath)
+        {
+            try
+            {
+                if (System.IO.Directory.Exists(TempPath))
+                {
+                    System.IO.Directory.Delete(TempPath, true);
+                }
+
+                System.IO.Directory.CreateDirectory(TempPath);
+
+                UpZipFile zip = new UpZipFile(StrPath, TempPath);
+
+                zip.StartUnZip();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+}

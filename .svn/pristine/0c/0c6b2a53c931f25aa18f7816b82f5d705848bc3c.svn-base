@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+
+//报表预览
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class GCFLML : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                ctrlArchiveTypeDetail1.DataBindEx();
+                ctrlArchiveTypeDetail1.SelectValue = "I0000";
+            }
+        }
+
+        protected void btnSeach_Click(object sender, EventArgs e)
+        {
+            string Report_Name = "城建档案（项目）级分类目录";
+            string reportPath = Server.MapPath("/Report/ReportFiles/" + Report_Name + ".mrt");
+            if (System.IO.File.Exists(reportPath))
+            {
+                StiReport Report = new StiReport();
+                Report.Load(reportPath);//加载报表
+
+                BLL.T_SingleProject_BLL projBLL = new T_SingleProject_BLL();
+                DataSet DS = projBLL.GetAllList(GetSearchString());
+                DataTable dt = DataTableEx.AddDataTableRowNO(DS.Tables[0]);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    Report.RegData("Report", dt);
+                    Report.Compile();
+                    Report.Render();
+                    StiWebViewer1.Report = Report;
+                }
+            }
+        }
+        private string GetSearchString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(" zdh='" + ctrlArchiveTypeDetail1.SelectValue + "'");
+            string gcbm = TXT_GCBM.Text.Trim();
+            string gcmc = TXT_GCMC.Text.Trim();
+            if (!string.IsNullOrEmpty(gcbm) && gcbm.Length > 0)
+            {
+                sb.Append(" and gcbm<>'' and gcbm like '%" + gcbm + "%'");
+            }
+            if (!string.IsNullOrEmpty(gcmc) && gcmc.Length > 0)
+            {
+                sb.Append("and gcmc<>'' and gcmc like '%" + gcmc + "%'");
+            }
+            return sb.ToString();
+        }
+        protected void BTN_EXPORT_Click(object sender, EventArgs e)
+        {
+            //string xlsModel = MapPath(".") + "\\ReportFiles\\xls城建档案工程级分类目录.xls";
+            //BLL.T_SingleProject_BLL projBLL = new T_SingleProject_BLL();
+            //DataSet DS = projBLL.GetAllList(GetSearchString());
+            //string outFileName = "\\ExportExcel\\" + Guid.NewGuid() + ".xls";
+            //Common.ExcelHelper.GCFLML_ToExcel(DS.Tables[0], xlsModel, MapPath(".") + outFileName);
+            //Response.Redirect("/Report" + outFileName.Replace("\\", "/"));
+        }
+    }
+}

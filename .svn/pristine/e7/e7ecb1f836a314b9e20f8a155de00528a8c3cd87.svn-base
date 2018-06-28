@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.CBLL;
+
+//单位添加或修改
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class QuestionTypeAdd : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            MyAddInit();
+            if (!IsPostBack)
+            {
+                ctrlCheckBoxUserList1.DataBindEx2(Common.Session.GetSessionInt("CompanyID"), true);
+
+                switch (Action)
+                {
+                    case "add":
+                        break;
+                    case "edit":
+                        BindInfo(Common.ConvertEx.ToInt(ID));
+                        break;
+                }
+            }
+        }
+
+        void BindInfo(int tID)
+        {
+            T_QuestionType_MDL questionMDL = (new T_QuestionType_BLL()).GetModel(tID);
+            Comm.SetValueToPage(questionMDL, this.tbl);
+            ctrlCheckBoxUserList1.SetSelectValue(questionMDL.ToUserIDList);
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            BLL.T_QuestionType_BLL questionBLL = new DigiPower.Onlinecol.Standard.BLL.T_QuestionType_BLL();
+            Model.T_QuestionType_MDL questionMDL = new T_QuestionType_MDL();
+            if (Action == "add")
+            {
+                questionMDL = (Model.T_QuestionType_MDL)Comm.GetValueToObject(questionMDL, this.tbl);
+                questionMDL.ToUserIDList = ctrlCheckBoxUserList1.GetSelectValue(true);
+                questionMDL.ToUserNameList = ctrlCheckBoxUserList1.GetSelectString(true);
+                questionBLL.Add(questionMDL);
+            }
+            else
+            {
+                questionMDL = questionBLL.GetModel(Common.ConvertEx.ToInt(ID));
+                questionMDL = (Model.T_QuestionType_MDL)Comm.GetValueToObject(questionMDL, this.tbl);
+                questionMDL.ToUserIDList = ctrlCheckBoxUserList1.GetSelectValue(true);
+                questionMDL.ToUserNameList = ctrlCheckBoxUserList1.GetSelectString(true);
+                questionBLL.Update(questionMDL);
+            }
+
+            Response.Redirect("QuestionTypeList.aspx?sqlwhere=" + SqlWhere + "&PageIndex=" + pPageIndex + "");
+        }
+    }
+}

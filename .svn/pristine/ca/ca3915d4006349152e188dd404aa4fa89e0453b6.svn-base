@@ -1,0 +1,119 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ReportStep1.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.ReportStep1" Title="新增/编辑 报表" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownReportType.ascx" TagName="ctrlDropDownReportType"
+    TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .tdCSS
+        {
+            background-color: #FFFFFF;
+            width: 35%;
+        }
+    </style>
+
+    <script language="javascript" type="text/javascript">
+    function GetBack(){
+        window.location.href="ReportList.aspx";
+    }
+    function CheckData(){
+        var objReportCode=document.getElementById("ctl00_ContentPlaceHolder1_ReportCode_TextBox1");
+        if(!checkTxtValue(objReportCode,"")){
+            return false;
+        }
+        
+        var ReportID=document.getElementById("ctl00_ContentPlaceHolder1_HidReportID").value; 
+        var len=ReportStep1.CheckReportCode(ReportID,objReportCode.value).value;
+        if(!len){
+            alert('报表编号必须唯一!');
+            return false;
+        }
+        return true;
+    }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" align="center" style="background-color: #8db2e3">
+        <tr>
+            <td valign="top" style="background-color: White; height: 13px;" background="../images/blue_back3.gif">
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: White;">
+                <table id="tbl" runat="server" width="99%" border="0" align="center" cellpadding="0"
+                    cellspacing="1" style="margin-top: 4px; margin-bottom: 4px; background-color: #c1d4da;">
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                报表类型：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc1:ctrlDropDownReportType ID="ReportTypeID" runat="server" SetWidth="120px" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                报表名称：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc3:ctrlTextBoxEx ID="ReportName" canEmpty="false" CssClass="input" MaxLength="50"
+                                runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                报表编号：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc3:ctrlTextBoxEx ID="ReportCode" canEmpty="false"  CssClass="input" MaxLength="20"
+                                runat="server" />
+                        </td>
+                    </tr>
+    <%--                <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                文件路径：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc3:ctrlTextBoxEx ID="ReportFilePath" canEmpty="false" enabled="false" CssClass="input"
+                                MaxLength="50" runat="server" width="300px" />
+                        </td>
+                    </tr>--%>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                顺序号：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <uc3:ctrlTextBoxEx ID="OrderId" CssClass="input" mode="Int" runat="server" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tdCSS" align="left">
+                            <label>
+                                是否有效：</label>
+                        </td>
+                        <td style="background-color: #FFFFFF" align="left">
+                            <asp:CheckBox ID="IsValid" runat="server" Checked="true" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="35" align="center" valign="middle" style="background-color: White; text-align: center;">
+                <asp:HiddenField ID="HidReportID" runat="server" Value="0" />
+                <input type="button" class="SelectButton" value=" 返回 " style="width: 52px;" onclick="GetBack()" />
+                &nbsp;
+        <%--        <asp:Button ID="btnSave" runat="server" Text=" 保存 " OnClientClick="return CheckData();" class="SelectButton" OnClick="btnSave_Click"
+                    Width="52px" />&nbsp;--%>
+                <asp:Button runat="server" ID="btnNextStep" Text=" 下一步 " Width="52px" class="SelectButton"  OnClientClick="return CheckData();"
+                    OnClick="btnNextStep_Click" />
+            </td>
+        </tr>
+    </table>
+</asp:Content>

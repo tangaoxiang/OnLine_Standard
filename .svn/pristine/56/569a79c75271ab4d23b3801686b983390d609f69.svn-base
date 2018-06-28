@@ -1,0 +1,124 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class SystemList : System.Web.UI.Page
+    {
+        T_SystemInfo_BLL systemInfoBLL = new T_SystemInfo_BLL();
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        int itemCount = 0;
+
+        /// <summary>
+        /// 每页页数
+        /// </summary>
+        int pageSize = SystemSet._PAGESIZE;
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(SystemList));
+            if (!IsPostBack)
+            {
+                BindType();
+
+                if (!String.IsNullOrWhiteSpace(DNTRequest.GetQueryString("drpType")))
+                    drpType.SelectedValue = DNTRequest.GetQueryString("drpType");
+
+                BindGridView(AspNetPager.CurrentPageIndex);
+            }
+        }
+
+        /// <summary>
+        /// 删除数据字典
+        /// </summary>
+        /// <param name="archiveListCellRptID"></param>
+        /// <param name="OrderIndex"></param>
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public void DeleteSystemInfo(string SystemInfoID)
+        {
+            systemInfoBLL.DeleteMore(SystemInfoID);
+        }
+
+        /// <summary>
+        /// 列表选择
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void drpType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 分页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AspNetPager_PageChanged(object sender, EventArgs e)
+        {
+            ViewState["CurrentPageIndex"] = AspNetPager.CurrentPageIndex;
+            BindGridView(AspNetPager.CurrentPageIndex);
+        }
+
+        /// <summary>
+        /// 绑定类型列表
+        /// </summary>
+        private void BindType()
+        {
+            DigiPower.Onlinecol.Standard.BLL.UserOperate bll = new DigiPower.Onlinecol.Standard.BLL.UserOperate();
+
+            DataSet ds = bll.GetDepartmentList("select distinct lower(CurrentType)as CurrentType,(case ISNULL(CurrentTypeCNName,'') when  '' then CurrentType else CurrentTypeCNName end) as CurrentTypeCNName from t_systeminfo order by CurrentType desc");
+
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                this.drpType.DataSource = ds.Tables[0];
+
+                this.drpType.DataTextField = "CurrentTypeCNName";
+                this.drpType.DataValueField = "CurrentType";
+
+                this.drpType.DataBind();
+            }
+        }
+
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView(int pageIndex)
+        {
+            if (ViewState["CurrentPageIndex"] == null && Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex")) > 0)
+            {
+                pageIndex = Common.ConvertEx.ToInt(DNTRequest.GetQueryString("PageIndex"));
+                ViewState["CurrentPageIndex"] = pageIndex;
+            }
+            else
+            {
+                pageIndex = ConvertEx.ToInt(ViewState["CurrentPageIndex"]);
+            }
+            DataTable dt = systemInfoBLL.GetListPaging("1=1 and lower(CurrentType) = '" + this.drpType.SelectedValue.ToLower() + "'", pageSize, pageIndex, out itemCount);
+
+            AspNetPager.AlwaysShow = true;
+            AspNetPager.PageSize = pageSize;
+
+            AspNetPager.RecordCount = itemCount;
+            AspNetPager.CurrentPageIndex = pageIndex;
+
+            rpData.DataSource = dt;
+            rpData.DataBind();
+        }
+    }
+}

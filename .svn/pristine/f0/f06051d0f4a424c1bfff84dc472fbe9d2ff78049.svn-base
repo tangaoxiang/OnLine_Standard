@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <Columns isShow="1">
+    <pointX title="X坐标"></pointX>
+    <pointY title="Y坐标"></pointY>
+    <pointNo title="x序号"></pointNo>
+  </Columns>
+
+  <SearchSql>
+    <![CDATA[
+        select 
+        a.PointID,
+        a.SingleProjectID,     
+        
+        a.OrderIndex as pointNo,
+        a.X as pointX,
+        a.Y as pointY 
+                                                                   
+        from T_SingleProject_Point a inner join T_SingleProject b on a.SingleProjectID=b.SingleProjectID where 1=1 {0}
+        order by a.OrderIndex asc 
+   ]]>
+  </SearchSql>
+</SqlList>

@@ -1,0 +1,176 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+//查询条件新增或保存
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class SearchFieldOrParaAdd : PageBase
+    {
+        #region 属性及构造函数
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                MyAddInit();
+                BindDDL(TableName, new T_Other_BLL().GetDataBaseTableList().Tables[0], "name", "name");//绑定所有表
+                ViewState["ReportCode"] = new T_Report_BLL().GetModel(Common.ConvertEx.ToInt(Common.DNTRequest.GetQueryString("id"))).ReportCode;
+
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    if (Action.ToLower().Equals("add"))
+                    {
+                        ViewState["PageState"] = CommonEnum.PageState.ADD;
+                        BindDDL(FieldName, GetTableToColumn(TableName.SelectedValue), "ColumnName", "ColumnName");//绑定所有列
+                    }
+                    else if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["PageState"] = CommonEnum.PageState.EDIT;
+                        BindDataEx();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 方法
+        protected void BindDataEx()
+        {
+            if (!String.IsNullOrEmpty(Common.DNTRequest.GetQueryString("Search_Para_ID")))
+            {
+                T_Search_Para_MDL tspMdl = new T_Search_Para_BLL().GetModel(Common.ConvertEx.ToInt(Common.DNTRequest.GetQueryString("Search_Para_ID")));
+                T_Search_Field_MDL tsfMdl = new T_Search_Field_BLL().GetModel(Common.ConvertEx.ToInt(tspMdl.Search_Field_ID));
+
+                if (tspMdl != null && tsfMdl != null)
+                {
+                    ViewState["tspMdl"] = tspMdl;
+                    ViewState["tsfMdl"] = tsfMdl;
+                    Comm.SetValueToPage(tspMdl, tbl);
+                    Comm.SetValueToPage(tsfMdl, tbl);
+
+                    if (Common.ConvertEx.ToInt(tsfMdl.Line) == 1) chk_Line.Checked = true;
+                    if (Common.ConvertEx.ToInt(tsfMdl.IsDictionary) == 1) chk_IsDictionary.Checked = true;
+
+                    BindDDL(FieldName, GetTableToColumn(tsfMdl.TableName), "ColumnName", "ColumnName");
+                }
+            }
+        }
+
+        private void BindDDL(DropDownList ddl, DataTable table, string DataTextField, string DataValueField)
+        {
+            if (table != null)
+            {
+                ddl.DataSource = table;
+                ddl.DataTextField = DataTextField;
+                ddl.DataValueField = DataValueField;
+                ddl.DataBind();
+            }
+        }
+
+        public DataTable GetTableToColumn(string tableName)
+        {
+            try
+            {
+                DataTable table = new DataTable();
+                table.Columns.Add(new DataColumn("ColumnName", typeof(String)));
+                table.Columns.Add(new DataColumn("ColumnType", typeof(String)));
+
+                DataSet ds = new T_Other_BLL().GetDataSet("select top(1) * from " + tableName);
+                for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
+                {
+                    DataRow row = table.NewRow();
+                    row["ColumnName"] = ds.Tables[0].Columns[i].ColumnName;
+                    row["ColumnType"] = ds.Tables[0].Columns[i].DataType.ToString();
+                    table.Rows.Add(row);
+                }
+                return table;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region 事件
+
+        //SelectedIndexChanged
+        protected void TableName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //绑定表对应的字段
+            BindDDL(FieldName, GetTableToColumn(TableName.SelectedValue), "ColumnName", "ColumnName");
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReportStep4.aspx?id=" + Common.DNTRequest.GetQueryString("id") + "");
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            T_Search_Para_MDL tspMdl = new T_Search_Para_MDL();
+            T_Search_Field_MDL tsfMdl = new T_Search_Field_MDL();
+
+            if (ViewState["tspMdl"] != null)
+                tspMdl = ViewState["tspMdl"] as T_Search_Para_MDL;
+
+            if (ViewState["tsfMdl"] != null)
+                tsfMdl = ViewState["tsfMdl"] as T_Search_Field_MDL;
+
+
+            tspMdl.ParaTypeCN = ParaType.SelectedItem.Text;
+            tspMdl.CompareTypeCN = CompareType.SelectedItem.Text;
+            tsfMdl.ReportCode = Common.ConvertEx.ToString(ViewState["ReportCode"]);
+
+
+            object tspObj = Comm.GetValueToObject(tspMdl, tbl);
+            object tsfObj = Comm.GetValueToObject(tsfMdl, tbl);
+
+            if (tspMdl != null && tsfMdl != null)
+            {
+                T_Search_Para_MDL new_tspMdl = tspObj as T_Search_Para_MDL;
+                T_Search_Field_MDL new_tsfMdl = tsfObj as T_Search_Field_MDL;
+
+                switch ((CommonEnum.PageState)ViewState["PageState"])
+                {
+                    case CommonEnum.PageState.ADD:
+                        new_tsfMdl.Line = (chk_Line.Checked) ? 1 : 0;
+                        new_tsfMdl.IsDictionary = (chk_IsDictionary.Checked) ? 1 : 0;
+
+                        int Search_Field_ID = new T_Search_Field_BLL().Add(new_tsfMdl);
+
+                        new_tspMdl.Search_Field_ID = Search_Field_ID;
+                        new T_Search_Para_BLL().Add(new_tspMdl);
+                        break;
+
+                    case CommonEnum.PageState.EDIT:
+                        new_tsfMdl.Line = (chk_Line.Checked) ? 1 : 0;
+                        new_tsfMdl.IsDictionary = (chk_IsDictionary.Checked) ? 1 : 0;
+                        new_tspMdl.SourceSql = SourceSql.Text.Trim();
+                        new_tspMdl.DefaultValue = DefaultValue.Text.Trim();
+                        new_tspMdl.ControlWidth = Common.ConvertEx.ToInt(ControlWidth.Text.Trim());
+
+                        new T_Search_Para_BLL().Update(new_tspMdl);
+                        new T_Search_Field_BLL().Update(new_tsfMdl);
+                        break;
+                }
+                Response.Redirect("ReportStep4.aspx?id=" + Common.DNTRequest.GetQueryString("id") + "");
+            }
+        }
+        #endregion
+    }
+}

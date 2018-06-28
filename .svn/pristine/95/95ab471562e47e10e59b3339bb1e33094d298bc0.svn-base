@@ -1,0 +1,146 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="ArchiveToFileList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.ArchiveToFileList" Title="案卷-FileList" %>
+
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style type="text/css">
+        .regedit_input {
+            border-radius: 4px;
+            padding: 0px !important;
+            font-size: 13px !important;
+            border: 1px solid #D5D5D5 !important;
+            color: #333 !important;
+            height: 17px;
+        }
+
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+
+        //全选
+        var selFlag = true;
+        function selectALL() {
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr('disabled') != 'disabled') {
+                    $(this).attr('checked', selFlag);
+                }
+            });
+            selFlag = !selFlag;
+        }
+        //查看电子文件 
+        function lookPDF(bh, filelistID, SingleProjectID) {
+            if (ArchiveToFileList.RKLookPDFFlag(SingleProjectID).value) {
+                var url = "../File/DocumentEdit.aspx?ID=" + filelistID + "&SingleProjectID=" + SingleProjectID;
+                window.top.Content.CreateTitle('文件编号[' + bh + ']查看电子文件', 3, url);
+            } else {
+                alert("出于安全考虑,已入库工程不能查看电子文件,如需查看,请联系管理员!");
+            }
+        }
+        //返回
+        function backHref() {
+            if ('<%= Store%>' != '') {
+                window.location.href = 'ArchiveList.aspx?Store=Store&SingleProjectID=<%= SingleProjectID%>';
+            } else {
+                window.location.href = 'ArchiveList.aspx';
+            }
+        }
+        //批量更新
+        function batchUpdateXH() {
+            var checkedLen = $("input[type='checkbox']:checked").length;
+            if (checkedLen > 0) {
+                $("input[type='checkbox']:checked").each(function () {
+                    var OrderIndex = $(this).parent().next().next().next().next().next().children().eq(0).val();
+                    ArchiveToFileList.UpdateArchiveXH($(this).val(), OrderIndex).value;
+                });
+                alert('文件序号更新成功!');
+                window.location.href = window.location.href;
+            } else {
+                alert('必须选择一项才可以操作!');
+            }
+        }
+        //著录
+        function updateFile(filelistID) {
+            var strURL = "../File/FileInfoList.aspx?ID=" + filelistID + "&IsView=1&SingleProjectID=<%=SingleProjectID%>";
+            openCommonWindowScroll(strURL, 880, 710);
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td width="10px">&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td></td>
+                        <td>
+                            <div align="right">
+                                <asp:Button ID="btnUpdateXH" runat="server" CssClass="button"
+                                    Text=" 批量更新 " ToolTip="批量更新文件序号" OnClientClick="batchUpdateXH();return false;" Visible="false" />
+                                <input type="button" value=" 返回 " class="button" onclick="backHref()" />
+                            </div>
+                        </td>
+                        <td width="30" align="right">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;' onclick='selectALL(1)'>全选</a>"
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px" ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox" name="checkOne" value='<%# Eval("FileListID")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="编号" DataField="bh" HeaderStyle-Width="60px" ItemStyle-Width="60px" />
+                            <asp:BoundField HeaderText="文件题名" DataField="title" />
+                            <asp:BoundField HeaderText="实体页数" DataField="ManualCount" HeaderStyle-Width="60px" ItemStyle-Width="80px" />
+                            <asp:BoundField HeaderText="上传页数" DataField="pagescount" HeaderStyle-Width="60px" ItemStyle-Width="80px" />
+                            <asp:TemplateField HeaderText="排序编号" HeaderStyle-Width="60px" ItemStyle-Width="60px" Visible="false" >
+                                <ItemTemplate>
+                                    <input type="text" value="<%# Eval("OrderIndex")%>" style="width: 50px" class="regedit_input"
+                                        id="txtXH<%# Eval("FileListID")%>" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                        onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="原文" HeaderStyle-Width="30px" ItemStyle-Width="30px">
+                                <ItemTemplate>
+                                    <a onclick="lookPDF('<%# Eval("BH")%>',<%# Eval("FileListID")%>,<%# Eval("SingleProjectID")%>)">查看</a>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                             <asp:TemplateField HeaderText="详细页" HeaderStyle-Width="50px" ItemStyle-Width="50px">
+                                <ItemTemplate>
+                                    <a onclick="updateFile(<%# Eval("FileListID")%>)">详细页</a>&nbsp;&nbsp;
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                    OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                    FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" LayoutType="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+</asp:Content>

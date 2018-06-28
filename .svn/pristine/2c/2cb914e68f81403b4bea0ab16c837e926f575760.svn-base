@@ -1,0 +1,443 @@
+using System;
+using System.Data;
+using System.Collections.Generic;
+using LTP.Common;
+using DigiPower.Onlinecol.Standard.Model;
+namespace DigiPower.Onlinecol.Standard.BLL
+{
+    /// <summary>
+    /// 业务逻辑类T_MyArchive_BLL 的摘要说明。
+    /// </summary>
+    public class T_MyArchive_BLL
+    {
+        private readonly DigiPower.Onlinecol.Standard.DAL.T_MyArchive_DAL dal = new DigiPower.Onlinecol.Standard.DAL.T_MyArchive_DAL();
+        public T_MyArchive_BLL()
+        { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return dal.GetMaxId();
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int ArchiveID)
+        {
+            return dal.Exists(ArchiveID);
+        }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL model)
+        {
+            return dal.Add(model);
+        }
+
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL model)
+        {
+            dal.Update(model);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int ArchiveID)
+        {
+
+            dal.Delete(ArchiveID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL GetModel(int ArchiveID)
+        {
+
+            return dal.GetModel(ArchiveID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体，从缓存中。
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL GetModelByCache(int ArchiveID)
+        {
+
+            string CacheKey = "T_MyArchive_MDLModel-" + ArchiveID;
+            object objModel = LTP.Common.DataCache.GetCache(CacheKey);
+            if (objModel == null)
+            {
+                try
+                {
+                    objModel = dal.GetModel(ArchiveID);
+                    if (objModel != null)
+                    {
+                        int ModelCache = LTP.Common.ConfigHelper.GetConfigInt("ModelCache");
+                        LTP.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+                    }
+                }
+                catch { }
+            }
+            return (DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL)objModel;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            return dal.GetList(strWhere);
+        }
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            return dal.GetList(Top, strWhere, filedOrder);
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL> GetModelList(string strWhere)
+        {
+            DataSet ds = dal.GetList(strWhere);
+            return DataTableToList(ds.Tables[0]);
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL> DataTableToList(DataTable dt)
+        {
+            List<DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL> modelList = new List<DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL>();
+            int rowsCount = dt.Rows.Count;
+            if (rowsCount > 0)
+            {
+                DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL model;
+                for (int n = 0; n < rowsCount; n++)
+                {
+                    model = new DigiPower.Onlinecol.Standard.Model.T_MyArchive_MDL();
+                    if (dt.Rows[n]["ArchiveID"].ToString() != "")
+                    {
+                        model.ArchiveID = int.Parse(dt.Rows[n]["ArchiveID"].ToString());
+                    }
+                    if (dt.Rows[n]["SingleProjectID"].ToString() != "")
+                    {
+                        model.SingleProjectID = int.Parse(dt.Rows[n]["SingleProjectID"].ToString());
+                    }
+                    if (dt.Rows[n]["CompanyID"].ToString() != "")
+                    {
+                        model.CompanyID = int.Parse(dt.Rows[n]["CompanyID"].ToString());
+                    }
+                    model.area_code = dt.Rows[n]["area_code"].ToString();
+                    model.dh = dt.Rows[n]["dh"].ToString();
+                    if (dt.Rows[n]["xh"].ToString() != "")
+                    {
+                        model.xh = int.Parse(dt.Rows[n]["xh"].ToString());
+                    }
+                    model.archive_form_no = dt.Rows[n]["archive_form_no"].ToString();
+                    model.dz_k = dt.Rows[n]["dz_k"].ToString();
+                    model.dz_l = dt.Rows[n]["dz_l"].ToString();
+                    model.dz_g = dt.Rows[n]["dz_g"].ToString();
+                    model.dz_c = dt.Rows[n]["dz_c"].ToString();
+                    model.dz_x = dt.Rows[n]["dz_x"].ToString();
+                    model.ajtm = dt.Rows[n]["ajtm"].ToString();
+                    model.bzdw = dt.Rows[n]["bzdw"].ToString();
+                    model.ztlx = dt.Rows[n]["ztlx"].ToString();
+                    if (dt.Rows[n]["sl"].ToString() != "")
+                    {
+                        model.sl = int.Parse(dt.Rows[n]["sl"].ToString());
+                    }
+                    model.dw = dt.Rows[n]["dw"].ToString();
+                    model.gg = dt.Rows[n]["gg"].ToString();
+                    if (dt.Rows[n]["qssj"].ToString() != "")
+                    {
+                        model.qssj = DateTime.Parse(dt.Rows[n]["qssj"].ToString());
+                    }
+                    if (dt.Rows[n]["zzsj"].ToString() != "")
+                    {
+                        model.zzsj = DateTime.Parse(dt.Rows[n]["zzsj"].ToString());
+                    }
+                    model.bgqx = dt.Rows[n]["bgqx"].ToString();
+                    model.mj = dt.Rows[n]["mj"].ToString();
+                    model.ztc = dt.Rows[n]["ztc"].ToString();
+                    model.note = dt.Rows[n]["note"].ToString();
+                    model.lrr = dt.Rows[n]["lrr"].ToString();
+                    if (dt.Rows[n]["lrsj"].ToString() != "")
+                    {
+                        model.lrsj = DateTime.Parse(dt.Rows[n]["lrsj"].ToString());
+                    }
+                    if (dt.Rows[n]["wz"].ToString() != "")
+                    {
+                        model.wz = int.Parse(dt.Rows[n]["wz"].ToString());
+                    }
+                    if (dt.Rows[n]["tzz"].ToString() != "")
+                    {
+                        model.tzz = int.Parse(dt.Rows[n]["tzz"].ToString());
+                    }
+                    if (dt.Rows[n]["dt"].ToString() != "")
+                    {
+                        model.dt = int.Parse(dt.Rows[n]["dt"].ToString());
+                    }
+                    if (dt.Rows[n]["zp"].ToString() != "")
+                    {
+                        model.zp = int.Parse(dt.Rows[n]["zp"].ToString());
+                    }
+                    if (dt.Rows[n]["dp"].ToString() != "")
+                    {
+                        model.dp = int.Parse(dt.Rows[n]["dp"].ToString());
+                    }
+                    if (dt.Rows[n]["ly"].ToString() != "")
+                    {
+                        model.ly = int.Parse(dt.Rows[n]["ly"].ToString());
+                    }
+                    if (dt.Rows[n]["lx"].ToString() != "")
+                    {
+                        model.lx = int.Parse(dt.Rows[n]["lx"].ToString());
+                    }
+                    if (dt.Rows[n]["gp"].ToString() != "")
+                    {
+                        model.gp = int.Parse(dt.Rows[n]["gp"].ToString());
+                    }
+                    if (dt.Rows[n]["cd"].ToString() != "")
+                    {
+                        model.cd = int.Parse(dt.Rows[n]["cd"].ToString());
+                    }
+                    if (dt.Rows[n]["cp"].ToString() != "")
+                    {
+                        model.cp = int.Parse(dt.Rows[n]["cp"].ToString());
+                    }
+                    if (dt.Rows[n]["sw0"].ToString() != "")
+                    {
+                        model.sw0 = int.Parse(dt.Rows[n]["sw0"].ToString());
+                    }
+                    if (dt.Rows[n]["sw1"].ToString() != "")
+                    {
+                        model.sw1 = int.Parse(dt.Rows[n]["sw1"].ToString());
+                    }
+                    if (dt.Rows[n]["qt"].ToString() != "")
+                    {
+                        model.qt = int.Parse(dt.Rows[n]["qt"].ToString());
+                    }
+                    if (dt.Rows[n]["jk"].ToString() != "")
+                    {
+                        model.jk = int.Parse(dt.Rows[n]["jk"].ToString());
+                    }
+                    model.jdh = dt.Rows[n]["jdh"].ToString();
+                    model.zlr = dt.Rows[n]["zlr"].ToString();
+                    if (dt.Rows[n]["zlrq"].ToString() != "")
+                    {
+                        model.zlrq = DateTime.Parse(dt.Rows[n]["zlrq"].ToString());
+                    }
+                    model.shyj = dt.Rows[n]["shyj"].ToString();
+                    model.shr = dt.Rows[n]["shr"].ToString();
+                    if (dt.Rows[n]["shsj"].ToString() != "")
+                    {
+                        model.shsj = DateTime.Parse(dt.Rows[n]["shsj"].ToString());
+                    }
+                    model.yjqk = dt.Rows[n]["yjqk"].ToString();
+                    model.yjr = dt.Rows[n]["yjr"].ToString();
+                    if (dt.Rows[n]["yjsj"].ToString() != "")
+                    {
+                        model.yjsj = DateTime.Parse(dt.Rows[n]["yjsj"].ToString());
+                    }
+                    model.rksh_jsqk = dt.Rows[n]["rksh_jsqk"].ToString();
+                    if (dt.Rows[n]["rksh_jssj"].ToString() != "")
+                    {
+                        model.rksh_jssj = DateTime.Parse(dt.Rows[n]["rksh_jssj"].ToString());
+                    }
+                    if (dt.Rows[n]["jgrq"].ToString() != "")
+                    {
+                        model.jgrq = DateTime.Parse(dt.Rows[n]["jgrq"].ToString());
+                    }
+                    model.jsr = dt.Rows[n]["jsr"].ToString();
+                    model.ajlx = dt.Rows[n]["ajlx"].ToString();
+                    model.zajh = dt.Rows[n]["zajh"].ToString();
+                    model.jsdw = dt.Rows[n]["jsdw"].ToString();
+                    model.sgdw = dt.Rows[n]["sgdw"].ToString();
+                    model.sjdw = dt.Rows[n]["sjdw"].ToString();
+                    model.gcmc = dt.Rows[n]["gcmc"].ToString();
+                    model.gcdd = dt.Rows[n]["gcdd"].ToString();
+                    model.kcdw = dt.Rows[n]["kcdw"].ToString();
+                    model.jldw = dt.Rows[n]["jldw"].ToString();
+                    if (dt.Rows[n]["zjs"].ToString() != "")
+                    {
+                        model.zjs = int.Parse(dt.Rows[n]["zjs"].ToString());
+                    }
+                    if (dt.Rows[n]["zajs"].ToString() != "")
+                    {
+                        model.zajs = int.Parse(dt.Rows[n]["zajs"].ToString());
+                    }
+                    if (dt.Rows[n]["djj"].ToString() != "")
+                    {
+                        model.djj = int.Parse(dt.Rows[n]["djj"].ToString());
+                    }
+                    model.dkbh = dt.Rows[n]["dkbh"].ToString();
+                    model.xmbh = dt.Rows[n]["xmbh"].ToString();
+                    model.tfh = dt.Rows[n]["tfh"].ToString();
+                    model.sjdwfzr = dt.Rows[n]["sjdwfzr"].ToString();
+                    model.pzwh = dt.Rows[n]["pzwh"].ToString();
+                    model.jzmd = dt.Rows[n]["jzmd"].ToString();
+                    model.rjl = dt.Rows[n]["rjl"].ToString();
+                    if (dt.Rows[n]["jzmj"].ToString() != "")
+                    {
+                        model.jzmj = decimal.Parse(dt.Rows[n]["jzmj"].ToString());
+                    }
+                    if (dt.Rows[n]["ydmj"].ToString() != "")
+                    {
+                        model.ydmj = decimal.Parse(dt.Rows[n]["ydmj"].ToString());
+                    }
+                    if (dt.Rows[n]["lhl"].ToString() != "")
+                    {
+                        model.lhl = decimal.Parse(dt.Rows[n]["lhl"].ToString());
+                    }
+                    model.ghxz = dt.Rows[n]["ghxz"].ToString();
+                    model.wz_dz = dt.Rows[n]["wz_dz"].ToString();
+                    model.wz_xz = dt.Rows[n]["wz_xz"].ToString();
+                    model.wz_nz = dt.Rows[n]["wz_nz"].ToString();
+                    model.wz_bz = dt.Rows[n]["wz_bz"].ToString();
+                    if (dt.Rows[n]["pz_zn"].ToString() != "")
+                    {
+                        model.pz_zn = int.Parse(dt.Rows[n]["pz_zn"].ToString());
+                    }
+                    if (dt.Rows[n]["pz_zy"].ToString() != "")
+                    {
+                        model.pz_zy = int.Parse(dt.Rows[n]["pz_zy"].ToString());
+                    }
+                    model.hh = dt.Rows[n]["hh"].ToString();
+                    model.ydghxkzh = dt.Rows[n]["ydghxkzh"].ToString();
+                    model.ydghxkzh_fzjg = dt.Rows[n]["ydghxkzh_fzjg"].ToString();
+                    if (dt.Rows[n]["ydghxkzh_fzrq"].ToString() != "")
+                    {
+                        model.ydghxkzh_fzrq = DateTime.Parse(dt.Rows[n]["ydghxkzh_fzrq"].ToString());
+                    }
+                    model.ghxkzh = dt.Rows[n]["ghxkzh"].ToString();
+                    model.ghxkzh_fzjg = dt.Rows[n]["ghxkzh_fzjg"].ToString();
+                    if (dt.Rows[n]["ghxkzh_fzrq"].ToString() != "")
+                    {
+                        model.ghxkzh_fzrq = DateTime.Parse(dt.Rows[n]["ghxkzh_fzrq"].ToString());
+                    }
+                    model.tdyt = dt.Rows[n]["tdyt"].ToString();
+                    model.ydxz = dt.Rows[n]["ydxz"].ToString();
+                    model.kcqy = dt.Rows[n]["kcqy"].ToString();
+                    model.blz = dt.Rows[n]["blz"].ToString();
+                    model.tfck = dt.Rows[n]["tfck"].ToString();
+                    model.cffs = dt.Rows[n]["cffs"].ToString();
+                    model.zbxt = dt.Rows[n]["zbxt"].ToString();
+                    model.gcxt = dt.Rows[n]["gcxt"].ToString();
+                    if (dt.Rows[n]["tzje"].ToString() != "")
+                    {
+                        model.tzje = decimal.Parse(dt.Rows[n]["tzje"].ToString());
+                    }
+                    model.yddw = dt.Rows[n]["yddw"].ToString();
+                    model.yjdw = dt.Rows[n]["yjdw"].ToString();
+                    model.fdcqzh = dt.Rows[n]["fdcqzh"].ToString();
+                    model.fdcqzh_fzjg = dt.Rows[n]["fdcqzh_fzjg"].ToString();
+                    if (dt.Rows[n]["fdcqzh_pzrq"].ToString() != "")
+                    {
+                        model.fdcqzh_pzrq = DateTime.Parse(dt.Rows[n]["fdcqzh_pzrq"].ToString());
+                    }
+                    model.sgxkzh = dt.Rows[n]["sgxkzh"].ToString();
+                    model.sgxkzh_fzjg = dt.Rows[n]["sgxkzh_fzjg"].ToString();
+                    if (dt.Rows[n]["sgxkzh_pzrq"].ToString() != "")
+                    {
+                        model.sgxkzh_pzrq = DateTime.Parse(dt.Rows[n]["sgxkzh_pzrq"].ToString());
+                    }
+                    model.ydm = dt.Rows[n]["ydm"].ToString();
+                    model.ydxzh = dt.Rows[n]["ydxzh"].ToString();
+                    model.sw = dt.Rows[n]["sw"].ToString();
+                    model.ShortDH = dt.Rows[n]["ShortDH"].ToString();
+                    model.xzyjsh = dt.Rows[n]["xzyjsh"].ToString();
+                    if (dt.Rows[n]["xzyjsh_pzrq"].ToString() != "")
+                    {
+                        model.xzyjsh_pzrq = DateTime.Parse(dt.Rows[n]["xzyjsh_pzrq"].ToString());
+                    }
+                    model.jzjg = dt.Rows[n]["jzjg"].ToString();
+                    model.qy = dt.Rows[n]["qy"].ToString();
+                    if (dt.Rows[n]["jzcs"].ToString() != "")
+                    {
+                        model.jzcs = int.Parse(dt.Rows[n]["jzcs"].ToString());
+                    }
+                    if (dt.Rows[n]["jzgd"].ToString() != "")
+                    {
+                        model.jzgd = decimal.Parse(dt.Rows[n]["jzgd"].ToString());
+                    }
+                    if (dt.Rows[n]["tccmj"].ToString() != "")
+                    {
+                        model.tccmj = decimal.Parse(dt.Rows[n]["tccmj"].ToString());
+                    }
+                    if (dt.Rows[n]["ztz"].ToString() != "")
+                    {
+                        model.ztz = decimal.Parse(dt.Rows[n]["ztz"].ToString());
+                    }
+                    model.zdjh = dt.Rows[n]["zdjh"].ToString();
+                    model.cfdz = dt.Rows[n]["cfdz"].ToString();
+                    model.swh = dt.Rows[n]["swh"].ToString();
+                    model.jnwjqssj = dt.Rows[n]["jnwjqssj"].ToString();
+                    model.jnwjzzsj = dt.Rows[n]["jnwjzzsj"].ToString();
+                    model.ydh = dt.Rows[n]["ydh"].ToString();
+                    model.fz = dt.Rows[n]["fz"].ToString();
+                    if (dt.Rows[n]["rkflag"].ToString() != "")
+                    {
+                        if ((dt.Rows[n]["rkflag"].ToString() == "1") || (dt.Rows[n]["rkflag"].ToString().ToLower() == "true"))
+                        {
+                            model.rkflag = true;
+                        }
+                        else
+                        {
+                            model.rkflag = false;
+                        }
+                    }
+                    modelList.Add(model);
+                }
+            }
+            return modelList;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList()
+        {
+            return GetList("");
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        //public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        //{
+        //return dal.GetList(PageSize,PageIndex,strWhere);
+        //}
+
+        #endregion  成员方法
+
+
+
+
+        //调整案卷顺序号，需在系统级别做，如果是Grid最后一条。处理不对
+        public void UpdateXH(int SingleProjectID, int XH, bool UPFlag)
+        {
+            dal.UpdateXH(SingleProjectID, XH, UPFlag);
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        /// <param name="strWhere">where子句</param>
+        /// <param name="isForeign">是否获取关联的外部数据</param>
+        /// <returns></returns>
+        public DataSet GetList(string strWhere, bool isForeign)
+        {
+            return dal.GetList(strWhere, isForeign);
+        }
+    }
+}
+

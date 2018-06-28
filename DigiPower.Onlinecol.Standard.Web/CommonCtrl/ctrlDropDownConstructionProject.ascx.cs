@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlDropDownConstructionProject : System.Web.UI.UserControl
+    {
+        public delegate void SelectChanged();
+        public event SelectChanged MySelectChanged;
+
+        private string _companyid = "";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            DropDownList1.AutoPostBack = true;
+        }
+
+        public bool AutoPostBack
+        {
+            set
+            {
+                DropDownList1.AutoPostBack = value;
+            }
+        }
+
+        public string SelectValue
+        {
+            get { return this.DropDownList1.SelectedValue; }
+            set { DropDownList1.SelectedIndex = DropDownList1.Items.IndexOf(DropDownList1.Items.FindByValue(value)); }
+        }
+
+        public bool enable
+        {
+            set { DropDownList1.Enabled = value; }
+            get { return DropDownList1.Enabled; }
+        }
+
+        public Unit width
+        {
+            set { DropDownList1.Width = value; }
+            get { return DropDownList1.Width; }
+        }
+
+        public string CompanyId
+        {
+            set { _companyid = value; }
+        }
+        public void DataBindEx()
+        {
+            string strwhere = "";
+            if (_companyid != "")
+                strwhere = " companyid='" + _companyid + "'";
+
+            List<T_Construction_Project_MDL> auxidictlist = new List<T_Construction_Project_MDL>();
+            //auxidictlist = (new T_Construction_Project_BLL()).GetModelList(strwhere);
+            auxidictlist = (new T_Construction_Project_BLL()).GetConstructionListByCompanyID(strwhere);
+
+            DropDownList1.DataTextField = "xmmc";
+            DropDownList1.DataValueField = "constructionprojectid";
+            DropDownList1.DataSource = auxidictlist;
+            DropDownList1.DataBind();
+        }
+
+        protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (MySelectChanged != null)
+            {
+                MySelectChanged();
+            }
+        }
+    }
+}

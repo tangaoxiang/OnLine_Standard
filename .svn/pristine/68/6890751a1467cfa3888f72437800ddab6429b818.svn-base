@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.Common;
+
+
+namespace DigiPower.Onlinecol.Standard.Log
+{
+    public class Log : System.Web.UI.Page
+    {
+        /// <summary>
+        /// 写日志
+        /// </summary>
+        /// <param name="tablename">表名</param>
+        /// <param name="operationtype">操作类型：增，删，改，查</param>
+        /// <param name="sqlstring">操作的sql语句</param>
+        /// <param name="result">结果：成功，失败</param>
+        /// <param name="classname">调用本方法的方法名</param>
+        /// <param name="methodname">调用本方法的类名</param>
+        /// <param name="errmsg">出错信息</param>
+        public static void WriteLog(string tablename, string operationtype, string sqlstring, string result, string classname, string methodname, string errmsg)
+        {
+            Log_MDL logmdl = new Log_MDL();
+            logmdl.UserName = HttpContext.Current.Session["UserName"].ToString();
+            logmdl.TableName = tablename;
+            logmdl.Type = operationtype;
+            logmdl.SqlString = sqlstring;
+            logmdl.Result = result;
+            logmdl.OperationDate = DateTime.Now;
+            logmdl.MethodName = methodname;
+            logmdl.ErrorMsg = errmsg;
+            logmdl.CreateIP = DNTRequest.GetIP();
+            logmdl.ClassName = classname;
+
+            (new Log_DAL()).Add(logmdl);
+        }
+
+        //public static void WriteLog(string p, string p_2, string p_3, string p_4)
+        //{
+        //    throw new NotImplementedException();
+        //}
+    }
+}

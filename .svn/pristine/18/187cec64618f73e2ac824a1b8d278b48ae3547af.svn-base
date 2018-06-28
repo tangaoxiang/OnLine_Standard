@@ -1,0 +1,259 @@
+using System;
+using System.Data;
+using System.Collections.Generic;
+using LTP.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections;
+namespace DigiPower.Onlinecol.Standard.BLL
+{
+    /// <summary>
+    /// 业务逻辑类T_Company_BLL 的摘要说明。
+    /// </summary>
+    public class T_Company_BLL
+    {
+        private readonly DigiPower.Onlinecol.Standard.DAL.T_Company_DAL dal = new DigiPower.Onlinecol.Standard.DAL.T_Company_DAL();
+        public T_Company_BLL()
+        { }
+        #region  成员方法
+
+        /// <summary>
+        /// 得到最大ID
+        /// </summary>
+        public int GetMaxId()
+        {
+            return dal.GetMaxId();
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public bool Exists(int CompanyID)
+        {
+            return dal.Exists(CompanyID);
+        }
+
+        /// <summary>
+        /// 增加一条数据
+        /// </summary>
+        public int Add(DigiPower.Onlinecol.Standard.Model.T_Company_MDL model)
+        {
+            return dal.Add(model);
+        }
+
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public void Update(DigiPower.Onlinecol.Standard.Model.T_Company_MDL model)
+        {
+            dal.Update(model);
+        }
+
+        /// <summary>
+        /// 删除一条数据
+        /// </summary>
+        public void Delete(int CompanyID)
+        {
+
+            dal.Delete(CompanyID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_Company_MDL GetModel(int CompanyID)
+        {
+
+            return dal.GetModel(CompanyID);
+        }
+
+        /// <summary>
+        /// 得到一个对象实体，从缓存中。
+        /// </summary>
+        public DigiPower.Onlinecol.Standard.Model.T_Company_MDL GetModelByCache(int CompanyID)
+        {
+
+            string CacheKey = "T_Company_MDLModel-" + CompanyID;
+            object objModel = LTP.Common.DataCache.GetCache(CacheKey);
+            if (objModel == null)
+            {
+                try
+                {
+                    objModel = dal.GetModel(CompanyID);
+                    if (objModel != null)
+                    {
+                        int ModelCache = LTP.Common.ConfigHelper.GetConfigInt("ModelCache");
+                        LTP.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
+                    }
+                }
+                catch { }
+            }
+            return (DigiPower.Onlinecol.Standard.Model.T_Company_MDL)objModel;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere)
+        {
+            return dal.GetList(strWhere);
+        }
+        /// <summary>
+        /// 获得前几行数据
+        /// </summary>
+        public DataSet GetList(int Top, string strWhere, string filedOrder)
+        {
+            return dal.GetList(Top, strWhere, filedOrder);
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_Company_MDL> GetModelList(string strWhere)
+        {
+            DataSet ds = dal.GetList(strWhere);
+            return DataTableToList(ds.Tables[0]);
+        }
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public List<DigiPower.Onlinecol.Standard.Model.T_Company_MDL> DataTableToList(DataTable dt)
+        {
+            List<DigiPower.Onlinecol.Standard.Model.T_Company_MDL> modelList = new List<DigiPower.Onlinecol.Standard.Model.T_Company_MDL>();
+            int rowsCount = dt.Rows.Count;
+            if (rowsCount > 0)
+            {
+                DigiPower.Onlinecol.Standard.Model.T_Company_MDL model;
+                for (int n = 0; n < rowsCount; n++)
+                {
+                    model = new DigiPower.Onlinecol.Standard.Model.T_Company_MDL();
+                    if (dt.Rows[n]["CompanyID"].ToString() != "")
+                    {
+                        model.CompanyID = int.Parse(dt.Rows[n]["CompanyID"].ToString());
+                    }
+                    model.AREA_CODE = dt.Rows[n]["AREA_CODE"].ToString();
+                    model.CompanyName = dt.Rows[n]["CompanyName"].ToString();
+                    model.CompanyCode = dt.Rows[n]["CompanyCode"].ToString();
+                    model.CompanyNameEn = dt.Rows[n]["CompanyNameEn"].ToString();
+                    if (dt.Rows[n]["CompanyType"].ToString() != "")
+                    {
+                        model.CompanyType = int.Parse(dt.Rows[n]["CompanyType"].ToString());
+                    }
+                    model.Addres = dt.Rows[n]["Addres"].ToString();
+                    model.ChargeUserName = dt.Rows[n]["ChargeUserName"].ToString();
+                    model.CharegeID = dt.Rows[n]["CharegeID"].ToString();
+                    model.ContactPerson = dt.Rows[n]["ContactPerson"].ToString();
+                    model.Zipcode = dt.Rows[n]["Zipcode"].ToString();
+                    model.Tel = dt.Rows[n]["Tel"].ToString();
+                    model.Fax = dt.Rows[n]["Fax"].ToString();
+                    model.Mobile = dt.Rows[n]["Mobile"].ToString();
+                    model.EMail = dt.Rows[n]["EMail"].ToString();
+                    model.Description = dt.Rows[n]["Description"].ToString();
+                    if (dt.Rows[n]["IsCompany"].ToString() != "")
+                    {
+                        if ((dt.Rows[n]["IsCompany"].ToString() == "1") || (dt.Rows[n]["IsCompany"].ToString().ToLower() == "true"))
+                        {
+                            model.IsCompany = true;
+                        }
+                        else
+                        {
+                            model.IsCompany = false;
+                        }
+                    }
+                    if (dt.Rows[n]["CreateDate"].ToString() != "")
+                    {
+                        model.CreateDate = DateTime.Parse(dt.Rows[n]["CreateDate"].ToString());
+                    }
+                    model.CreateIP = dt.Rows[n]["CreateIP"].ToString();
+
+                    if (dt.Rows[n]["CreateUserID"].ToString() != "")
+                    {
+                        model.CreateUserID = int.Parse(dt.Rows[n]["CreateUserID"].ToString());
+                    }
+                     
+                    modelList.Add(model);
+                }
+            }
+            return modelList;
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        public DataSet GetAllList()
+        {
+            return GetList("");
+        }
+
+        /// <summary>
+        /// 获得数据列表
+        /// </summary>
+        //public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        //{
+        //return dal.GetList(PageSize,PageIndex,strWhere);
+        //}
+
+        #endregion  成员方法
+
+        //public List<T_Company_MDL> GetModelListByAreaCode(string strWhere)
+        //{
+        //    DataSet ds = dal.GetListByAreaCode(strWhere);
+        //    return DataTableToList(ds.Tables[0]);
+        //}
+
+        public List<T_Company_MDL> BindDataWithNoJSDW()
+        {
+            DataSet ds = dal.BindDataWithNoJSDW();
+            return DataTableToList(ds.Tables[0]);
+        }
+
+        public DataSet GetMyChildCompany(string CompanyType, string CompanyName, string ParentCompanyID, string MyCompanyID)
+        {
+            return dal.GetMyChildCompany(CompanyType, CompanyName, ParentCompanyID, MyCompanyID);
+        }
+
+        public DataSet GetMyChildCompany(string CompanyType, string CompanyName, string ParentCompanyID, string MyCompanyID, string Area_Code)
+        {//比较复杂
+            return dal.GetMyChildCompany(CompanyType, CompanyName, ParentCompanyID, MyCompanyID, Area_Code);
+        }
+
+        /// <summary>
+        /// 获得数据列表 分页
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetListPaging(string Gcmc, string CompanyType, string CompanyName, string ParentCompanyID, string MyCompanyID, string Area_Code,
+            int PageSize, int curPage, out int recCoun)
+        {
+            return dal.GetMyChildCompany(Gcmc, CompanyType, CompanyName, ParentCompanyID, MyCompanyID, Area_Code, PageSize, curPage, "CompanyID", "CompanyID asc", out recCoun);
+        }
+
+        /// <summary>
+        /// 获得数据列表 分页
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetListPaging(Hashtable ht, int PageSize, int curPage, out int recCoun)
+        {
+            return dal.GetMyChildCompany(ht, PageSize, curPage, "CompanyID", "CompanyType,CompanyID asc", out recCoun);
+        }
+
+        /// <summary>
+        /// 删除公司时候，与其相关信息也删除
+        /// 目前只考虑删除 监理/施工
+        /// </summary>
+        /// <param name="CompanyID"></param>
+        /// <returns></returns>
+        public bool DeleteCompanyOther(string CompanyID)
+        {
+            return dal.DeleteCompanyOther(CompanyID);
+        }
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        /// <param name="sqlWhere"></param>
+        /// <returns></returns>
+        public bool Exists(string sqlWhere)
+        {
+            return dal.Exists(sqlWhere);
+        }
+
+    }
+}

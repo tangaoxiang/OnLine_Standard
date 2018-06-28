@@ -1,0 +1,183 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.Text;
+
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections.Generic;
+
+namespace DigiPower.Onlinecol.Standard.Web.SystemManage
+{
+    public partial class RightManage : PageBase
+    {
+        T_WorkFlow_BLL flowBLL = new T_WorkFlow_BLL();
+        T_Module_BLL moduleBLL = new T_Module_BLL();
+        T_SystemInfo_BLL sysBLL = new T_SystemInfo_BLL();
+
+        List<T_SystemInfo_MDL> ltWorkFlowRightChar = new List<T_SystemInfo_MDL>();
+        List<T_SystemInfo_MDL> ltMenuRightChar = new List<T_SystemInfo_MDL>();
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(RightManage));
+            ddlCompany.MySelectChange += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownCompanyInfo.SelectChange(ddlCompan_MySelectChange);
+            ddlRole.MyRoleChanged += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlDropDownRole.RoleChanged(ddlRole_MyRoleChanged);
+
+            ltMenuRightChar = sysBLL.GetModelListForCurrentType(SystemSet._MENURIGHTCHAR);
+            ltWorkFlowRightChar = sysBLL.GetModelListForCurrentType(SystemSet._WORKFLOWRIGHTCHAR);
+
+            if (!this.IsPostBack)
+            {
+                ddlCompany.DataBindEx();
+                ddlRole.BindDdlRold(ddlCompany.SelectValue);
+                BindModule();
+            }
+        }
+
+        /// <summary>
+        /// 公司下拉框选择事件
+        /// </summary>
+        private void ddlCompan_MySelectChange()
+        {
+            ddlRole.BindDdlRold(ddlCompany.SelectValue);
+            BindModule();
+        }
+
+        /// <summary>
+        /// 角色下拉框选择事件
+        /// </summary>
+        private void ddlRole_MyRoleChanged()
+        {
+            BindModule();
+        }
+
+        /// <summary>
+        /// 绑定所有菜单,流程,权限按钮
+        /// </summary>
+        private void BindModule()
+        {
+            StringBuilder strBuilder = new StringBuilder();
+
+            strBuilder.Append("<table>");
+            strBuilder.Append("     <thead>");
+            strBuilder.Append("         <tr>");
+            strBuilder.Append("             <th width=\"190px\">模块名称</th>");
+            strBuilder.Append("             <th>权限按钮<input type=\"checkbox\" onclick=\"selAll(0,1,this)\" /></th>");
+            strBuilder.Append("         </tr>");
+            strBuilder.Append("     </thead> ");
+            strBuilder.Append("     <tbody class=\"tbody\">");
+
+            string ParentName = string.Empty;
+            string ParentID = string.Empty;
+            string ModuleID = string.Empty;
+            string ModuleName = string.Empty;
+
+            DataTable moduleDT = moduleBLL.GetCustomModuleList();
+            var index = 0;
+            foreach (DataRow row in moduleDT.Rows)
+            {
+                index++;
+                ParentID = ConvertEx.ToString(row["parentid"]);
+                ModuleID = ConvertEx.ToString(row["Moduleid"]);
+                ModuleName = ConvertEx.ToString(row["modulename"]);
+
+                if (ParentName == string.Empty || ParentName != ConvertEx.ToString(row["ParentName"]))
+                {
+                    strBuilder.Append("         <tr class=\"" + (index % 2 == 0 ? "bg01" : "") + "\">");
+                    strBuilder.Append("             <td width=\"190px\">" + ConvertEx.ToString(row["ParentName"]) + "</td>");
+                    strBuilder.Append("             <td><input type=\"checkbox\" onclick=\"selAll(1," + ParentID + ",this)\" /></td>");
+                    strBuilder.Append("         </tr>");
+                }
+                strBuilder.Append("         <tr class=\"" + (index % 2 == 0 ? "bg01" : "") + "\">");
+                strBuilder.Append("             <td width=\"190px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                strBuilder.Append("                 <input type=\"checkbox\" onclick=\"selAll(2," + ModuleID + ",this)\" />" + ModuleName);
+                strBuilder.Append("             </td>");
+
+                strBuilder.Append("             <td>");
+                foreach (T_SystemInfo_MDL sysInfoMDL in ltMenuRightChar)
+                {
+                    strBuilder.Append("<input type=\"checkbox\" allChk=\"1\" parentMenu=\"" + ParentID + "\" sonMenu=\"" + ModuleID + "\"  ");
+                    strBuilder.Append("value=\"" + sysInfoMDL.SystemInfoCode + "\" />" + sysInfoMDL.SystemInfoName + "&nbsp;&nbsp;");
+
+                }
+                strBuilder.Append("             </td>");
+                strBuilder.Append("         </tr>");
+
+                ParentName = ConvertEx.ToString(row["ParentName"]);
+            }
+            strBuilder.Append("     </tbody> ");
+            strBuilder.Append("</table>");
+            ltMenuHtml.Text = strBuilder.ToString();
+
+            if (!string.IsNullOrWhiteSpace(ddlCompany.SelectValue))
+            {
+                strBuilder.Clear();
+                strBuilder.Append("<table>");
+                strBuilder.Append("     <thead>");
+                strBuilder.Append("         <tr>");
+                strBuilder.Append("             <th width=\"190px\">流程名称</th>");
+                strBuilder.Append("             <th>权限按钮<input type=\"checkbox\" onclick=\"selAll(3,2,this)\" /></th>");
+                strBuilder.Append("         </tr>");
+                strBuilder.Append("     </thead> ");
+                strBuilder.Append("     <tbody class=\"tbody\">");
+
+                index = 0;
+                IList<T_WorkFlow_MDL> ltWorkFlow = flowBLL.GetModelList("CompanyID=" + ddlCompany.SelectValue);
+                foreach (T_WorkFlow_MDL flowMDL in ltWorkFlow)
+                {
+                    index++;
+                    strBuilder.Append("         <tr class=\"" + (index % 2 == 0 ? "bg01" : "") + "\">");
+                    strBuilder.Append("             <td width=\"190px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                    strBuilder.Append("                 <input type=\"checkbox\" onclick=\"selAll(4," + flowMDL.WorkFlowID + ",this)\" />" + flowMDL.WorkFlowName);
+                    strBuilder.Append("             </td>");
+                    strBuilder.Append("             <td>");
+                    foreach (T_SystemInfo_MDL sysInfoMDL in ltWorkFlowRightChar)
+                    {
+                        strBuilder.Append("<input type=\"checkbox\" allChk=\"2\" parentWorkFlow=\"" + flowMDL.WorkFlowID + "\"  ");
+                        strBuilder.Append("value=\"" + sysInfoMDL.SystemInfoCode + "\" />" + sysInfoMDL.SystemInfoName + "&nbsp;&nbsp;");
+
+                    }
+                    strBuilder.Append("             </td>");
+                    strBuilder.Append("         </tr>");
+
+                }
+                strBuilder.Append("     </tbody> ");
+                strBuilder.Append("</table>");
+                ltWorkFlowHtml.Text = strBuilder.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 保存角色权限
+        /// </summary>
+        /// <param name="RightChar">菜单按钮</param>
+        /// <param name="RoleID">角色ID</param>
+        /// <param name="ModelID">流程或菜单ID</param>
+        /// <param name="RoleRightType">是菜单权限还是流程权限 1:菜单 2:流程</param>
+        /// <param name="ModelID">父菜单ID</param>
+        /// <returns></returns>
+        [Ajax.AjaxMethod()]
+        public bool SaveRoleRight(string RightChar, string RoleID, string ModelID, int RoleRightType, string PModelID)
+        {
+            try
+            {
+                new T_Other_BLL().SetRoleRight(RightChar, RoleID, ModelID, 1, RoleRightType, PModelID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Common.LogUtil.Debug(this, "权限保存失败", ex);
+                return false;
+            }
+        }
+    }
+}

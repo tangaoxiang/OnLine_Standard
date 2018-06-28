@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class JiaoJieDengJiAdd : PageBase
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            MyAddInit();
+            if (!IsPostBack)
+            {
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["ps"] = CommonEnum.PageState.EDIT;
+
+                        if (!String.IsNullOrEmpty(ID))
+                        {
+                            H_SID.Value = ID;
+
+                            T_JiaoJieDengJi_MDL Mdl = new T_JiaoJieDengJi_BLL().GetModel(Common.ConvertEx.ToInt(ID));
+                            if (Mdl != null)
+                            {
+                                ViewState["model"] = Mdl;
+                                this.ctrlDengJiBaseInfo1.SetDS(Mdl);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_JiaoJieDengJi_MDL infoMDL = new T_JiaoJieDengJi_MDL();
+            T_JiaoJieDengJi_BLL infoBLL = new T_JiaoJieDengJi_BLL();
+
+            infoMDL = ctrlDengJiBaseInfo1.GetModule(int.Parse(H_SID.Value));
+            if (infoMDL != null)
+            {
+                if (H_SID.Value == "0")
+                {
+                    infoBLL.Add(infoMDL);
+                }
+                else
+                {
+                    infoBLL.Update(infoMDL);
+                }
+            }
+
+            Common.MessageBox.ShowAndRedirect(this, "保存成功！", "./JiaoJieDengJiList.aspx");
+        }
+    }
+}

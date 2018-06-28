@@ -1,0 +1,269 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ctrlCompanyRegBaseInfo3_1.ascx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlCompanyRegBaseInfo3_1" %>
+<%@ Register Src="ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="~/CommonCtrl/ctrlDropDownArea.ascx" TagName="ctrlDropDownArea"
+    TagPrefix="uc4" %>
+<asp:HiddenField ID="HSingleProjectID" runat="server" />
+<asp:HiddenField ID="Hid_ghxkz" runat="server" Value='<%=file1path%>' />
+<asp:HiddenField ID="Hid_sgxkz" runat="server" Value='<%=file2path%>'/>
+<asp:HiddenField ID="Hid_other" runat="server" Value='<%=file3path%>'/>
+<script language="javascript" type="text/javascript">
+    function CheckFile(obj) {//检测文件是否合法
+        var spCount = obj.value.split('.');
+        var fileExt = spCount[spCount.length - 1].toLowerCase();
+        if (fileExt == 'exe' || fileExt == 'bat') {
+            alert('只能上传文档或图片附件！');
+            if (!window.addEventListener) {
+                obj.outerHTML += '';
+            }
+            else {
+                obj.value = '';
+            }
+            return;
+        }
+    }
+    function selectimage(name)
+    {
+        if (name != "") {
+            window.open("../CompanyManage/CompanyRegPreview.aspx?imagepath=" + name, '', 'location=no,menubar=no,resizable=no,toolbar=no,titlebar=no,status=no,scrollbars=yes');
+        }
+    }
+</script>
+<table id="tablemain" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+    <tr>
+        <td class="left_title_3 promise" colspan="4">工程信息
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">工程名称：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="gcmc" Description="工程名称" canEmpty="false" MaxLength="100"
+                runat="server" CssClass="regedit_input" width="350px" />
+            <asp:HiddenField ID="userid" runat="server" />
+            <asp:HiddenField ID="companyid" runat="server" />
+            <asp:HiddenField ID="SingleProjectID" runat="server" />
+            <asp:HiddenField ID="constructionprojectid" runat="server" />
+        </td>
+        <td class="left_title_1">工程编号：</td>
+        <td class="left_title_2">
+            <asp:TextBox ID="gcbm" runat="server" ReadOnly="true" CssClass="regedit_input">自动生成</asp:TextBox>
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">工程地点：</td>
+        <td class="left_title_2" colspan="3">
+            <uc4:ctrlDropDownArea ID="AREA_CODE" runat="server" />
+            <uc3:ctrlTextBoxEx ID="gcdd" CssClass="regedit_input" canEmpty="false" Description="阜阳市"
+                width="268px" MaxLength="120" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">开工时间：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="kgsj" CssClass="regedit_input" MaxLength="10" canEmpty="false" Description="开工时间"
+                mode="Date" runat="server" />
+        </td>
+        <td class="left_title_1">竣工时间：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="jgsj" CssClass="regedit_input" MaxLength="10" canEmpty="false" runat="server"
+                Description="竣工时间" mode="Date" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">附注：
+        </td>
+        <td class="left_title_2" colspan="3">
+            <uc3:ctrlTextBoxEx ID="fz" CssClass="regedit_input" Description="附注" width="400px"
+                runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_3 promise" colspan="4">责任者项
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">建设单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="jsdw" CssClass="regedit_input" width="350px" MaxLength="100" canEmpty="false"
+                Description="建设单位" runat="server" />
+        </td>
+        <td class="left_title_1">立项批准单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="lxpzdw" CssClass="regedit_input" width="200px" Description="立项批准单位"
+                canEmpty="false" MaxLength="100" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">设计单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="sjdw" CssClass="regedit_input" width="350px" Description="设计单位" canEmpty="false"
+                MaxLength="100" runat="server" />
+        </td>
+        <td class="left_title_1">勘察单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="kcdw" CssClass="regedit_input" width="200px" Description="勘察单位" canEmpty="false"
+                MaxLength="100" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">施工单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="sgdw" CssClass="regedit_input" width="350px" Description="施工单位" canEmpty="false"
+                MaxLength="100" runat="server" />
+        </td>
+        <td class="left_title_1">监理单位：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="jldw" CssClass="regedit_input" width="200px" canEmpty="false" Description="监理单位"
+                MaxLength="100" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_3 promise" colspan="4">文号项
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">规划许可证号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="ghxkzh" CssClass="regedit_input" width="200px" Description="规划许可证号"
+                canEmpty="false" MaxLength="20" runat="server" />
+            <input type="file" id="file1" name="file0" class="trFile" onchange="CheckFile(this)" />
+            <a href="#" onclick="javascript:selectimage('<%=filename1%>')">查看</a>
+        </td>
+        <td class="left_title_1">施工许可证号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="sgxkzh" CssClass="regedit_input" width="200px" Description="施工许可证号"
+                canEmpty="true" MaxLength="80" runat="server" />
+                <input type="file" id="file2" name="file1" class="trFile" onchange="CheckFile(this)" />
+             <a href="#" onclick="javascript:selectimage('<%=filename2%>')" >查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">验收备案号：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="ysbah" CssClass="regedit_input" width="200px" Description="验收备案号"
+                MaxLength="50" canEmpty="true" runat="server" />
+        </td>
+        <td class="left_title_1">其它证件：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="other" CssClass="regedit_input" width="200px" Description="其他扫描文件"
+                canEmpty="true" MaxLength="80" runat="server" />
+                <input type="file" id="file3" name="file3" class="trFile" onchange="CheckFile(this)" />
+             <a href="#" onclick="javascript:selectimage('<%=filename3%>')" >查看</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_3 promise" colspan="4">项目工程坐标
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">X坐标：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FX1" CssClass="regedit_input" canEmpty="true" Description="FX1"
+                MaxLength="20" runat="server" mode="Float" width="200px" />
+        </td>
+        <td class="left_title_1">Y坐标：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FY1" CssClass="regedit_input" canEmpty="true" Description="FY1"
+                MaxLength="20" runat="server" mode="Float" width="200px" />
+        </td>
+    </tr>
+</table>
+
+
+<table id="table1" runat="server" width="99%" border="0" align="center" cellpadding="3" cellspacing="1" style="display: none;">
+    <tr>
+        <td class="left_title_3 promise" colspan="4">土地/红线坐标
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第一点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DX1" CssClass="regedit_input" canEmpty="true" Description="DX1"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第一点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DY1" CssClass="regedit_input" canEmpty="true" Description="DY1"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第二点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DX2" CssClass="regedit_input" canEmpty="true" Description="DX2"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第二点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DY2" CssClass="regedit_input" canEmpty="true" Description="DY2"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第三点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DX3" CssClass="regedit_input" canEmpty="true" Description="DX3"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第三点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DY3" CssClass="regedit_input" canEmpty="true" Description="DY3"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第四点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DX4" CssClass="regedit_input" canEmpty="true" Description="DX4"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第四点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="DY4" CssClass="regedit_input" canEmpty="true" Description="DY4"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_3 promise" colspan="4">项目工程坐标
+        </td>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+        <td class="left_title_1">第二点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FX2" CssClass="regedit_input" canEmpty="true" Description="FX2"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第二点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FY2" CssClass="regedit_input" canEmpty="true" Description="FY2"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第三点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FX3" CssClass="regedit_input" canEmpty="true" Description="FX3"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第三点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FY3" CssClass="regedit_input" canEmpty="true" Description="FY3"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+    <tr>
+        <td class="left_title_1">第四点X：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FX4" CssClass="regedit_input" canEmpty="true" Description="FX4"
+                MaxLength="20" runat="server" />
+        </td>
+        <td class="left_title_1">第四点Y：</td>
+        <td class="left_title_2">
+            <uc3:ctrlTextBoxEx ID="FY4" CssClass="regedit_input" canEmpty="true" Description="FY4"
+                MaxLength="20" runat="server" />
+        </td>
+    </tr>
+</table>
+

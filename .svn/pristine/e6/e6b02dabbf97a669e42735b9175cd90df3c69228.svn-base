@@ -1,0 +1,111 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DigiPower.Onlinecol.Standard.Log
+{
+    internal class Log_MDL
+    {
+        #region Model
+        private int _logid;
+        private string _tablename;
+        private string _type;
+        private string _classname;
+        private string _methodname;
+        private string _sqlstring;
+        private string _errormsg;
+        private string _username;
+        private DateTime _operationdate;
+        private string _createip;
+        private string _result;
+        /// <summary>
+        /// 
+        /// </summary>
+        public int LogID
+        {
+            set { _logid = value; }
+            get { return _logid; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TableName
+        {
+            set { _tablename = value; }
+            get { return _tablename; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Type
+        {
+            set { _type = value; }
+            get { return _type; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ClassName
+        {
+            set { _classname = value; }
+            get { return _classname; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MethodName
+        {
+            set { _methodname = value; }
+            get { return _methodname; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SqlString
+        {
+            set { _sqlstring = value; }
+            get { return _sqlstring; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ErrorMsg
+        {
+            set { _errormsg = value; }
+            get { return _errormsg; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string UserName
+        {
+            set { _username = value; }
+            get { return _username; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime OperationDate
+        {
+            set { _operationdate = value; }
+            get { return _operationdate; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string CreateIP
+        {
+            set { _createip = value; }
+            get { return _createip; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Result
+        {
+            set { _result = value; }
+            get { return _result; }
+        }
+        #endregion Model
+    }
+}

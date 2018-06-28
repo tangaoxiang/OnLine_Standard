@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.Common;
+
+//查看案卷下的所有文件
+
+namespace DigiPower.Onlinecol.Standard.Web.SuppleMent
+{
+    public partial class SmArchiveToFileList : System.Web.UI.Page
+    {
+        #region 属性及构造方法
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ctrlGridEx1.MyGridView_DataRowBound += new DigiPower.Onlinecol.Standard.Web.CommonCtrl.ctrlGridEx.GridView_DataRowBound(ctrlGridEx1_MyGridView_DataRowBound);
+            BindGridView();
+        }
+        #endregion
+
+        #region 事件
+        //GridView DataRowBound事件   jdk 10.26
+        protected void ctrlGridEx1_MyGridView_DataRowBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DataRowView view = e.Row.DataItem as DataRowView;
+                string StrLook = "<a style=\"cursor:pointer;\" onclick=\"WinOpenAll(2,900,600)\" >查看</a>";
+                StrLook += "<input type=\"hidden\" name=\"ArchiveID\" value=\"" + ConvertEx.ToString(view["FileListID"]) + "\" />";
+                StrLook += "<input type=\"hidden\" name=\"SingleProjectID\" value=\"" + ConvertEx.ToString(view["SingleProjectID"]) + "\" />";
+                e.Row.Cells[8].Text = StrLook;
+
+                e.Row.Cells[2].Style.Add("width", "40%");
+                e.Row.Cells[2].Style.Add("word-break", "break-all ");
+            }
+        }
+
+        /// <summary>
+        /// 上移
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnUp_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+                int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+                flBLL.UpdateXH(ArchiveID, flMDL.OrderIndex, true);
+                BindGridView();
+            }
+        }
+
+        /// <summary>
+        /// 下移
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDown_Click(object sender, EventArgs e)
+        {
+            List<string> ltIndex = ctrlGridEx1.GetSelects();
+            if (ltIndex.Count > 0)
+            {
+                int ArchiveID = Common.DNTRequest.GetQueryInt("ArchiveID", 0);
+                int FileListID = Common.ConvertEx.ToInt(ltIndex[0]);
+                T_FileList_BLL flBLL = new T_FileList_BLL();
+                T_FileList_MDL flMDL = flBLL.GetModel(FileListID);
+                flBLL.UpdateXH(ArchiveID, flMDL.OrderIndex, false);
+                BindGridView();
+            }
+        }
+        #endregion
+
+        #region 方法
+        /// <summary>
+        /// 绑定列表
+        /// </summary>
+        private void BindGridView()
+        {
+            T_FileList_BLL bll = new T_FileList_BLL();
+            DataSet ds = new DataSet();
+            ds = bll.GetList(" ArchiveID=" + Common.DNTRequest.GetQueryString("ArchiveID"));
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                List<string> l1 = new List<string>();
+                l1.Add("bh");
+                l1.Add("Title");
+                l1.Add("w_t_h");
+                l1.Add("ManualCount");
+                l1.Add("pagescount");
+                l1.Add("Remark");
+                l1.Add("OrderIndex");
+                //ctrlGridEx1.PageCount = Common.ConvertEx.ToInt(Common.Session.GetSession("PageCount"));
+                //ctrlGridEx1.InitGrid("FileListID", l1, ds, "");
+                ctrlGridEx1.InitGrid("FileListID", l1, ds, "../File/DocumentEdit.aspx?SingleProjectID=0", false, true, "查看");
+            }
+        }
+ 
+        #endregion
+
+    }
+}

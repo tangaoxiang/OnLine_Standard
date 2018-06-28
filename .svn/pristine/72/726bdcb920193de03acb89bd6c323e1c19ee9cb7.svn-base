@@ -1,0 +1,364 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Web;
+using Stimulsoft.Report.Web.Design;
+using Stimulsoft.Report.Dictionary;
+
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class ViewReport : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+                string ReportCode = Common.DNTRequest.GetQueryString("ReportCode");
+                string strWhere = Common.DNTRequest.GetQueryString("strWhere");
+
+                if (ReportCode.Length > 0 && strWhere.Length > 0)
+                {
+
+                    List<T_Report_MDL> ltReport = new T_Report_BLL().GetModelList("ReportCode='" + ReportCode + "'");
+                    if (ltReport.Count > 0)
+                    {
+                        T_Report_MDL trMdl = ltReport[0];
+                        T_Report_Type_MDL trtMdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(trMdl.ReportTypeID));
+                        if (trMdl == null || trtMdl == null) return;
+
+                        string reportPath = Server.MapPath("Report/ReportFiles/" + trtMdl.ReportTypeName + "/" + trMdl.ReportFilePath);
+                        if (System.IO.File.Exists(reportPath))
+                        {
+                            StiReport Report = new StiReport();
+                            Report.Load(reportPath);//加载报表
+
+
+                            if (ReportCode.ToLower() == "zrs")
+                            {
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select * from T_SingleProject where SingleProjectID=" + SingleProjectID + " ";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "zms")
+                            {
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                               string strSql = "select * from T_SingleProject where SingleProjectID=" + SingleProjectID + " ";
+                               // string strSql = "select COUNT(tzz)  from T_SingleProject inner join T_FileList on T_SingleProject.SingleProjectID=.T_FileList.SingleProjectID   where T_SingleProject.SingleProjectID=" + SingleProjectID + "group by T_SingleProject.SingleProjectID  order by T_SingleProject.SingleProjectID desc ";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "rkz")
+                            {
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select * from T_SingleProject where SingleProjectID=" + SingleProjectID + " ";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            } 
+                            else if (ReportCode.ToLower() == "archivefengpi")
+                            {
+                                int ArchiveID = Common.ConvertEx.ToInt(strWhere);
+                                T_Archive_BLL arBLL = new T_Archive_BLL();
+                                T_Archive_MDL arMDL = arBLL.GetModel(ArchiveID);
+
+                                string strSql = "SELECT DH,ShortDH,AJTM,BZDW,lrsj,zzsj,t_systeminfo.systeminfoname as sys_mj,sys2.systeminfoname as sys_bgqx,XH,(SELECT COUNT(0) FROM T_Archive WHERE SINGLEPROJECTID=" + arMDL.SingleProjectID + ") as jzcs, ";
+                                strSql += "(select SUM(isnull(ManualCount,0)) from t_filelist where t_filelist.ArchiveID=" + arMDL.ArchiveID + ")as TotalPageNums ";
+                                       strSql += "FROM T_Archive left join t_systeminfo on t_archive.mj=t_systeminfo.systeminfoid left join t_systeminfo sys2 on t_archive.bgqx=sys2.systeminfoid WHERE ARCHIVEID=" + arMDL.ArchiveID;
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "archivemulu")
+                            {
+                                int ArchiveID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select (ROW_NUMBER() over (ORDER BY  bh)) as RowID,w_t_h,Title,zrr,lrsj,StartTime,PagesCount,ManualCount,yc from t_filelist where archiveid=" + ArchiveID + " Order by bh asc ";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                                {//重排页次
+                                    DataTable dt = dataSet.Tables[0];
+
+                                    int PageIndexCount = 1;
+                                    foreach (DataRow dr in dt.Rows)
+                                    {
+                                        dr["PagesCount"] = PageIndexCount;
+                                        dr["yc"] = PageIndexCount;
+                                        PageIndexCount += Common.ConvertEx.ToInt(dr["ManualCount"].ToString());
+                                    }
+
+                                    int dtCount = dt.Rows.Count;
+                                    int lastManualCount = ConvertEx.ToInt(dt.Rows[dtCount - 1]["ManualCount"]);//案卷中最后一份文件的实体页数
+                                    if (lastManualCount > 1)
+                                    {
+                                        dt.Rows[dtCount - 1]["yc"] = string.Concat(
+                                            ConvertEx.ToInt(dt.Rows[dtCount - 1]["PagesCount"]), "-",
+                                            ConvertEx.ToInt(dt.Rows[dtCount - 1]["PagesCount"]) - 1 + lastManualCount);
+                                    }
+                                    else if(lastManualCount==1)
+                                    {
+                                        dt.Rows[dtCount - 1]["yc"] = string.Concat(dt.Rows[dtCount - 1]["yc"], "-", dt.Rows[dtCount - 1]["yc"]);
+                                    }
+
+                                }
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "printarchive")
+                            {
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select w_t_h,Title,zrr,lrsj,StartTime,PagesCount from t_filelist where Status<>0 AND SingleProjectID=" + SingleProjectID + " Order by OrderIndex ";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "juanneibeikao")
+                            {
+                                int ArchiveID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select T_Archive.lrr,T_Archive.lrsj,T_Archive.shr,T_Archive.shsj,sum(isnull(manualcount,0)) wzz,sum(isnull(t_filelist.tzz,0)) tzz,sum(isnull(zpz,0)) zpz,T_Archive.note from t_filelist,T_Archive where t_filelist.ArchiveID=T_Archive.ArchiveID AND t_filelist.archiveid=" + ArchiveID + " group by  T_Archive.lrr,T_Archive.shr,T_Archive.note,T_Archive.lrsj,T_Archive.shsj";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "shengchahuizhi")
+                            {
+                                string SingleProjectID = Common.DNTRequest.GetQueryString("SingleProjectID");
+                                string strSql = "select DISTINCT A.CompanyName,C.GCMC,COUNT(D.SingleProjectID) as ArchivesCount,(case ajlx when 183 then COUNT(D.SingleProjectID) else 0 end) as WZJ,(case ajlx when 184 then COUNT(D.SingleProjectID) else 0 end) as TZJ from T_Company A,T_Construction_Project B,T_SingleProject C,T_Archive D where A.CompanyID=B.CompanyID AND B.ConstructionProjectID=C.ConstructionProjectID AND C.SingleProjectID=" + SingleProjectID + " AND C.SingleProjectID=D.SingleProjectID GROUP BY A.CompanyName,C.GCMC,ajlx";
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "yanshou_yjs")
+                            {//认定书
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select A.*,(CASE A.ProjectType WHEN 1 then B.jzmj WHEN 2 THEN C.jzmj WHEN 3 THEN D.mj END) AS jzmj,(CASE A.ProjectType WHEN 1 then B.GCJS WHEN 2 THEN C.GCJS WHEN 3 THEN D.GCJS END) AS GCJS from T_SingleProject A LEFT JOIN a_single_project B ON A.SingleProjectID=B.SingleProjectID LEFT JOIN b_single_project C ON A.SingleProjectID=C.SingleProjectID LEFT JOIN c_single_project D ON A.SingleProjectID=D.SingleProjectID WHERE A.SingleProjectID=" + SingleProjectID;
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "archive_hegeyjianshu")
+                            {//合格意见书
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                //string strSql = "select A.*,(CASE A.ProjectType WHEN 1 then B.jglx WHEN 2 THEN C.jglx WHEN 3 THEN '' END) AS jglx,(CASE A.ProjectType WHEN 1 then B.GCJS WHEN 2 THEN C.GCJS WHEN 3 THEN D.GCJS END) AS GCJS from T_SingleProject A LEFT JOIN a_single_project B ON A.SingleProjectID=B.SingleProjectID LEFT JOIN b_single_project C ON A.SingleProjectID=C.SingleProjectID LEFT JOIN c_single_project D ON A.SingleProjectID=D.SingleProjectID WHERE A.SingleProjectID=" + SingleProjectID;
+                                string strSql = "select A.*,(CASE A.ProjectType WHEN 1 then B.jglx WHEN 2 THEN C.jglx WHEN 3 THEN '' END) AS jglx,(CASE A.ProjectType WHEN 1 then B.jzmj WHEN 2 THEN C.jzmj WHEN 3 THEN D.mj END) AS GCJS from T_SingleProject A LEFT JOIN a_single_project B ON A.SingleProjectID=B.SingleProjectID LEFT JOIN b_single_project C ON A.SingleProjectID=C.SingleProjectID LEFT JOIN c_single_project D ON A.SingleProjectID=D.SingleProjectID WHERE A.SingleProjectID=" + SingleProjectID;
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+
+
+                            else if (ReportCode.ToLower() == "yuyanshou_sqd")
+                            {//科室负责人审核 打印预验收核发申请单
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+
+                                string strSql = "select A.gcmc,A.jsdw,A.gcdd,A.gcbm,(CASE A.ProjectType WHEN 1 then B.jzmj WHEN 2 THEN C.jzmj WHEN 3 THEN '' END) AS jzmj,";
+                                strSql += "(CASE A.ProjectType WHEN 1 then B.gcjs WHEN 2 THEN C.zjs WHEN 3 THEN '' END) AS gczj,A.ghxkzh,A.kcdw,A.sjdw,A.jldw,A.sgdw,";
+                                strSql += "A.kgsj,A.jgsj,E.ReadyCheckBookCode,E.zljddw,E.ArchiveUserName,E.ArchiveUser_Tel ";
+                                strSql += "from T_SingleProject A LEFT JOIN a_single_project B ON A.SingleProjectID=B.SingleProjectID ";
+                                strSql += "LEFT JOIN b_single_project C ON A.SingleProjectID=C.SingleProjectID ";
+                                strSql += "LEFT JOIN c_single_project D ON A.SingleProjectID=D.SingleProjectID ";
+                                strSql += "LEFT JOIN T_ReadyCheckBook E ON A.SingleProjectID=E.SingleProjectID ";
+
+                                strSql += "WHERE E.CodeType=3 AND A.SingleProjectID=" + SingleProjectID;
+
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "yys_yjs1")
+                            {//科室负责人审核 打印预验收意见书 房屋
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+
+                                string strSql = "select t.gcmc,t.jsdw,t.gcdd,t.gcbm,t.kgsj,t.jgsj,t.kcdw,t.sjdw,t.sgdw,t.jldw,t.ghxkzh,t.sgxkzh, ";
+                                strSql += "t1.jzmj,t1.jglx,t1.dscs,t1.dxcs,E.ArchiveUserName,E.ArchiveUser_Tel,E.jsdwfzr_Name,E.jsdwfzr_Tel,E.zljddw,E.cscd ";
+                                strSql += "from dbo.T_SingleProject t left join a_single_project t1 on t1.SingleProjectID=t.SingleProjectID ";
+                                strSql += "LEFT JOIN T_ReadyCheckBook E ON t.SingleProjectID=E.SingleProjectID ";
+                                strSql += "where E.CodeType=3 AND t.SingleProjectID=" + SingleProjectID;
+
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "yys_yjs2")
+                            {//科室负责人审核 打印预验收意见书 市政
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+
+                                string strSql = "select t.gcmc,t.jsdw,t.gcdd,t.gcbm,t.kgsj,t.jgsj,t.kcdw,t.sjdw,t.sgdw,t.jldw,t.ghxkzh,t.sgxkzh, ";
+                                strSql += "t1.jzmj,t1.jglx,t1.cd,t1.kd,t1.zjs from dbo.T_SingleProject t left join b_single_project t1 ";
+                                strSql += "on t1.SingleProjectID=t.SingleProjectID where t.SingleProjectID=" + SingleProjectID;
+
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "proj_application")
+                            {//《建设工程档案接收和移交证明书》核发申请单
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select P.jsdw,P.gcbm,P.gcmc,P.gcdd,"
+                                                + " CASE ISNULL(P1.JZMJ,0) WHEN 0 THEN P2.jzmj END AS JZMJ,"
+                                                + " R1.ReadyCheckBookCode AS YYZH,"
+                                                + " R2.ReadyCheckBookCode AS HFZH"
+                                            + " from T_SingleProject P"
+                                                + " LEFT JOIN a_single_project P1 ON p.SingleProjectID=p1.SingleProjectID"
+                                                + " LEFT JOIN b_single_project P2 ON P.SingleProjectID=P2.SingleProjectID"
+                                                + " LEFT JOIN T_ReadyCheckBook R1 ON P.SingleProjectID=R1.SingleProjectID AND R1.CodeType=3"
+                                                + " LEFT JOIN T_ReadyCheckBook R2 ON P.SingleProjectID=R2.SingleProjectID AND R2.CodeType=7"
+                                            + " WHERE P.SingleProjectID=" + SingleProjectID.ToString();
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else if (ReportCode.ToLower() == "proj_certificate")
+                            {
+                                int SingleProjectID = Common.ConvertEx.ToInt(strWhere);
+                                string strSql = "select P.gcbm,P.jsdw,P.gcmc,P.ghxkzh,P.gcdd,P.tzCount,"
+                                    //   + " CASE ISNULL(P1.JZMJ,0) WHEN 0 THEN P2.jzmj ELSE P1.jzmj END AS JZMJ,"
+                                    //   CASE ISNULL(P1.gcjs,0) WHEN 0 THEN P2.zjs ELSE P1.jzmj END AS JZMJ,"
+
+                                                    + " (CASE P.ProjectType WHEN 1 then P1.jzmj WHEN 2 THEN P2.jzmj WHEN 3 THEN 0 END) AS JZMJ, "
+                                                    + " (CASE P.ProjectType WHEN 1 then P1.gcjs WHEN 2 THEN P2.zjs WHEN 3 THEN 0 END) AS gczj, "
+                                                    + " P.kgsj,P.jgsj,R.TOTAL_SCROLL,R.CHARACTER_SCROLL,R.PIC_SCROLL,R.PIC_PAGE_COUNT,"
+                                                    + " R.PHOTO_COUNT,R.RADIO_COUNT,R.OTHER_MATERIAL,R.Directory_SCROLL,R.Directory_PAGE_COUNT,R.zljddw "
+                                                + " from T_SingleProject P"
+                                                    + " LEFT JOIN T_ReadyCheckBook R ON P.SingleProjectID=R.SingleProjectID AND R.CodeType=1"
+                                                    + " LEFT JOIN a_single_project P1 ON P.SingleProjectID=P1.SingleProjectID"
+                                                    + " LEFT JOIN b_single_project P2 ON P.SingleProjectID=p2.SingleProjectID"
+                                                + " WHERE P.SingleProjectID=" + SingleProjectID;
+                                DataSet dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                Report.RegData("Report", dataSet);
+                                Report.Compile();
+                                Report.Render();
+                                StiWebViewer1.Report = Report;
+                            }
+                            else
+                            {
+                                List<T_Report_MainSql_MDL> ltMain = new T_Report_MainSql_BLL().GetModelList("ReportID=" + trMdl.ReportID.ToString());
+                                if (ltMain.Count > 0)
+                                {
+                                    string MainSql = "";
+                                    foreach (T_Report_MainSql_MDL rMdl in ltMain)
+                                    {
+                                        string TempStr = rMdl.MainSql;
+                                        TempStr = TempStr.Remove(TempStr.IndexOf("{")) + " AND " + strWhere + " ";
+
+
+                                        MainSql += TempStr;
+                                    }
+
+                                    if (MainSql != "")
+                                    {
+                                        DataSet dataSet = new T_Other_BLL().GetDataSet(MainSql);
+
+                                        if (ReportCode == "printArchive") //打印归档目录
+                                        {
+                                            DataTable outDT = dataSet.Tables[0].Copy();
+                                            outDT.Clear();
+                                            Recursion(dataSet.Tables[0], 0, 0, ref outDT);
+                                            dataSet.Tables.Clear();
+                                            dataSet.Tables.Add(outDT);
+                                        }
+                                        else if (ReportCode.ToLower() == "archivefengpi")
+                                        {
+                                            string strSql = "SELECT DH,AJTM,BZDW,lrsj,zzsj,t_systeminfo.systeminfoname as sys_mj,sys2.currenttypecnname as sys_bgqx,XH,(SELECT COUNT(0) FROM T_Archive WHERE SINGLEPROJECTID=42) as Total FROM T_Archive left join t_systeminfo on t_archive.mj=t_systeminfo.systeminfoid left join t_systeminfo sys2 on t_archive.bgqx=sys2.systeminfoid WHERE ARCHIVEID=55";
+                                            dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                        }
+                                        else if (ReportCode.ToLower() == "yuyanshou_yjs")
+                                        {
+                                            string strSql = "select a.*,C.UserName as Temp_UserName from t_singleproject A,T_WorkFlowDefine B,t_usersinfo C where A.SINGLEPROJECTID=B.SINGLEPROJECTID AND B.WORKFLOWID=28 AND B.RecvUserID=C.UserID AND A." + strWhere;
+                                            dataSet = new T_Other_BLL().GetDataSet(strSql);
+                                        }
+
+                                        Report.RegData("Report", dataSet);
+                                        Report.Compile();
+                                        Report.Render();
+                                        StiWebViewer1.Report = Report;
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show(this, "请先为报表配置SQL语句!");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "报表文件不存在!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "报表编号不正确，无记录!");
+                    }
+                }
+            }
+        }
+
+        public bool Recursion(DataTable dt, int PID, int LevelID, ref DataTable outDT)
+        {
+            bool bOut = false;
+            DataRow[] dr = dt.Select("PID='" + PID + "'", "OrderIndex");
+            foreach (DataRow drr in dr)
+            {
+                string IsFolder = drr["IsFolder"].ToString();
+                if (IsFolder == "true")
+                {
+                    bOut = true;
+                }
+                drr["title"] = Comm.AddEmpty(drr["title"].ToString(), LevelID);
+                outDT.Rows.Add(drr.ItemArray);
+
+                int NewLevelID = LevelID + 1;
+                bOut = Recursion(dt, Int32.Parse(drr["recid"].ToString()), NewLevelID, ref outDT);
+                if (bOut == false)
+                {
+                    //outDT.Rows.RemoveAt(outDT.Rows.Count-1);
+                }
+            }
+            return bOut;
+        }
+    }
+}

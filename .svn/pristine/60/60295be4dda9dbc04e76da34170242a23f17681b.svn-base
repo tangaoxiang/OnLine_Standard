@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using System.IO;
+using System.Collections.Generic;
+using DigiPower.Onlinecol.Standard.Model;
+using DigiPower.Onlinecol.Standard.BLL;
+
+//报表类型
+
+namespace DigiPower.Onlinecol.Standard.Web.Report
+{
+    public partial class ReportTypeAdd : PageBase
+    {
+        #region 属性及构造函数
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(ReportTypeAdd));
+            MyAddInit();
+
+            if (!this.IsPostBack)
+            {
+                if (!String.IsNullOrEmpty(Action))
+                {
+                    PID.DataBindEx(true);
+
+                    if (Action.ToLower().Equals("add"))
+                    {
+                        ViewState["pagestate"] = CommonEnum.PageState.ADD;
+                    }
+                    else if (Action.ToLower().Equals("edit"))
+                    {
+                        ViewState["pagestate"] = CommonEnum.PageState.EDIT;
+                        BindPage(ID);
+                        HidReportTypeID.Value = ID.ToString();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region 事件
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            T_Report_Type_BLL bll = new T_Report_Type_BLL();
+            T_Report_Type_MDL mdl = new T_Report_Type_MDL();
+
+            if (ViewState["model"] != null)
+                mdl = ViewState["model"] as T_Report_Type_MDL;
+
+            object obj = Comm.GetValueToObject(mdl, tbl);
+
+            if (obj != null)
+            {
+                if (((CommonEnum.PageState)ViewState["pagestate"]) == CommonEnum.PageState.ADD)       //ADD   
+                {
+                    mdl.ReportTypeName = FiltrateChar(mdl.ReportTypeName);
+                    bll.Add(mdl);
+                }
+                else if (((CommonEnum.PageState)ViewState["pagestate"]) == CommonEnum.PageState.EDIT) //EDIT
+                {
+                    T_Report_Type_MDL newMdl = obj as T_Report_Type_MDL;
+                    newMdl.ReportTypeName = FiltrateChar(newMdl.ReportTypeName);
+                    bll.Update(newMdl);
+                }
+            }
+            Response.Redirect("ReportTypeList.aspx?sqlwhere=" + SqlWhere + "&PageIndex=" + pPageIndex + "");
+        }
+
+        #endregion
+
+        #region 方法
+
+        /// <summary>
+        /// 判断报表类型是否存在
+        /// </summary>
+        /// <returns></returns>
+        [Ajax.AjaxMethod]
+        public bool CheckReportTypeName(string ID, string ReportTypeName)
+        {
+            try
+            {
+                List<T_Report_Type_MDL> list = new T_Report_Type_BLL().GetModelList("ReportTypeID!=" + ID + " AND ReportTypeName='" + FiltrateChar(ReportTypeName.Trim()) + "'");
+                if (list.Count > 0) return false;
+                else return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 修改时,给控件赋值
+        /// </summary>
+        /// <param name="ID"></param>
+        private void BindPage(string ID)
+        {
+            T_Report_Type_MDL Mdl = new T_Report_Type_BLL().GetModel(Common.ConvertEx.ToInt(ID));
+
+            if (Mdl != null)
+            {
+                ViewState["ReportTypeName"] = Mdl.ReportTypeName;
+                Comm.SetValueToPage(Mdl, tbl);
+                ViewState["model"] = Mdl;
+                PID.SelectValue = Common.ConvertEx.ToString(Mdl.PID);
+            }
+        }
+
+        /// <summary>
+        /// 过滤文件非法字符
+        /// </summary>
+        /// <returns></returns>
+        private string FiltrateChar(string fileName)
+        {
+            if (!String.IsNullOrEmpty(fileName) && fileName.Trim().Length > 0)
+            {
+                //过滤非法字符
+                string[] errorStr = new string[] { "/", "\\", ":", ",", "*", "?", "\"", "<", ">", "|" };
+                foreach (string str in errorStr)
+                {
+                    if (fileName.Contains(str))
+                        fileName = fileName.Replace(str, "");
+                }
+                return fileName;
+            }
+            return "";
+        }
+
+        #endregion
+    }
+}

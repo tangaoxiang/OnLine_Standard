@@ -1,0 +1,147 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Model;
+using System.Collections.Generic;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Text;
+using System.Net;
+
+namespace DigiPower.Onlinecol.Standard.Web
+{
+    public partial class UserLoginGather : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Ajax.Utility.RegisterTypeForAjax(typeof(UserLoginGather));
+            if (!this.IsPostBack)
+            {
+                this.Title = ConfigurationManager.AppSettings["AppTitle"] + "\"互联网+\"建设工程文件跟踪管理服务系统 - 登陆";
+                if (Request.Cookies["LoginName"] != null)
+                {
+                    txtUserName.Value = Server.UrlDecode(Request.Cookies["LoginName"].Value);
+                }
+            }
+        }
+
+        [Ajax.AjaxMethod(Ajax.HttpSessionStateRequirement.ReadWrite)]
+        public string Login(string userName, string pwd)
+        {
+            T_UsersInfo_BLL userinfobll = new T_UsersInfo_BLL();
+            string LoginString = "loginname='" + Common.Common.SqlSafe(userName.Trim()) + "'";
+            if (pwd.Trim() != "")
+            {
+                LoginString += " and passwd='" + DESEncrypt.Encrypt(pwd.Trim()) + "'";
+            }
+            else
+            {
+                return "failure";
+            }
+
+            List<T_UsersInfo_MDL> userinfomdl = userinfobll.GetModelList(LoginString);
+            if (userinfomdl.Count > 0 && userinfomdl[0].IsValid == true)
+            {
+                T_Company_BLL compBLL = new T_Company_BLL();
+                T_Company_MDL compMDL = compBLL.GetModel(userinfomdl[0].CompanyID);
+                if (compMDL != null)
+                {
+                    HttpContext.Current.Session["IsCompany"] = compMDL.IsCompany.ToString().ToLower();
+                    HttpContext.Current.Session["CompanyName"] = compMDL.CompanyName;
+                    HttpContext.Current.Session["OLD_AREA_CODE"] = compMDL.AREA_CODE;
+                    HttpContext.Current.Session["AREA_CODE"] = "";
+                    if (compMDL.IsCompany.ToString().ToLower() == "false")
+                    {//只有档案馆，需要区域信息，建设单位等都不要过虑                        
+                        string myArea_Code = compMDL.AREA_CODE;
+                        string myArea_CodeNew = compMDL.AREA_CODE;
+                        for (int i1 = myArea_Code.Length - 1; i1 > 0; i1--)
+                        {
+                            if (myArea_Code[i1].ToString() == "0")
+                            {
+                                myArea_CodeNew = myArea_Code.Substring(0, i1);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        HttpContext.Current.Session["AREA_CODE"] = myArea_CodeNew;
+                    }
+                    HttpContext.Current.Session["CompanyType"] = compMDL.CompanyType;
+                }
+                else
+                {
+                    //HttpContext.Current.Session["IsCompany"] = true.ToString().ToLower();
+                    return "failure";
+                }
+
+                BLL.T_SystemInfo_BLL systemInfoBLL = new T_SystemInfo_BLL();
+                Model.T_SystemInfo_MDL systemInfoMDL = systemInfoBLL.GetModel(compMDL.CompanyType);
+                if (systemInfoMDL == null) return "failure";
+
+                HttpContext.Current.Session["CompanyTypeName"] = systemInfoMDL.SystemInfoName;
+                HttpContext.Current.Session["CompanyTypeCode"] = systemInfoMDL.SystemInfoCode;
+                HttpContext.Current.Session["SystemInfoID"] = systemInfoMDL.SystemInfoID;
+                HttpContext.Current.Session["MyParentID"] = systemInfoMDL.ParentID;
+
+                HttpContext.Current.Session["UserID"] = userinfomdl[0].UserID;
+                //HttpContext.Current.Session["area_code"] = userinfomdl[0].Area_code;//用户区域没有意义
+                HttpContext.Current.Session["LoginID"] = userName;
+
+                HttpContext.Current.Session["LoginName"] = userinfomdl[0].LoginName;
+                HttpContext.Current.Session["UserName"] = userinfomdl[0].UserName;
+                //HttpContext.Current.Session["Passwd"] = userinfomdl[0].Passwd;
+                HttpContext.Current.Session["RoleID"] = userinfomdl[0].RoleID;
+                HttpContext.Current.Session["CompanyID"] = userinfomdl[0].CompanyID;
+                //HttpContext.Current.Session["DepartmentID"] = "1";// userinfomdl[0].RoleID;
+                //HttpContext.Current.Session["CompanyName"] = "深圳市世纪伟图科技开发有限单位";// userinfomdl[0].COM;
+                HttpContext.Current.Session["PageCount"] = "10";
+
+                HttpContext.Current.Session["IsLeader"] = userinfomdl[0].IsLeader;
+                HttpContext.Current.Session["SuperAdmin"] = userinfomdl[0].IsSuperAdmin;
+
+
+                T_Role_MDL roleMDL = new T_Role_BLL().GetModel(userinfomdl[0].RoleID);  //签章用
+                if (roleMDL != null)
+                {
+                    HttpContext.Current.Session["RoleName"] = roleMDL.RoleName;
+                    HttpContext.Current.Session["RoleCode"] = roleMDL.RoleCode;
+                }
+
+
+                //保存cookies
+                //if (ddlSelect.SelectedValue == "1")
+                //{
+                //记下Cookie,用于下次登陆
+                TimeSpan ts = new TimeSpan(8760, 0, 0);
+                DateTime expired = DateTime.Today.Add(ts);
+                //Response.Cookies.Clear();
+                HttpContext.Current.Response.Cookies["LoginName"].Value = Server.UrlEncode(userName);
+                HttpContext.Current.Response.Cookies["LoginName"].Expires = expired;
+                //修改最后登录时间
+                userinfomdl[0].LastLoginTime = DateTime.Now;
+                userinfobll.Update(userinfomdl[0]);
+
+                System.Text.RegularExpressions.Regex r1 = new System.Text.RegularExpressions.Regex("[A-Za-z].*[0-9]|[0-9].*[A-Za-z]");
+                if (r1.IsMatch(pwd) == false)
+                {
+                    return "changepasswd";
+                }
+
+                return "success";
+            }
+            else
+            {
+                return "failure";
+            }
+        }
+    }
+}

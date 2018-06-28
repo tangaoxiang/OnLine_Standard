@@ -1,0 +1,75 @@
+<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="JiaoJieDengJiList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.Report.JiaoJieDengJiList" Title="登记台账" %>
+
+<%@ Register Src="../CommonCtrl/ctrlJSCheckInfo.ascx" TagName="ctrlJSCheckInfo" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc4" %>
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownSingleProject.ascx" TagName="ctrlDropDownSingleProject"
+    TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script language="javascript" type="text/javascript">
+
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    &nbsp;<table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px;
+        border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td>
+                            <div align="right">
+                                &nbsp;
+                                <asp:Button ID="BTN_ADD" runat="server" Text=" 新增 " CssClass="button" OnClick="BTN_ADD_Click" />
+                                <asp:Button ID="BTN_PRINT" runat="server" Text=" 打印 " CssClass="button" OnClick="BTN_PRINT_Click" />
+                            </div>
+                        </td>
+                        <td width="30" style="text-align: right;">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="99%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table style="text-align: left; width: 100%">
+                                    <tr>
+                                        <td>
+                                            <label runat="server" id="lblSingleProject">
+                                                &nbsp;工程名称：</label>
+                                            <%--<uc2:ctrlDropDownSingleProject ID="SingleProjectID" runat="server" />--%>
+                                            <asp:TextBox ID="TXT_PROJ_NAME" runat="server"></asp:TextBox>
+                                            <label runat="server" id="Label1">
+                                                &nbsp;工程编号：</label>
+                                            <asp:TextBox ID="TXT_PROJ_NO" runat="server"></asp:TextBox>
+                                            <label>
+                                                &nbsp;建设单位：</label>
+                                            <asp:TextBox ID="TXT_JSDW" runat="server"></asp:TextBox>
+                                            &nbsp;
+                                            <asp:Button ID="BTN_SEARCH" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text=" 查询 " />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;">
+                    <uc1:ctrlGridEx ID="ctrlGridEx1" runat="server" SelCheckType="Radio" />
+                </div>
+            </td>
+        </tr>
+    </table>
+</asp:Content>

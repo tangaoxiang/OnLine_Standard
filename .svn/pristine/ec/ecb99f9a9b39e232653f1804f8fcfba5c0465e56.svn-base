@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlList>
+  <OperationSql>
+    <![CDATA[
+      SELECT ROW_NUMBER() OVER (ORDER BY LogID)as '序号',UserName as '操作人' ,CreateIP as'操作IP',CreateDate as '发生时间',
+      (CASE Description WHEN 'ErrorBug' THEN '系统BUG' WHEN 'LogIn' THEN '用户登录' WHEN 'LogOut' THEN '用户登录' END)as '操作类型',
+      ErrorMsg as '操作详情'		 
+      FROM  T_OperationLog  where {0} order by LogID asc 
+    ]]>
+  </OperationSql>
+  <EfileConvertSql>
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY LogID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',
+    f0.SingleProjectID as '工程KEY',f0.FileListID as '文件KEY',f0.EFileID as '电子文件KEY',
+    f0.EFileStartPath as '文件存储位置',f0.FileName as '文件名称',f0.CreateDate as '发生时间',f0.Description as '转换错误日志'
+    from T_EFile_ConvertLog f0 INNER JOIN T_SingleProject f1 ON f0.SingleProjectID=f1.SingleProjectID where {0}  
+    order by LogID asc 
+    ]]>
+  </EfileConvertSql>         
+  <ZrsCertificateSql_1>
+    <!--已发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',
+    f0.ReadyCheckBookCode as '证书编号', 
+    '责任书' as '证书类型', 
+    (case len(ISNULL(f0.ReadyCheckBookCode,'')) when 0 then '未发放'   else '已发放' end)as '证书发放情况' ,
+    (SELECT ff.UserName FROM T_UsersInfo ff where ff.UserID=f0.CreateUserID)as '发放人',  
+    f0.CreateTime as '发放时间'   
+    from T_SingleProject f1 left JOIN T_ReadyCheckBook f0 ON f0.SingleProjectID=f1.SingleProjectID where 1=1 {0} 
+    order by f0.ReadyCheckBookCode,f0.ReadyCheckBookID desc  
+    ]]>
+  </ZrsCertificateSql_1>
+  <ZrsCertificateSql_2>
+    <!--未发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',  
+    '责任书' as '证书类型', 
+    '未发放'as '证书发放情况',
+    ''as '证书编号',
+    ''as '发放人',  
+    ''as '发放时间', 
+    '未发放'as '证书发放情况'
+    from T_SingleProject f1 where 1=1 {0} 
+    order by f1.SingleProjectID asc  
+    ]]>
+  </ZrsCertificateSql_2>
+  <RkzCertificateSql_1>
+    <!--已发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',
+    f0.ReadyCheckBookCode as '证书编号', 
+    '认可证' as '证书类型', 
+    (case len(ISNULL(f0.ReadyCheckBookCode,'')) when 0 then '未发放'   else '已发放' end)as '证书发放情况' ,
+    (SELECT ff.UserName FROM T_UsersInfo ff where ff.UserID=f0.CreateUserID)as '发放人',  
+    f0.CreateTime as '发放时间'   
+    from T_SingleProject f1 left JOIN T_ReadyCheckBook f0 ON f0.SingleProjectID=f1.SingleProjectID where 1=1 {0} 
+    order by f0.ReadyCheckBookCode,f0.ReadyCheckBookID desc  
+    ]]>
+  </RkzCertificateSql_1>
+  <RkzCertificateSql_2>
+    <!--未发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',  
+    '认可证' as '证书类型', 
+    '未发放'as '证书发放情况',
+    ''as '证书编号',
+    ''as '发放人',  
+    ''as '发放时间', 
+    '未发放'as '证书发放情况'
+    from T_SingleProject f1 where 1=1 {0} 
+    order by f1.SingleProjectID asc  
+    ]]>
+  </RkzCertificateSql_2>
+  <ZmsCertificateSql_1>
+    <!--已发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',
+    f0.ReadyCheckBookCode as '证书编号', 
+    '证明书' as '证书类型', 
+    (case len(ISNULL(f0.ReadyCheckBookCode,'')) when 0 then '未发放'   else '已发放' end)as '证书发放情况' ,
+    (SELECT ff.UserName FROM T_UsersInfo ff where ff.UserID=f0.CreateUserID)as '发放人',  
+    f0.CreateTime as '发放时间'   
+    from T_SingleProject f1 left JOIN T_ReadyCheckBook f0 ON f0.SingleProjectID=f1.SingleProjectID where 1=1 {0} 
+    order by f0.ReadyCheckBookCode,f0.ReadyCheckBookID desc  
+    ]]>
+  </ZmsCertificateSql_1>
+  <ZmsCertificateSql_2>
+    <!--未发放-->
+    <![CDATA[
+    SELECT 
+    ROW_NUMBER() OVER (ORDER BY f1.SingleProjectID)as '序号',
+    f1.gcbm as '工程编号',f1.gcmc as '工程名称',f1.gcdd as '工程地点',  
+    '证明书' as '证书类型', 
+    '未发放'as '证书发放情况',
+    ''as '证书编号',
+    ''as '发放人',  
+    ''as '发放时间', 
+    '未发放'as '证书发放情况'
+    from T_SingleProject f1 where 1=1 {0} 
+    order by f1.SingleProjectID asc  
+    ]]>
+  </ZmsCertificateSql_2>
+
+</SqlList>
+
+
+
+

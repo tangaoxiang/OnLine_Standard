@@ -1,0 +1,156 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Site3.Master" AutoEventWireup="true" CodeBehind="SingleProjectAndFileList.aspx.cs"
+    Inherits="DigiPower.Onlinecol.Standard.Web.SystemManage.SingleProjectAndFileList" %>
+
+<%@ Register Src="../CommonCtrl/ctrlDropDownSystemInfo.ascx" TagName="ctrlDropDownSystemInfo"
+    TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc3" %>
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlDropDownUser.ascx" TagName="ctrlDropDownUser" TagPrefix="uc2" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script language="javascript" type="text/javascript" src="../JS/WebCalendar.js"></script>
+    <script language="javascript" type="text/javascript">
+        function btnWJZJ() {
+            if (isCheck()) {
+                var keyList = getKeyList();
+                var strURL = "../WorkFlow/WjdjOther.aspx?SingleProjectID=" + keyList[0];
+                window.top.Content.CreateTitle('工程编号[' + keyList[1] + ']文件信息', 5, strURL);
+            }
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <table width="99%" border="0" cellpadding="0" cellspacing="0" style="margin: 4px 4px; border: solid 1px #8db2e3;">
+        <tr>
+            <td height="25" class="button_area" style="border: 0px; border-bottom: 1px;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 2px;">
+                    <tr>
+                        <td width="10px"></td>
+                        <td></td>
+                        <td>
+                            <div align="right">
+                                &nbsp;
+                                <asp:Button ID="btnWJZJ" runat="server" OnClientClick="btnWJZJ();return false;" CssClass="button" Text=" 文件信息 " />
+                            </div>
+                        </td>
+                        <td width="30" align="right">
+                            <img src="../Images/01.png" border="0" style="margin-right: 4px;" alt="" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#cbdcec">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" class="STYLE1">
+                            <asp:Panel runat="server" ID="tblSearch" Width="100%" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td>&nbsp; 工程类别：
+                                        </td>
+                                        <td>&nbsp;
+                                            <uc1:ctrlDropDownSystemInfo ID="ProjectType" runat="server" CurrentType="Archive_Form" />
+                                        </td>
+                                        <td>&nbsp; 工程地址：
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="gcdd" runat="server" CssClass="SelectText" Width="200px"></asp:TextBox>
+                                            指导员：<uc2:ctrlDropDownUser ID="ctrlDropDownUser1" runat="server" />
+                                        </td>
+                                        <td rowspan="5" style="text-align: right;">
+                                            <asp:Button ID="btnSearch" runat="server" class="SelectButton" OnClick="btnSearch_Click"
+                                                Text=" 查询 " />
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;
+                                            <label>
+                                                工程名称：</label>
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="gcmc" runat="server" CssClass="SelectText" Width="200px"></asp:TextBox>
+                                        </td>
+                                        <td>&nbsp; 工程编号：
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="gcbm" runat="server" CssClass="SelectText" Width="200"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp; 规划许可证号：
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="ghxkzh" runat="server" CssClass="SelectText" Width="200px"></asp:TextBox>
+                                        </td>
+                                        <td>&nbsp; 开工时间：
+                                        </td>
+                                        <td>&nbsp;
+                                            <uc3:ctrlTextBoxEx ID="kgsj1" runat="server" mode="DateNoTip" width="80px" CssClass="SelectText" />
+                                            &nbsp;~&nbsp;
+                                            <uc3:ctrlTextBoxEx ID="kgsj2" runat="server" mode="Date" width="80px" CssClass="SelectText" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp; 施工许可证号：
+                                        </td>
+                                        <td>&nbsp;
+                                            <asp:TextBox ID="sgxkzh" runat="server" CssClass="SelectText" Width="200px"></asp:TextBox>
+                                        </td>
+                                        <td>&nbsp; 竣工时间：
+                                        </td>
+                                        <td>&nbsp;
+                                            <uc3:ctrlTextBoxEx ID="jgsj1" runat="server" mode="DateNoTip" width="80px" CssClass="SelectText" />
+                                            &nbsp;~&nbsp;
+                                            <uc3:ctrlTextBoxEx ID="jgsj2" runat="server" mode="Date" width="80px" CssClass="SelectText" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center;">
+                <div style="margin-top: 4px; margin-bottom: 4px; border: 0; width: 100%;" id="divgvData">
+                    <asp:GridView ID="gvData" runat="server" AutoGenerateColumns="False">
+                        <Columns>
+                            <asp:TemplateField HeaderText="<a style='cursor:pointer;'></a>"
+                                HeaderStyle-CssClass="tr1" ItemStyle-CssClass="tr1" HeaderStyle-Width="33px" ItemStyle-Width="33px">
+                                <ItemTemplate>
+                                    <input style="border-bottom-color: blue;" type="checkbox"
+                                        name="checkOne" value='<%# Eval("SingleProjectID")%>,<%# Eval("gcbm")%>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField HeaderText="项目类型" DataField="ProjectTypeName" ItemStyle-Width="90px" HeaderStyle-Width="90px" />
+                            <asp:BoundField HeaderText="项目名称" DataField="xmmc" HeaderStyle-Width="160px" ItemStyle-Width="160px" />
+                            <asp:BoundField HeaderText="工程编号" DataField="gcbm" ItemStyle-Width="60px" HeaderStyle-Width="60px" />
+                            <asp:BoundField HeaderText="工程名称" DataField="gcmc" />
+                            <asp:BoundField HeaderText="工程地址" DataField="gcdd" HeaderStyle-Width="140px" ItemStyle-Width="140px" />
+                            <asp:BoundField HeaderText="规划许可证号" DataField="ghxkzh" HeaderStyle-Width="120px" ItemStyle-Width="120px" />
+                            <asp:BoundField HeaderText="施工许可证号" DataField="sgxkzh" HeaderStyle-Width="120px" ItemStyle-Width="120px" />
+                            <asp:BoundField HeaderText="业务指导人员" DataField="UserName" HeaderStyle-Width="120px" ItemStyle-Width="120px" />
+                        </Columns>
+                    </asp:GridView>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center; height: 30px; border: 0px;" class="button_area">
+                <webdiyer:AspNetPager ID="AspNetPager" runat="server" PagingButtonSpacing="8px"
+                    OnPageChanged="AspNetPager_PageChanged" ShowCustomInfoSection="left" CustomInfoStyle="text-align:left;"
+                    FirstPageText="首页" LastPageText="尾页" NextPageText="下一页" PrevPageText="上一页" PageIndexBoxStyle="text-align:right;"
+                    CustomInfoHTML="<div style='margin-top:6px'>共有 <strong>%RecordCount%</strong> 条记录，当前第 <strong>%CurrentPageIndex%</strong> 页，每页<strong> %PageSize%</strong> 条，共<strong> %PageCount%</strong> 页</div>"
+                    UrlPaging="false" Width="100%" layouttype="Table" ShowNavigationToolTip="True"
+                    ShowPageIndex="False" HorizontalAlign="Right" PageIndexBoxType="TextBox" ShowPageIndexBox="Always" SubmitButtonText="跳转" TextAfterPageIndexBox="页" TextBeforePageIndexBox="转到">
+                </webdiyer:AspNetPager>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+</asp:Content>

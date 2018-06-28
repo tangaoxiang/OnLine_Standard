@@ -1,0 +1,121 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="QuestionInfo.aspx.cs" Inherits="DigiPower.Onlinecol.Standard.Web.WorkFlow.QuestionInfo" %>
+
+<%@ Register Src="../CommonCtrl/ctrlTextBoxEx.ascx" TagName="ctrlTextBoxEx" TagPrefix="uc1" %>
+<%@ Register Src="../CommonCtrl/ctrlBtnBack.ascx" TagName="ctrlBtnBack" TagPrefix="uc2" %>
+<%@ Register Src="../CommonCtrl/ctrlGridEx.ascx" TagName="ctrlGridEx" TagPrefix="uc3" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>问题详情</title>
+    <link href="/css/default2.css" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../JS/default.js"></script>
+    <script type="text/javascript" src="../JS/common.js"></script>
+    <link href="../CSS/select_file_20140529.css" media="screen" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .promiseLabelExt {
+            width: 35%;
+        }
+
+        .promiseInputWidthExt {
+            width: 280px;
+        }
+
+        table {
+            background-color: #c9c7c0;
+            margin-top: 3px;
+        }
+
+        tr {
+            background-color: #fff;
+        }
+
+        .trFile {
+            font-family: Trebuchet MS;
+            line-height: 20px;
+            border: 1px solid #D5D5D5 !important;
+            color: #333 !important;
+            background: url('../Images/bg-form-field.gif') repeat-x scroll left top #FFF;
+        }
+    </style>
+</head>
+<body style="margin: 1px 0px 0px 0px;">
+    <form id="form1" runat="server">
+        <table width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+            <tr>
+                <td class="left_title_3 promise" colspan="6">问题详情
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">工程名称：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:Label ID="gcmc" runat="server"></asp:Label>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left_title_1 promiseLabelExt">归档目录：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:Label ID="FileListName" runat="server"></asp:Label>
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">标题：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:Label ID="Title" runat="server" Style="word-break: break-all;"></asp:Label>
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">内容：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:Label ID="txt_Description" runat="server" Style="word-break: break-all;"></asp:Label>
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">附件：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:Literal ID="AttachName" runat="server"></asp:Literal>
+                </td>
+            </tr>
+        </table>
+        <asp:Literal ID="ltAnswerHTML" runat="server"></asp:Literal>
+        <table width="99%" border="0" align="center" cellpadding="3" cellspacing="1">
+            <tr>
+                <td class="left_title_3 promise" colspan="6">问题回复
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">回复内容：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <uc1:ctrlTextBoxEx ID="Description" TextMode="MultiLine" width="90%" Rows="6" MaxLength="4000"
+                        height="50px" runat="server" />
+                </td>
+            </tr>
+            <tr>
+                <td class="left_title_1 promiseLabelExt">上传附件：
+                </td>
+                <td class="left_title_2" colspan="5">
+                    <asp:FileUpload ID="FileUpload1" runat="server" Style="margin-top: 4px;" CssClass="trFile" BackColor="White" />
+                </td>
+            </tr>
+        </table>
+        <table id="table2" runat="server" width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="left_title_4">
+                    <asp:Button ID="btnsubmit" runat="server" Text=" 提 交 " CssClass="btn2" OnClick="btnsubmit_Click" />
+                    &nbsp; 
+                    <input type="button" value="返回" class="btn2" onclick="window.location.href = 'QuestionList.aspx'" />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+    </form>
+</body>
+</html>
+

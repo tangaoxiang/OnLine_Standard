@@ -1,0 +1,74 @@
+﻿/*表单设计样式*/
+
+.form_1{
+	height:auto;
+	padding:20px 60px;
+	background:#cbdcec;
+	width:auto;
+	float:left;
+	}
+	
+.search_area .form_1{
+	padding:5px 60px;
+	}
+	
+.search_area .form_block{
+	margin-bottom:20px;
+	}
+
+.form_1 input{
+	height:21px;
+	}
+	
+.form_block table{
+	margin:5px 10px;
+	}
+	
+.form_block th{
+	text-indent:10px;
+	white-space:nowrap;
+	}
+	
+.moremore{
+	display:none;
+	}
+
+
+#ext-gen26{ padding:0 10px;}
+
+.form_block th{
+	text-align:right;
+	padding-right:30px;
+	line-height:30px;
+	font-size:12px;
+	font-weight:bold;
+	}
+
+	
+.form_block{
+	display:block;
+	background:#cbdcec;
+	width:100%;
+	height:auto;
+	margin:15px 0 0 0;
+	border:1px #c9c7c0 solid;
+	}
+	
+.menu_list {
+	width: 100%;
+	text-align:center;
+}
+
+.menu_head {
+	font-size:14px;
+	padding: 3px 10px;
+	cursor: pointer;
+	position: relative;
+	margin:1px;
+       font-weight:bold;
+       background: #eaf1fb;
+
+}
+.menu_body {
+	display:none;
+}

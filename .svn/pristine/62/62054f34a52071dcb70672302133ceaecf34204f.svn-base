@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using DigiPower.Onlinecol.Standard.BLL;
+using DigiPower.Onlinecol.Standard.Common;
+using DigiPower.Onlinecol.Standard.Model;
+
+namespace DigiPower.Onlinecol.Standard.Web.CommonCtrl
+{
+    public partial class ctrlCompanyRegBaseInfo3_3 : System.Web.UI.UserControl
+    {
+        public string file1path = "";
+        public string filename1 = "";
+        public string file2path = "";
+        public string filename2 = "";
+        public string file3path = "";
+        public string filename3 = "";
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// 禁用页面所有的控件
+        /// </summary>
+        /// <param name="flag"></param>
+        public void DisabledControl()
+        {
+            EnableControls(tablemain, false);
+        }
+
+        protected void EnableControls(Control c, bool bEnabled)
+        {
+            if (c is WebControl)
+                ((WebControl)c).Enabled = bEnabled;
+
+            if (c is HtmlControl)
+                ((HtmlControl)c).Disabled = !bEnabled;
+
+            foreach (Control cc in c.Controls)
+                EnableControls(cc, bEnabled);
+        }
+
+        public void DataBindEx(int tSingleProjectID)
+        {
+            AREA_CODE.BindDdlArea(true);//区域
+
+            HSingleProjectID.Value = tSingleProjectID.ToString();
+            DataBindEx();
+        }
+
+        private void DataBindEx()
+        {
+            T_SingleProject_MDL projectmdl = (new T_SingleProject_BLL()).GetModel(ConvertEx.ToInt(HSingleProjectID.Value));
+            c_single_project_MDL c_projectmdl = new c_single_project_BLL().GetModel(ConvertEx.ToInt(HSingleProjectID.Value));
+            Comm.SetValueToPage(projectmdl, tablemain);
+            if (jsdw.Text == "")
+            {
+                jsdw.Text = Common.Session.GetSession("CompanyName");
+            }
+            if (projectmdl != null)
+            {
+                projectmdl.fz = c_projectmdl.fz;
+                List<T_FileAttach_MDL> mdllist = new T_FileAttach_BLL().
+                  GetModelList("PriKeyValue='" + projectmdl.SingleProjectID + "' and (AttachCode='ghxkz' or AttachCode='sgxkz' or AttachCode='other')");
+                T_FileAttach_MDL fam = mdllist.Find(d => d.AttachCode == "ghxkz");
+                T_FileAttach_MDL fam1 = mdllist.Find(d => d.AttachCode == "sgxkz");
+                T_FileAttach_MDL fam2 = mdllist.Find(d => d.AttachCode == "other");
+
+                if (fam != null)
+                {
+                    file1path = fam.AttachPath;
+                    filename1 = fam.AttachName;
+                }
+                if (fam1 != null)
+                {
+                    file2path = fam1.AttachPath;
+                    filename2 = fam1.AttachName;
+                }
+                if (fam2 != null)
+                {
+                    file3path = fam2.AttachPath;
+                    filename3 = fam2.AttachName;
+                }
+                Comm.SetValueToPage(projectmdl, tablemain);
+            }
+        }
+        public void SetDefaultValue(Model.T_Construction_Project_MDL pMDL)
+        {
+            Comm.SetValueToPage(pMDL, tablemain);
+            gcmc.Text = pMDL.xmmc;
+            gcdd.Text = pMDL.xmdd;
+        }
+        public T_SingleProject_MDL GetModule(int tSingleProjectID)
+        {
+            T_SingleProject_MDL mdl = new T_SingleProject_MDL();
+            if (tSingleProjectID > 0)
+            {
+                BLL.T_SingleProject_BLL bll = new T_SingleProject_BLL();
+                mdl = bll.GetModel(tSingleProjectID);
+            }
+            object obj = Comm.GetValueToObject(mdl, tablemain);
+            return (T_SingleProject_MDL)obj;
+        }
+    }
+}
